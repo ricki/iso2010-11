@@ -4,18 +4,18 @@ import com.umbrella.worldconq.domain.Session;
 
 public class ServerProxy {
 
-	protected static ServerProxy mInstancia = null;
+	protected static ServerProxy mInstance = null;
 	
 	protected ServerProxy(){
 		
 	}
 	
 	public static ServerProxy getServerProxy(){
-		if (mInstancia == null){
-			mInstancia = new ServerProxy();
+		if (mInstance == null) {
+			mInstance = new ServerProxy();
 		}
 		
-		return mInstancia;
+		return mInstance;
 	}
 	
 	public String validateUser(String Login, String Passwd) {
@@ -24,7 +24,7 @@ public class ServerProxy {
 	}
 
 	public boolean registerUser(String Login, String Passwd, String Email) {
-		System.out.println("Register user");
+		System.out.println("ServerProxy::registerUser " + Login +" " + Passwd + " "+ Email);
 		return true;
 	}
 
