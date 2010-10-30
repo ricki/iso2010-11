@@ -19,8 +19,8 @@ public class ServerProxy {
 	}
 	
 	public String validateUser(String Login, String Passwd) {
-		System.out.println("Validate user");
-		return "valido";
+		System.out.println("ServerProxy::validateUser " + Login +" " + Passwd );
+		return "1234";
 	}
 
 	public boolean registerUser(String Login, String Passwd, String Email) {
