@@ -44,6 +44,8 @@ public class RegisterDialog extends JDialog {
 		private void initGUI() {
 		try {
 			this.setResizable(false);
+			this.setSize(500, 250);
+			
 			registerPanel = new JPanel();
 			getContentPane().add(registerPanel, BorderLayout.CENTER);
 			registerPanel.setLayout(null);
@@ -62,7 +64,8 @@ public class RegisterDialog extends JDialog {
 			UserTextField = new JTextField();
 			UserTextField.setBounds(170, 20, 295, 30);
 			UserTextField.setToolTipText("Introduzca aqui su nombre de usuario");
-
+			UserTextField.addKeyListener(new AcceptDialogKeyAdapter(this));
+			
 			EmailLabel = new JLabel();
 			EmailLabel.setText("Email :");
 			EmailLabel.setBounds(35, 63, 143, 16);
@@ -70,7 +73,8 @@ public class RegisterDialog extends JDialog {
 			EmailTextField = new JTextField();
 			EmailTextField.setBounds(170, 60, 295, 30);
 			EmailTextField.setToolTipText("Introduzca aqui su correo electrónico");
-
+			EmailTextField.addKeyListener(new AcceptDialogKeyAdapter(this));
+			
 			PasswdLabel = new JLabel();
 			PasswdLabel.setText("Contraseña :");
 			PasswdLabel.setBounds(35, 103, 143, 16);
@@ -103,7 +107,7 @@ public class RegisterDialog extends JDialog {
 			registerPanel.add(CancelButton);
 			registerPanel.add(mapLabel);
 				
-			this.setSize(500, 250);
+		
 			
 		} catch (Exception e) {
 			e.printStackTrace();
