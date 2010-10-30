@@ -107,11 +107,8 @@ public class RegisterDialog extends JDialog {
 			//registerPanel.add(mapLabel);
 				
 			this.setContentPane(registerPanel);
-			
-			
-			
-			this.pack();
-			pack();
+		
+		
 			this.setSize(500, 230);
 			
 		} catch (Exception e) {
