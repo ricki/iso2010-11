@@ -44,14 +44,12 @@ public class RegisterDialog extends JDialog {
 		private void initGUI() {
 		try {
 			this.setResizable(false);
-			
 			registerPanel = new JPanel();
 			getContentPane().add(registerPanel, BorderLayout.CENTER);
 			registerPanel.setLayout(null);
-			registerPanel.addKeyListener(new AcceptDialogKeyAdapter(this));
 			
 			try {
-				this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("home/antonio/workspace/iso2010-11/src/image/umbrella.png")).getImage());
+				this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
 			} catch (Exception e) {
 				System.out.println("Imagen no encontrada");
 			}
@@ -83,17 +81,17 @@ public class RegisterDialog extends JDialog {
 			PasswdField.addKeyListener(new AcceptDialogKeyAdapter(this));
 			
 			AcceptButton = new JButton("Aceptar");
-			AcceptButton.setBounds(140, 150, 100, 30);
+			AcceptButton.setBounds(140, 160, 100, 30);
 			AcceptButton.addMouseListener(new AcceptDialogMouseAdapter(this, true));
 				
 			CancelButton = new JButton("Cancelar");
-			CancelButton.setBounds(260, 150, 100, 30);
+			CancelButton.setBounds(260, 160, 100, 30);
 			CancelButton.addMouseListener(new AcceptDialogMouseAdapter(this, false));
 				
 			
 			mapLabel = new JLabel();
-			//map.setIcon(new ImageIcon(getClass().getClassLoader().getResource("src/images/mapa.png")));
-			mapLabel.setBounds(0, 6, 472, 257);
+			mapLabel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("image/mapa.png")));
+			mapLabel.setBounds(50, 0, 357, 215);
 			
 			registerPanel.add(UserLabel);
 			registerPanel.add(UserTextField);
@@ -103,13 +101,9 @@ public class RegisterDialog extends JDialog {
 			registerPanel.add(PasswdField);
 			registerPanel.add(AcceptButton);
 			registerPanel.add(CancelButton);
-			
-			//registerPanel.add(mapLabel);
+			registerPanel.add(mapLabel);
 				
-			this.setContentPane(registerPanel);
-		
-		
-			this.setSize(500, 230);
+			this.setSize(500, 250);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
