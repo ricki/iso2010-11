@@ -12,13 +12,14 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
-		RegisterDialog dlg = new RegisterDialog(f, "Registro", true);
+		RegisterDialog dlg = new RegisterDialog(f, "La Conquista del Mundo - Registro", true);
 		dlg.setVisible(true);
 		System.out.println("Fin del registro");
 		f.dispose();
-
-		if (dlg.getSelection() == true) new UserManager().registerUser("A", "B","");
-		else System.out.println("Ha pulsado adios");
+		
+		
+		if (dlg.getSelection() == true) new UserManager().registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+		else System.out.println("Ha pulsado Esc");
 	}
 
 }
