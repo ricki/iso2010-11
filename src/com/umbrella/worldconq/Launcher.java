@@ -1,9 +1,6 @@
 package com.umbrella.worldconq;
 
-import javax.swing.JFrame;
-
-import com.umbrella.worldconq.domain.UserManager;
-import com.umbrella.worldconq.ui.*;
+import com.umbrella.worldconq.ui.StartupWindow;
 
 public class Launcher {
 
@@ -11,6 +8,14 @@ public class Launcher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		{
+			try {
+				javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		StartupWindow stw = new StartupWindow();
 		stw.setLocationRelativeTo(null);
 		stw.setVisible(true);

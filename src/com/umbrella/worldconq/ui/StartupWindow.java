@@ -6,25 +6,24 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.border.LineBorder;
 
 import com.umbrella.worldconq.domain.UserManager;
 
 
 public class StartupWindow extends JFrame{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5107198177153703399L;
 	private JButton AcceptButton;
 	private JButton RegisterButton;
 	private JPanel StartupPanel;
@@ -39,26 +38,20 @@ public class StartupWindow extends JFrame{
 	
 	private UserManager Manager;
 	
-	{
-		//Set Look & Feel
-		try {
-			javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
 	public StartupWindow() {
 		super();
 		initGUI();
 	}
 
 	private void initGUI() {
-		try {
+		//try {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			
-			this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
+			try {
+				this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
+			} catch (Exception e) {
+				System.out.println("Imagen no encontrada");
+			}
 			this.setResizable(false);
 			this.setTitle("La Conquista del Mundo");
 			this.setSize(400, 250);
@@ -116,9 +109,9 @@ public class StartupWindow extends JFrame{
 			
 			Manager = new UserManager();
 			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		//} catch(Exception e) {
+		//	e.printStackTrace();
+		//}
 	}
 	
 	private String getUser() {

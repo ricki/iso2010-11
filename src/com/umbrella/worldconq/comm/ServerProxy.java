@@ -1,7 +1,5 @@
 package com.umbrella.worldconq.comm;
 
-import com.umbrella.worldconq.domain.Session;
-
 public class ServerProxy {
 
 	protected static ServerProxy mInstance = null;
