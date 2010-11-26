@@ -8,10 +8,10 @@ public class User {
 	private String Name;
 	private String Email;
 
-	public User() {
-		ID = null;
-		Name = "";
-		Email = "";
+	public User(UUID id, String name, String email) throws ExceptionEmail {
+		setID(id);
+		setName(name);
+		setEmail(email);
 	}
 
 	public UUID getID() {
@@ -34,38 +34,41 @@ public class User {
 		return Email;
 	}
 
-	public boolean setEmail(String email) {
-		boolean dev = false;
-		if (isEmail(email)){
+	public void setEmail(String email) throws ExceptionEmail {
+		if (validateEmail(email)) {
 			Email = email;
-			dev = true;
+		} else {
+			throw new ExceptionEmail("Email mal formado");
 		}
-		return dev;
 	}
 
-	private boolean isEmail(String email) {
-		boolean dev = true;
+	public String toString() {
+		return getID() + "," + getName() + "," + getEmail();
+	}
+
+	private boolean validateEmail(String email) {
+		boolean ret = true;
 		// compruebo que al menos tenga una arroba y un punto
 		if (email.length() == 0) {
-			dev = false;
+			ret = false;
 		} else {
 			String[] arroba = new String[email.split("@").length];
 			for (int i = 0; i < arroba.length; i++) {
 				arroba[i] = email.split("@")[i];
 			}
-			if (arroba.length == 2) {	// contiene arroba
+			if (arroba.length == 2) { // contiene arroba
 				String[] punto = new String[arroba[1].split("\\.").length];
 				for (int j = 0; j < punto.length; j++) {
 					punto[j] = arroba[1].split("\\.")[j];
 				}
-				if (punto.length == 1) {	// contiene punto
-					dev = false;
+				if (punto.length == 1) { // contiene punto
+					ret = false;
 				}
 			} else {
-				dev = false;
+				ret = false;
 			}
 		}
-		return dev;
+		return ret;
 	}
 
 }
