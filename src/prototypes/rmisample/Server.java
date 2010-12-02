@@ -18,12 +18,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		System.setProperty("java.security.policy", "/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy");
+		int puerto=12349;
+		//System.setProperty("java.security.policy", "/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy");
+		System.setProperty("java.security.policy", "/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy");
 		if (System.getSecurityManager() == null)
 			System.setSecurityManager(new RMISecurityManager());
 		
 		Server s = new Server();
-		Registry reg = LocateRegistry.createRegistry(12345);
+		Registry reg = LocateRegistry.createRegistry(puerto);
 		reg.rebind("DummyServer", s);
 		
 		System.out.println("Server started...");
@@ -35,6 +37,10 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
 	public void sendMessage(String msg) throws RemoteException {
 		System.out.println("Received message: " + msg);
+	}
+	public int sendNum(int n) throws RemoteException {
+		System.out.println("Numero enviado: " + n);
+		return n;
 	}
 
 }
