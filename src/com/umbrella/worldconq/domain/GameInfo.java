@@ -9,18 +9,18 @@ public class GameInfo {
 	private UUID ID;
 	private String Name;
 	private String Description;
-	private ArrayList<User> Users;
+	private ArrayList<Player> Players;
 	private ArrayList<Calendar> TimeGame;
 	private int OpenTerritories;
 
 	public GameInfo(UUID id, String name, String description,
-			ArrayList<User> users, ArrayList<Calendar> timeGame,
+			ArrayList<Player> players, ArrayList<Calendar> timeGame,
 			int openTerritories) {
 		setID(id);
 		setName(name);
 		setDescription(description);
 		setOpenTerritories(openTerritories);
-		setUsers(users);
+		setPlayers(players);
 		setTimeGame(timeGame);
 	}
 
@@ -48,12 +48,12 @@ public class GameInfo {
 		Description = description;
 	}
 
-	public ArrayList<User> getUsers() {
-		return Users;
+	public ArrayList<Player> getPlayers() {
+		return Players;
 	}
 
-	public void setUsers(ArrayList<User> users) {
-		Users = users;
+	public void setPlayers(ArrayList<Player> players) {
+		Players = players;
 	}
 
 	public ArrayList<Calendar> getTimeGame() {
@@ -74,7 +74,7 @@ public class GameInfo {
 
 	public String toString() {
 		return getID() + "," + getName() + "," + getDescription() + ","
-				+ getUsers().toString() + "," + getTimeGame().toString() + ","
+				+ getPlayers().toString() + "," + getTimeGame().toString() + ","
 				+ getOpenTerritories();
 	}
 
