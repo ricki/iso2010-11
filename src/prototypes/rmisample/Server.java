@@ -1,12 +1,18 @@
 package prototypes.rmisample;
 
-import java.rmi.RMISecurityManager;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Server extends UnicastRemoteObject implements ServerInterface {
+
+	// Add here your security policy path
+	static final String secPaths[] = {
+		"/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
+		"/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy"
+	};
 
 	/**
 	 * 
@@ -18,12 +24,17 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		int puerto=12349;
-		//System.setProperty("java.security.policy", "/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy");
-		System.setProperty("java.security.policy", "/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy");
-		if (System.getSecurityManager() == null)
-			System.setSecurityManager(new RMISecurityManager());
 		
+		// Load security policy
+		for (int i = 0; i < secPaths.length; i++) {
+			File f = new File(secPaths[i]);
+			if (f.exists()) {
+				System.setProperty("java.security.policy", secPaths[i]);
+				break;
+			}
+		}
+		
+		int puerto = 12345;
 		Server s = new Server();
 		Registry reg = LocateRegistry.createRegistry(puerto);
 		reg.rebind("DummyServer", s);
