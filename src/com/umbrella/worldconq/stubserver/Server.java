@@ -1,5 +1,6 @@
 package com.umbrella.worldconq.stubserver;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.rmi.*;
 import java.rmi.registry.*;
@@ -12,7 +13,12 @@ public class Server extends UnicastRemoteObject implements IServer {
 	private int puerto = 3234;
 	private String miIP;
 	private Registry reg;
-	private String ruta = "/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy";
+	
+	// Add here your security policy path
+	private static final String[] secPaths = {
+		"/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
+		"/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
+	};
 	
 	private String[][] registerUsers = {
 			{ "JorgeCA", "jorge", "jorge.colao@gmail.com"},
@@ -24,28 +30,29 @@ public class Server extends UnicastRemoteObject implements IServer {
 			{ "deejaytoni", "toni", "deejaytoni@gmail.com"} };
 
 	
-	public Server() throws RemoteException {
-		System.setProperty("java.security.policy", ruta);
-		if (System.getSecurityManager() == null)
-			System.setSecurityManager(new RMISecurityManager());
-
-		try {
-			// Obtenemos la IP local
-			miIP = (InetAddress.getLocalHost()).toString();
-		} catch (Exception e) {
-			throw new RemoteException("No se puede obtener la direccion IP.");
+	public Server() throws Exception, RemoteException {
+		super();
+		
+		// Load security policy
+		for (int i = 0; i < secPaths.length; i++) {
+			File f = new File(secPaths[i]);
+			if (f.exists()) {
+				System.setProperty("java.security.policy", secPaths[i]);
+				break;
+			}
 		}
+		
+		miIP = (InetAddress.getLocalHost()).toString();
 		System.out.println("Conexion establecida por:");
 		System.out.println("IP=" + miIP + ", y puerto=" + puerto);
 
-		// creamos el registro y asiganamos el nombre y el objeto.
 		reg = LocateRegistry.createRegistry(puerto);
-		reg.rebind("RMIServer", this);
+		reg.rebind("WorldConqStubServer", this);
 
 		System.out.println("Esperando peticiones...");
 	}
 
-	public static void main(String[] args) throws RemoteException {
+	public static void main(String[] args) throws Exception {
 		new Server();
 	}
 
