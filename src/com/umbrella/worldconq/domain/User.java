@@ -4,46 +4,46 @@ import java.util.UUID;
 
 public class User {
 
-	private UUID ID;
-	private String Name;
-	private String Email;
+	private UUID mId;
+	private String mName;
+	private String mEmail;
 
 	public User(UUID id, String name, String email) throws MalformedEMailException {
-		setID(id);
+		setId(id);
 		setName(name);
 		setEmail(email);
 	}
 
-	public UUID getID() {
-		return ID;
+	public UUID getId() {
+		return mId;
 	}
 
-	public void setID(UUID id) {
-		ID = id;
+	public void setId(UUID id) {
+		mId = id;
 	}
 
 	public String getName() {
-		return Name;
+		return mName;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		mName = name;
 	}
 
 	public String getEmail() {
-		return Email;
+		return mEmail;
 	}
 
 	public void setEmail(String email) throws MalformedEMailException {
 		if (validateEmail(email)) {
-			Email = email;
+			mEmail = email;
 		} else {
 			throw new MalformedEMailException(email + " is not a valid eMail.");
 		}
 	}
 
 	public String toString() {
-		return getID() + "," + getName() + "," + getEmail();
+		return getId() + "," + getName() + "," + getEmail();
 	}
 
 	private boolean validateEmail(String email) {

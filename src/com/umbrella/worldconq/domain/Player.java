@@ -1,8 +1,8 @@
 package com.umbrella.worldconq.domain;
 
 public class Player {
-	private int Money;
-	private User User;
+	private int mMoney;
+	private User mUser;
 
 	public Player(int money, User user) {
 		setMoney(money);
@@ -10,19 +10,19 @@ public class Player {
 	}
 
 	public int getMoney() {
-		return Money;
+		return mMoney;
 	}
 
 	public void setMoney(int money) {
-		Money = money;
+		mMoney = money;
 	}
 
 	public User getUser() {
-		return User;
+		return mUser;
 	}
 
 	public void setUser(User user) {
-		User = user;
+		mUser = user;
 	}
 	
 	public String toString() {

@@ -6,75 +6,75 @@ import java.util.UUID;
 
 public class GameInfo {
 
-	private UUID ID;
-	private String Name;
-	private String Description;
-	private ArrayList<Player> Players;
-	private ArrayList<Calendar> TimeGame;
-	private int OpenTerritories;
+	private UUID mId;
+	private String mName;
+	private String mDescription;
+	private ArrayList<Player> mPlayers;
+	private ArrayList<Calendar> mGameSessions;
+	private int mOpenTerritories;
 
 	public GameInfo(UUID id, String name, String description,
-			ArrayList<Player> players, ArrayList<Calendar> timeGame,
+			ArrayList<Player> players, ArrayList<Calendar> gameSessions,
 			int openTerritories) {
-		setID(id);
+		setId(id);
 		setName(name);
 		setDescription(description);
 		setOpenTerritories(openTerritories);
 		setPlayers(players);
-		setTimeGame(timeGame);
+		setGameSessions(gameSessions);
 	}
 
-	public UUID getID() {
-		return ID;
+	public UUID getId() {
+		return mId;
 	}
 
-	public void setID(UUID id) {
-		ID = id;
+	public void setId(UUID id) {
+		mId = id;
 	}
 
 	public String getName() {
-		return Name;
+		return mName;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		mName = name;
 	}
 
 	public String getDescription() {
-		return Description;
+		return mDescription;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		mDescription = description;
 	}
 
 	public ArrayList<Player> getPlayers() {
-		return Players;
+		return mPlayers;
 	}
 
 	public void setPlayers(ArrayList<Player> players) {
-		Players = players;
+		mPlayers = players;
 	}
 
-	public ArrayList<Calendar> getTimeGame() {
-		return TimeGame;
+	public ArrayList<Calendar> getGameSessions() {
+		return mGameSessions;
 	}
 
-	public void setTimeGame(ArrayList<Calendar> timeGame) {
-		TimeGame = timeGame;
+	public void setGameSessions(ArrayList<Calendar> gameSessions) {
+		mGameSessions = gameSessions;
 	}
 
 	public int getOpenTerritories() {
-		return OpenTerritories;
+		return mOpenTerritories;
 	}
 
 	public void setOpenTerritories(int openTerritories) {
-		OpenTerritories = openTerritories;
+		mOpenTerritories = openTerritories;
 	}
 
 	public String toString() {
-		return getID() + "," + getName() + "," + getDescription() + ","
-				+ getPlayers().toString() + "," + getTimeGame().toString() + ","
+		return getId() + "," + getName() + "," + getDescription() + ","
+				+ getPlayers().toString() + "," + getGameSessions().toString() + ","
 				+ getOpenTerritories();
 	}
 
