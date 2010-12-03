@@ -8,7 +8,7 @@ public class User {
 	private String Name;
 	private String Email;
 
-	public User(UUID id, String name, String email) throws ExceptionEmail {
+	public User(UUID id, String name, String email) throws MalformedEMailException {
 		setID(id);
 		setName(name);
 		setEmail(email);
@@ -34,11 +34,11 @@ public class User {
 		return Email;
 	}
 
-	public void setEmail(String email) throws ExceptionEmail {
+	public void setEmail(String email) throws MalformedEMailException {
 		if (validateEmail(email)) {
 			Email = email;
 		} else {
-			throw new ExceptionEmail("Email mal formado");
+			throw new MalformedEMailException(email + " is not a valid eMail.");
 		}
 	}
 
