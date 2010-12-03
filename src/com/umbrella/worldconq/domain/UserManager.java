@@ -1,27 +1,35 @@
 package com.umbrella.worldconq.domain;
 
+import java.util.UUID;
+
 import com.umbrella.worldconq.comm.ServerProxy;
 import com.umbrella.worldconq.domain.Session;
 
 
 public class UserManager {
 	
-	private Session Session;
+	private Session mSession;
 	
 	public UserManager(){
-		 Session = new Session();
+		 mSession = null;
 	}
 	
 	public void registerUser(String Login, String Passwd, String Email) {
 		ServerProxy.getServerProxy().registerUser(Login, Passwd, Email);
 	}
 
-	public void validateUser(String Login, String Passwd){
-		String id_session = ServerProxy.getServerProxy().validateUser(Login, Passwd);
-		Session.setSessID(id_session);
+	public void createSession(String Login, String Passwd){
+		// TODO Comprobar si hay sesión activa y cerrarla antes.
+		UUID id = ServerProxy.getServerProxy().validateUser(Login, Passwd);
+		mSession = new Session(id);
 	}
 
 	public void closeSession() {
-		throw new UnsupportedOperationException();
+		ServerProxy.getServerProxy().closeSession(mSession.getId());
+		mSession = null;
+	}
+	
+	public Session getActiveSession() {
+		return mSession;
 	}
 }

@@ -14,7 +14,7 @@ public class Session {
 		this.mId = id;
 	}
 	
-	public UUID getSessID(){
+	public UUID getId(){
 		return this.mId;
 	}
 

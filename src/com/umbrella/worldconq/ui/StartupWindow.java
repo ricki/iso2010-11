@@ -171,7 +171,7 @@ public class StartupWindow extends JFrame{
 
 		public void mouseClicked(MouseEvent evt) {
 			try{
-				stw.Manager.validateUser(stw.getUser(), stw.getPasswd());
+				stw.Manager.createSession(stw.getUser(), stw.getPasswd());
 				stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 				NoticeLabel.setForeground(new Color (0, 200, 0));
 			}
@@ -194,7 +194,7 @@ public class StartupWindow extends JFrame{
 		public void keyPressed(KeyEvent evt) {
 			if(evt.getKeyCode() == 10){
 			try{
-				stw.Manager.validateUser(stw.getUser(), stw.getPasswd());
+				stw.Manager.createSession(stw.getUser(), stw.getPasswd());
 				stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 				NoticeLabel.setForeground(new Color (0, 200, 0));
 			}
