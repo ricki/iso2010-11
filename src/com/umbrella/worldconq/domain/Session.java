@@ -1,20 +1,21 @@
 package com.umbrella.worldconq.domain;
 
+import java.util.UUID;
+
 public class Session {
 	
-	private String SessID;
+	private UUID mId;
 	
-	public Session(){
-		this.SessID="";
-		
+	public Session(UUID id){
+		setId(id);
 	}
 	
-	public void setSessID(String id_session){
-		this.SessID=id_session;
+	public void setId(UUID id){
+		this.mId = id;
 	}
 	
-	public String getSessID(){
-		return this.SessID;
+	public UUID getId(){
+		return this.mId;
 	}
 
 }

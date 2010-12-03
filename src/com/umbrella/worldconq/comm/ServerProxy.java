@@ -1,5 +1,7 @@
 package com.umbrella.worldconq.comm;
 
+import java.util.UUID;
+
 public class ServerProxy {
 
 	protected static ServerProxy mInstance = null;
@@ -16,9 +18,9 @@ public class ServerProxy {
 		return mInstance;
 	}
 	
-	public String validateUser(String Login, String Passwd) {
+	public UUID validateUser(String Login, String Passwd) {
 		System.out.println("ServerProxy::validateUser " + Login +" " + Passwd );
-		return "1234";
+		return UUID.randomUUID();
 	}
 
 	public boolean registerUser(String Login, String Passwd, String Email) {
@@ -26,7 +28,7 @@ public class ServerProxy {
 		return true;
 	}
 
-	public void closeSession(String SessionID) {
+	public void closeSession(UUID sessId) {
 		System.out.println("Close session");
 	}
 	
