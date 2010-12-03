@@ -1,13 +1,10 @@
 package com.umbrella.worldconq.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.DefaultComboBoxModel;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -15,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 
@@ -31,7 +27,7 @@ import javax.swing.JTextField;
 * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
 * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
 */
-public class CreateGameDialog extends JDialog{
+public class CreateGameDialog extends JDialog {
 	
 	private static final long serialVersionUID = -5128501222928885944L;
 	private boolean selection;
@@ -90,12 +86,12 @@ public class CreateGameDialog extends JDialog{
 		addPlaydateButton = new JButton("Añadir fecha de juego");
 		addPlaydateButton .setBounds(260, 110, 100, 30);
 		addPlaydateButton.setSize(200, 25);
-		addPlaydateButton .addMouseListener(new NewDateMouseAdapter(this, false));
+		addPlaydateButton .addMouseListener(new NewDateMouseAdapter(this));
 
 		deletePlaydateButton = new JButton("Eliminar fecha");
 		deletePlaydateButton .setBounds(260, 150, 60, 25);
 		deletePlaydateButton.setSize(140, 25);
-		deletePlaydateButton .addMouseListener(new DeleteDateMouseAdapter(this, false));
+		deletePlaydateButton .addMouseListener(new DeleteDateMouseAdapter(this));
 		
 		datesLabel = new JLabel();
 		datesLabel.setText("Fechas de juego");
@@ -114,7 +110,7 @@ public class CreateGameDialog extends JDialog{
 		
 		createButton = new JButton("Crear partida");
 		createButton.setBounds(320, 225, 140, 25);
-		createButton .addMouseListener(new CreateMouseAdapter(this, false));
+		createButton.addMouseListener(new AcceptDialogMouseAdapter(this, true));
 		
 
 
@@ -155,66 +151,40 @@ public class CreateGameDialog extends JDialog{
 	private class NewDateMouseAdapter extends MouseAdapter {
 
 		private CreateGameDialog dlg;
-		private boolean selection;	
 
-		public NewDateMouseAdapter(CreateGameDialog dlg, boolean selection) {
+		public NewDateMouseAdapter(CreateGameDialog dlg) {
 			this.dlg = dlg;
-			this.selection = selection;
 		}
 
 		public void mouseClicked(MouseEvent evt) {
-
-			
-			DateDialog dlg= new DateDialog(new JFrame(), "Introduzca fecha", true);
+			DateDialog dlg = new DateDialog(new JFrame(), "Introduzca fecha", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 			if (dlg.getSelection() == true) {
 				try{
-					datesListContent.addElement((dlg.getDateTextField().getText())+"/t("+dlg.getGameLenTextField().getText()+" minutos)");
-					datesListContent.setSelectedItem(null);
+					this.dlg.datesListContent.addElement((dlg.getDateTextField().getText())+"/t("+dlg.getGameLenTextField().getText()+" minutos)");
+					this.dlg.datesListContent.setSelectedItem(null);
 					
-				}
-				catch(Exception e) {
+				} catch(Exception e) {
 //					stw.NoticeLabel.setText(" Error en el registro");
 //					NoticeLabel.setForeground(new Color (255, 0, 0));
 				}	
 			}
-
-
 		}
 	}
 	private class DeleteDateMouseAdapter extends MouseAdapter {
 
 		private CreateGameDialog dlg;
-		private boolean selection;	
 
-		public DeleteDateMouseAdapter(CreateGameDialog dlg, boolean selection) {
+		public DeleteDateMouseAdapter(CreateGameDialog dlg) {
 			this.dlg = dlg;
-			this.selection = selection;
 		}
 
 		public void mouseClicked(MouseEvent evt) {
-			dlg.selection = this.selection;
 			datesListContent.removeElement(datesList.getSelectedValue());
 			dlg.setVisible(true);
 		}
 	}
 	
-	private class CreateMouseAdapter extends MouseAdapter {
-
-		private CreateGameDialog dlg;
-		private boolean selection;	
-
-		public CreateMouseAdapter(CreateGameDialog dlg, boolean selection) {
-			this.dlg = dlg;
-
-			
-		}
-
-		public void mouseClicked(MouseEvent evt) {
-			dlg.selection = this.selection;
-			dlg.setVisible(false);
-		}
-	}
 }
 

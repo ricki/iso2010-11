@@ -16,7 +16,7 @@
 
 
 
-	public class MainWindow extends JFrame{
+	public class MainWindow extends JFrame {
 
 		/**
 		 * 
@@ -49,7 +49,7 @@
 				JButton createGameButton = new JButton("Crear partida");
 				bar.add(createGameButton);
 				getContentPane().add(bar, BorderLayout.NORTH);
-				createGameButton.addMouseListener(new createGameMouseAdapter(this));
+				createGameButton.addMouseListener(new CreateGameMouseAdapter(this));
 				
 		
 				
@@ -66,11 +66,11 @@
 		
 
 		
-		private class createGameMouseAdapter extends MouseAdapter {
+		private class CreateGameMouseAdapter extends MouseAdapter {
 			
 			private MainWindow mw;
 
-			public createGameMouseAdapter(MainWindow mw) {
+			public CreateGameMouseAdapter(MainWindow mw) {
 				this.mw = mw;
 			}
 

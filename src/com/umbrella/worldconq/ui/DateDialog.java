@@ -1,18 +1,14 @@
 package com.umbrella.worldconq.ui;
 
 import java.awt.BorderLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -20,7 +16,7 @@ import javax.swing.JTextField;
 
 
 
-public class DateDialog extends JDialog{
+public class DateDialog extends JDialog {
 	private static final long serialVersionUID = -5128501222928885944L;
 	private boolean selection;
 	private JPanel mainPanel;
