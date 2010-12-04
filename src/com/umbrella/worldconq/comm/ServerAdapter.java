@@ -2,17 +2,17 @@ package com.umbrella.worldconq.comm;
 
 import java.util.UUID;
 
-public class ServerProxy {
+public class ServerAdapter {
 
-	protected static ServerProxy mInstance = null;
+	protected static ServerAdapter mInstance = null;
 	
-	protected ServerProxy(){
+	protected ServerAdapter(){
 		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 	}
 	
-	public static ServerProxy getServerProxy(){
+	public static ServerAdapter getServerAdapter(){
 		if (mInstance == null) {
-			mInstance = new ServerProxy();
+			mInstance = new ServerAdapter();
 		}
 		
 		return mInstance;

@@ -2,7 +2,7 @@ package com.umbrella.worldconq.domain;
 
 import java.util.UUID;
 
-import com.umbrella.worldconq.comm.ServerProxy;
+import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.Session;
 
 
@@ -15,17 +15,17 @@ public class UserManager {
 	}
 	
 	public void registerUser(String Login, String Passwd, String Email) {
-		ServerProxy.getServerProxy().registerUser(Login, Passwd, Email);
+		ServerAdapter.getServerAdapter().registerUser(Login, Passwd, Email);
 	}
 
 	public void createSession(String Login, String Passwd){
 		// TODO Comprobar si hay sesión activa y cerrarla antes.
-		UUID id = ServerProxy.getServerProxy().validateUser(Login, Passwd);
+		UUID id = ServerAdapter.getServerAdapter().validateUser(Login, Passwd);
 		mSession = new Session(id);
 	}
 
 	public void closeSession() {
-		ServerProxy.getServerProxy().closeSession(mSession.getId());
+		ServerAdapter.getServerAdapter().closeSession(mSession.getId());
 		mSession = null;
 	}
 	
