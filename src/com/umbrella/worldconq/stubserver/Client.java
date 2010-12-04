@@ -1,29 +1,15 @@
 package com.umbrella.worldconq.stubserver;
 
-import java.io.File;
 import java.rmi.Naming;
 import java.util.UUID;
 
 public class Client {
 
-	// Add here your security policy path
-	private static final String[] secPaths = {
-		"/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
-		"/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
-	};
-	
 	private static int puerto=3234;
 	private static String IP="127.0.1.1";
 
 	public static void main(String[] args) throws Exception {
-		// Load security policy
-		for (int i = 0; i < secPaths.length; i++) {
-			File f = new File(secPaths[i]);
-			if (f.exists()) {
-				System.setProperty("java.security.policy", secPaths[i]);
-				break;
-			}
-		}
+		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 		
 		IServer prx = null;
 		prx = (IServer) Naming.lookup("rmi://"+IP+":"+puerto+"/WorldConqStubServer");

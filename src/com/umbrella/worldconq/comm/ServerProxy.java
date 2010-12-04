@@ -7,7 +7,7 @@ public class ServerProxy {
 	protected static ServerProxy mInstance = null;
 	
 	protected ServerProxy(){
-		
+		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 	}
 	
 	public static ServerProxy getServerProxy(){

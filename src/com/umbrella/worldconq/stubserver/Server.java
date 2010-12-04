@@ -1,24 +1,18 @@
 package com.umbrella.worldconq.stubserver;
 
-import java.io.File;
 import java.net.InetAddress;
-import java.rmi.*;
-import java.rmi.registry.*;
-import java.rmi.server.*;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
 public class Server extends UnicastRemoteObject implements IServer {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8434201731175738674L;
 	private int puerto = 3234;
 	private String miIP;
 	private Registry reg;
-	
-	// Add here your security policy path
-	private static final String[] secPaths = {
-		"/home/ricki/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
-		"/home/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/prototypes/rmisample/open.policy",
-	};
 	
 	private String[][] registerUsers = {
 			{ "JorgeCA", "jorge", "jorge.colao@gmail.com"},
@@ -33,14 +27,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public Server() throws Exception, RemoteException {
 		super();
 		
-		// Load security policy
-		for (int i = 0; i < secPaths.length; i++) {
-			File f = new File(secPaths[i]);
-			if (f.exists()) {
-				System.setProperty("java.security.policy", secPaths[i]);
-				break;
-			}
-		}
+		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 		
 		miIP = (InetAddress.getLocalHost()).toString();
 		System.out.println("Conexion establecida por:");
