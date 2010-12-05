@@ -7,6 +7,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.UUID;
 
+import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.stubserver.IServer;
 
 public class ServerAdapter {
@@ -61,19 +62,20 @@ public class ServerAdapter {
 		return mProxy != null;
 	}
 	
-	public UUID validateUser(String Login, String Passwd) {
-		System.out.println("ServerProxy::validateUser " + Login +" " + Passwd );
-		return UUID.randomUUID();
+	public Session createSession(String Login, String Passwd) throws Exception {
+		if (!isConnected()) throw new RemoteException();
+		return new Session(mProxy.loginUser(Login, Passwd, null)); // TODO Falta el callback
 	}
 
-	public boolean registerUser(String Login, String Passwd, String Email) {
-		System.out.println("ServerProxy::registerUser " + Login +" " + Passwd + " "+ Email);
-		return true;
-	}
-
-	public void closeSession(UUID sessId) {
-		System.out.println("Close session");
+	public void closeSession(Session session) throws Exception {
+		if (!isConnected()) throw new RemoteException();
+		mProxy.logoutUser(session.getId());
 	}
 	
+	public void registerUser(String Login, String Passwd, String Email) throws Exception {
+		if (!isConnected()) throw new RemoteException();
+		mProxy.registerUser(Login, Passwd, Email);
+	}
+
 	
 }
