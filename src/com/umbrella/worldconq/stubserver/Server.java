@@ -6,6 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class Server extends UnicastRemoteObject implements IServer {
@@ -23,12 +24,52 @@ public class Server extends UnicastRemoteObject implements IServer {
 			{ "Aduran", "angel", "anduraniz@gmail.com"},
 			{ "LauraN", "laura", "arualitan@gmail.com"},
 			{ "deejaytoni", "toni", "deejaytoni@gmail.com"} };
-
+	
+	private ArrayList<GameInfo> gameList;
 	
 	public Server() throws Exception, RemoteException {
 		super();
 		
 		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
+		
+		this.gameList = new ArrayList<GameInfo>();
+		{ // GameInfo 01
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game01";
+			info.Description = "desc form game01";
+			info.Players = new ArrayList<String>();
+			info.Players.add("JorgeCA");
+			info.Players.add("Aduran");
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
+		{ // GameInfo 02
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game02";
+			info.Description = "desc form game02";
+			info.Players = new ArrayList<String>();
+			info.Players.add("ricki");
+			info.Players.add("DaniLR");
+			info.Players.add("deejaytoni");
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
+		{ // GameInfo 03
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game03";
+			info.Description = "desc form game03";
+			info.Players = new ArrayList<String>();
+			info.Players.add("pobleteag");
+			info.Players.add("LauraN");
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
 		
 		miIP = (InetAddress.getLocalHost()).toString();
 		System.out.println("Conexion establecida por:");
