@@ -15,7 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import com.umbrella.worldconq.domain.UserManager;
+import com.umbrella.worldconq.WorldConqApp;
 
 
 public class StartupWindow extends JFrame {
@@ -36,11 +36,8 @@ public class StartupWindow extends JFrame {
 	private JTextField UserTextField;
 	private JPasswordField PasswdField;
 
-	private UserManager usrMgr;
-
-	public StartupWindow(UserManager usrMgr) {
+	public StartupWindow() {
 		super();
-		this.usrMgr = usrMgr;
 		initGUI();
 	}
 
@@ -106,8 +103,6 @@ public class StartupWindow extends JFrame {
 		StartupPanel.add(AcceptButton);
 		StartupPanel.add(RegisterButton);
 		StartupPanel.add(mapLabel);
-
-		usrMgr = new UserManager();
 	}
 
 	private String getUser() {
@@ -140,7 +135,7 @@ public class StartupWindow extends JFrame {
 
 			if (dlg.getSelection() == true) {
 				try{
-					stw.usrMgr.registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+					WorldConqApp.getUserManager().registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
 					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()+" registrado");
 					NoticeLabel.setForeground(new Color (0, 200, 0));
 				}
@@ -167,7 +162,7 @@ public class StartupWindow extends JFrame {
 
 		public void mouseClicked(MouseEvent evt) {
 			try{
-				stw.usrMgr.createSession(stw.getUser(), stw.getPasswd());
+				WorldConqApp.getUserManager().createSession(stw.getUser(), stw.getPasswd());
 				stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 				NoticeLabel.setForeground(new Color (0, 200, 0));
 			}
@@ -190,7 +185,7 @@ public class StartupWindow extends JFrame {
 		public void keyPressed(KeyEvent evt) {
 			if(evt.getKeyCode() == 10) {
 				try {
-					stw.usrMgr.createSession(stw.getUser(), stw.getPasswd());
+					WorldConqApp.getUserManager().createSession(stw.getUser(), stw.getPasswd());
 					stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 					NoticeLabel.setForeground(new Color (0, 200, 0));
 				}

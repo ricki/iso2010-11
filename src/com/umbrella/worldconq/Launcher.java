@@ -20,12 +20,12 @@ public class Launcher {
 		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 		
 		try {
-			ServerAdapter.getServerAdapter().setRemoteInfo(
+			WorldConqApp.getServerAdapter().setRemoteInfo(
 				"WorldConqStubServer",
 				InetAddress.getByName("localhost"),
 				3234
 			);
-			ServerAdapter.getServerAdapter().connect();
+			WorldConqApp.getServerAdapter().connect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

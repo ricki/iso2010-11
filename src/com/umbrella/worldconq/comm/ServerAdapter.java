@@ -21,14 +21,14 @@ public class ServerAdapter {
 	private int mRemotePort;
 	private IServer mProxy;
 	
-	protected ServerAdapter() {
+	public ServerAdapter() {
 		mRemoteName = null;
 		mRemoteHost = null;
 		mRemotePort = 0;
 		mProxy = null;
 	}
 	
-	protected ServerAdapter(String remoteName, InetAddress remoteHost, int remotePort) {
+	public ServerAdapter(String remoteName, InetAddress remoteHost, int remotePort) {
 		setRemoteInfo(remoteName, remoteHost, remotePort);
 	}
 	
