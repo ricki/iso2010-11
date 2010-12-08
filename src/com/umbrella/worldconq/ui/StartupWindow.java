@@ -36,10 +36,11 @@ public class StartupWindow extends JFrame {
 	private JTextField UserTextField;
 	private JPasswordField PasswdField;
 
-	private UserManager Manager;
+	private UserManager usrMgr;
 
-	public StartupWindow() {
+	public StartupWindow(UserManager usrMgr) {
 		super();
+		this.usrMgr = usrMgr;
 		initGUI();
 	}
 
@@ -106,7 +107,7 @@ public class StartupWindow extends JFrame {
 		StartupPanel.add(RegisterButton);
 		StartupPanel.add(mapLabel);
 
-		Manager = new UserManager();
+		usrMgr = new UserManager();
 	}
 
 	private String getUser() {
@@ -139,7 +140,7 @@ public class StartupWindow extends JFrame {
 
 			if (dlg.getSelection() == true) {
 				try{
-					stw.Manager.registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+					stw.usrMgr.registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
 					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()+" registrado");
 					NoticeLabel.setForeground(new Color (0, 200, 0));
 				}
@@ -166,7 +167,7 @@ public class StartupWindow extends JFrame {
 
 		public void mouseClicked(MouseEvent evt) {
 			try{
-				stw.Manager.createSession(stw.getUser(), stw.getPasswd());
+				stw.usrMgr.createSession(stw.getUser(), stw.getPasswd());
 				stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 				NoticeLabel.setForeground(new Color (0, 200, 0));
 			}
@@ -189,7 +190,7 @@ public class StartupWindow extends JFrame {
 		public void keyPressed(KeyEvent evt) {
 			if(evt.getKeyCode() == 10) {
 				try {
-					stw.Manager.createSession(stw.getUser(), stw.getPasswd());
+					stw.usrMgr.createSession(stw.getUser(), stw.getPasswd());
 					stw.NoticeLabel.setText("Logeado : " + stw.getUser());
 					NoticeLabel.setForeground(new Color (0, 200, 0));
 				}
