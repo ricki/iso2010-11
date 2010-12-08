@@ -187,8 +187,9 @@ public class StartupWindow extends JFrame {
 			if(evt.getKeyCode() == 10) {
 				try {
 					WorldConqApp.getUserManager().createSession(stw.getUser(), stw.getPasswd());
-					stw.NoticeLabel.setText("Logeado : " + stw.getUser());
-					NoticeLabel.setForeground(new Color (0, 200, 0));
+					WorldConqApp.getStartupWindow().setVisible(false);
+					WorldConqApp.getMainWindow().setLocationRelativeTo(null);
+					WorldConqApp.getMainWindow().setVisible(true);
 				}
 				catch(Exception e) {
 					stw.NoticeLabel.setText("Contraseña o login Erroneos");
