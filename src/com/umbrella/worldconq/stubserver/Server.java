@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Server extends UnicastRemoteObject implements IServer {
@@ -106,6 +107,18 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void resignGame(UUID session, UUID partida) throws Exception,
 			RemoteException {
 		System.out.println("IServer::resignGame");
+	}
+
+	@Override
+	public UUID createGame(GameInfo info) throws Exception, RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<GameInfo> listGames() throws Exception, RemoteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
