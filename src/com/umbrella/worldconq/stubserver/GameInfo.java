@@ -12,7 +12,7 @@ public class GameInfo implements Serializable {
 	public UUID ID;
 	public String Name;
 	public String Description;
-	public ArrayList<String> Players;
+	public ArrayList<Player> Players;
 	public ArrayList<Calendar> GameSessions;
 	public int NumeroTerritoriosLibres;
 

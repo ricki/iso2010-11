@@ -38,9 +38,23 @@ public class Server extends UnicastRemoteObject implements IServer {
 			info.ID = UUID.randomUUID();
 			info.Name = "game01";
 			info.Description = "desc form game01";
-			info.Players = new ArrayList<String>();
-			info.Players.add("JorgeCA");
-			info.Players.add("Aduran");
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "JorgeCA";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "Aduran";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
 			gameList.add(info);
@@ -50,10 +64,31 @@ public class Server extends UnicastRemoteObject implements IServer {
 			info.ID = UUID.randomUUID();
 			info.Name = "game02";
 			info.Description = "desc form game02";
-			info.Players = new ArrayList<String>();
-			info.Players.add("ricki");
-			info.Players.add("DaniLR");
-			info.Players.add("deejaytoni");
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "ricki";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "DaniLR";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "deejaytoni";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
 			gameList.add(info);
@@ -63,9 +98,23 @@ public class Server extends UnicastRemoteObject implements IServer {
 			info.ID = UUID.randomUUID();
 			info.Name = "game03";
 			info.Description = "desc form game03";
-			info.Players = new ArrayList<String>();
-			info.Players.add("pobleteag");
-			info.Players.add("LauraN");
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "pobleteag";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "LauraN";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
 			gameList.add(info);
