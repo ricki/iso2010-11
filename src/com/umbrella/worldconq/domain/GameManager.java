@@ -1,5 +1,9 @@
 package com.umbrella.worldconq.domain;
 
+import java.util.ArrayList;
+
+import com.umbrella.worldconq.WorldConqApp;
+
 public class GameManager {
 
 	private GameListModel mCurrentGameListModel;
@@ -24,5 +28,12 @@ public class GameManager {
 
 	public GameListModel getOpenGameListModel() {
 		return mOpenGameListModel;
+	}
+
+	public void updateGameList() throws Exception {
+		// FIXME : Implementación temporal
+		ArrayList<GameInfo> l = WorldConqApp.getServerAdapter().fetchGameList();
+		mCurrentGameListModel.setData(l);
+		mOpenGameListModel.setData(l);
 	}
 }
