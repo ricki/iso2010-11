@@ -89,9 +89,9 @@ public class ServerAdapter {
 			
 			for (int iPlayer = 0; iPlayer < rawPlayerList.size(); iPlayer++) {
 				domainPlayerList.add(new Player(
-					rawPlayerList.get(i).userName,
-					rawPlayerList.get(i).money,
-					rawPlayerList.get(i).online
+					rawPlayerList.get(iPlayer).userName,
+					rawPlayerList.get(iPlayer).money,
+					rawPlayerList.get(iPlayer).online
 				));
 			}
 			domainList.add(new GameInfo(
