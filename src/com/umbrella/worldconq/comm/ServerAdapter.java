@@ -5,8 +5,10 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.UUID;
+import java.util.ArrayList;
 
+import com.umbrella.worldconq.domain.GameInfo;
+import com.umbrella.worldconq.domain.Player;
 import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.stubserver.IServer;
 
@@ -77,5 +79,31 @@ public class ServerAdapter {
 		mProxy.registerUser(Login, Passwd, Email);
 	}
 
+	public ArrayList<GameInfo> fetchGameList() throws Exception {
+		ArrayList<com.umbrella.worldconq.stubserver.GameInfo> rawList = mProxy.listGames();
+		ArrayList<GameInfo> domainList = new ArrayList<GameInfo>();
+		
+		for (int i = 0; i < rawList.size(); i++) {
+			ArrayList<com.umbrella.worldconq.stubserver.Player> rawPlayerList = rawList.get(i).Players;
+			ArrayList<Player> domainPlayerList = new ArrayList<Player>();
+			
+			for (int iPlayer = 0; iPlayer < rawPlayerList.size(); iPlayer++) {
+				domainPlayerList.add(new Player(
+					rawPlayerList.get(i).userName,
+					rawPlayerList.get(i).money,
+					rawPlayerList.get(i).online
+				));
+			}
+			domainList.add(new GameInfo(
+				rawList.get(i).ID,
+				rawList.get(i).Name,
+				rawList.get(i).Description,
+				domainPlayerList,
+				rawList.get(i).GameSessions,
+				rawList.get(i).NumeroTerritoriosLibres
+			));
+		}
+		return domainList;
+	}
 	
 }
