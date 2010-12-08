@@ -153,13 +153,14 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public UUID createGame(GameInfo info) throws Exception, RemoteException {
 		// TODO Auto-generated method stub
+		System.out.println("IServer::createGame");
 		return null;
 	}
 
 	@Override
 	public ArrayList<GameInfo> listGames() throws Exception, RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("IServer::listGames");
+		return gameList;
 	}
 
 }
