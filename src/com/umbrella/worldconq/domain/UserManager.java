@@ -1,7 +1,6 @@
 package com.umbrella.worldconq.domain;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.comm.ServerAdapter;
 
 
 public class UserManager {
