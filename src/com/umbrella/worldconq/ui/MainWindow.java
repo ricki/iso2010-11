@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
@@ -20,10 +21,10 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
 
-	private JToolBar mGameListToolBar;
-	private JPanel mGameListPanel;
+	private JToolBar mGameListToolBar = null;
+	private JPanel mGameListPanel = null;
 
-	private JToolBar mPlayToolBar;
+	private JToolBar mPlayToolBar = null;
 
 	public MainWindow() {
 		super();
@@ -43,25 +44,34 @@ public class MainWindow extends JFrame {
 		this.setTitle("La Conquista del Mundo");
 		this.setSize(800, 500);
 
-		JToolBar bar = new JToolBar();
+		mGameListToolBar = new JToolBar();
+		mPlayToolBar = new JToolBar();
+
+		JButton updateListButton = new JButton("Actualizar lista");
+		updateListButton.addMouseListener(new UpdateListMouseAdapter());
+		mGameListToolBar.add(updateListButton);
 
 		JButton createGameButton = new JButton("Crear partida");
-		bar.add(createGameButton);
-		getContentPane().add(bar, BorderLayout.NORTH);
 		createGameButton.addMouseListener(new CreateGameMouseAdapter(this));
+		mGameListToolBar.add(createGameButton);
+
+		getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
+//		getContentPane().add(mPlayToolBar, BorderLayout.NORTH); FIXME Esto no funciona.
+		getContentPane().add(getGameListPanel(), BorderLayout.CENTER);
+		setGameListMode();
 	}
 
 	public void setGameListMode() {
 		mGameListToolBar.setVisible(true);
 		mPlayToolBar.setVisible(false);
-		setContentPane(getGameListPanel());
+		getGameListPanel().setVisible(true);
 	}
 
 	public void setPlayMode() {
 		// TODO : Creo ya la función. A completar en próximas iteraciones.
 		mGameListToolBar.setVisible(false);
 		mPlayToolBar.setVisible(true);
-		setContentPane(null);
+		getGameListPanel().setVisible(false);
 	}
 
 	private JPanel getGameListPanel() {
@@ -70,6 +80,8 @@ public class MainWindow extends JFrame {
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel, BoxLayout.Y_AXIS));
 			JTable currentList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
 			JTable openList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
+			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 			mGameListPanel.add(new JLabel("Mis partidas actuales"));
 			mGameListPanel.add(currentList);
@@ -111,7 +123,7 @@ public class MainWindow extends JFrame {
 			f.dispose();
 		}
 	}
-	
+
 	private class UpdateListMouseAdapter extends MouseAdapter {
 		public void mouseClicked(MouseEvent evt) {
 			try {
