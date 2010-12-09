@@ -18,7 +18,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	
 	private String[][] registerUsers = {
 			{ "JorgeCA", "jorge", "jorge.colao@gmail.com"},
-			{ "ricki", "ricardo", "ricardo.ruedas@gmail.com"},
+			{ "ricki", "ricki", "ricardo.ruedas@gmail.com"},
 			{ "pobleteag", "antonio", "pobleteag@gmail.com"},
 			{ "DaniLR", "daniel", "daniel.leonromero@gmail.com"},
 			{ "Aduran", "angel", "anduraniz@gmail.com"},
