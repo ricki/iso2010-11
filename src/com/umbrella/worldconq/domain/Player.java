@@ -1,12 +1,24 @@
 package com.umbrella.worldconq.domain;
 
 public class Player {
+	private String mUserName;
 	private int mMoney;
-	private User mUser;
+//	private User mUser;
+	private boolean mOnline;
 
-	public Player(int money, User user) {
+	public Player(String userName, int money, boolean online) {
+		setUserName(userName);
 		setMoney(money);
-		setUser(user);
+//		setUser(user);
+		setOnline(online);
+	}
+
+	public void setUserName(String mUserName) {
+		this.mUserName = mUserName;
+	}
+
+	public String getUserName() {
+		return mUserName;
 	}
 
 	public int getMoney() {
@@ -17,16 +29,24 @@ public class Player {
 		mMoney = money;
 	}
 
-	public User getUser() {
-		return mUser;
+//	public User getUser() {
+//		return mUser;
+//	}
+
+//	public void setUser(User user) {
+//		mUser = user;
+//	}
+	
+	public void setOnline(boolean online) {
+		this.mOnline = online;
 	}
 
-	public void setUser(User user) {
-		mUser = user;
+	public boolean isOnline() {
+		return mOnline;
 	}
-	
+
 	public String toString() {
-		return getMoney() + "," + getUser().toString();
+		return getMoney() + "," + getUserName();
 	}
 
 }

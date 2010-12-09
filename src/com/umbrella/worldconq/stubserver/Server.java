@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class Server extends UnicastRemoteObject implements IServer {
@@ -16,18 +18,107 @@ public class Server extends UnicastRemoteObject implements IServer {
 	
 	private String[][] registerUsers = {
 			{ "JorgeCA", "jorge", "jorge.colao@gmail.com"},
-			{ "ricki", "ricardo", "ricardo.ruedas@gmail.com"},
+			{ "ricki", "ricki", "ricardo.ruedas@gmail.com"},
 			{ "pobleteag", "antonio", "pobleteag@gmail.com"},
 			{ "DaniLR", "daniel", "daniel.leonromero@gmail.com"},
 			{ "Aduran", "angel", "anduraniz@gmail.com"},
 			{ "LauraN", "laura", "arualitan@gmail.com"},
 			{ "deejaytoni", "toni", "deejaytoni@gmail.com"} };
-
+	
+	private ArrayList<GameInfo> gameList;
 	
 	public Server() throws Exception, RemoteException {
 		super();
 		
 		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
+		
+		this.gameList = new ArrayList<GameInfo>();
+		{ // GameInfo 01
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game01";
+			info.Description = "desc form game01";
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "JorgeCA";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "Aduran";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
+		{ // GameInfo 02
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game02";
+			info.Description = "desc form game02";
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "ricki";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "DaniLR";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "deejaytoni";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
+		{ // GameInfo 03
+			GameInfo info = new GameInfo();
+			info.ID = UUID.randomUUID();
+			info.Name = "game03";
+			info.Description = "desc form game03";
+			info.Players = new ArrayList<Player>();
+			{
+				Player p = new Player();
+				p.userName = "pobleteag";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = true;
+				info.Players.add(p);
+			}
+			{
+				Player p = new Player();
+				p.userName = "LauraN";
+				p.money = 1000;
+				p.online = true;
+				p.hasTurn = false;
+				info.Players.add(p);
+			}
+			info.GameSessions = new ArrayList<Calendar>();
+			info.GameSessions.add(Calendar.getInstance());
+			gameList.add(info);
+		}
 		
 		miIP = (InetAddress.getLocalHost()).toString();
 		System.out.println("Conexion establecida por:");
@@ -106,6 +197,19 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void resignGame(UUID session, UUID partida) throws Exception,
 			RemoteException {
 		System.out.println("IServer::resignGame");
+	}
+
+	@Override
+	public UUID createGame(GameInfo info) throws Exception, RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println("IServer::createGame");
+		return null;
+	}
+
+	@Override
+	public ArrayList<GameInfo> listGames() throws Exception, RemoteException {
+		System.out.println("IServer::listGames");
+		return gameList;
 	}
 
 }

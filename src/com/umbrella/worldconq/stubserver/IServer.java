@@ -1,6 +1,7 @@
 package com.umbrella.worldconq.stubserver;
 
 import java.rmi.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public interface IServer extends java.rmi.Remote {
@@ -14,8 +15,10 @@ public interface IServer extends java.rmi.Remote {
 
 	public void logoutUser(UUID session) throws Exception, RemoteException;
 
-	// public ArrayList<GameInfo> listGames() throws Exception, RemoteException;
-	// public UUID createGame (GameInfo info) throws Exception, RemoteException;
+	public ArrayList<GameInfo> listGames() throws Exception, RemoteException;
+	
+	public UUID createGame (GameInfo info) throws Exception, RemoteException;
+	
 	public void joinGame(UUID session, UUID partida) throws Exception,
 			RemoteException;
 

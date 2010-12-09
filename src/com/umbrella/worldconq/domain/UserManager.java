@@ -1,6 +1,6 @@
 package com.umbrella.worldconq.domain;
 
-import com.umbrella.worldconq.comm.ServerAdapter;
+import com.umbrella.worldconq.WorldConqApp;
 
 
 public class UserManager {
@@ -12,16 +12,16 @@ public class UserManager {
 	}
 	
 	public void registerUser(String Login, String Passwd, String Email) throws Exception {
-		ServerAdapter.getServerAdapter().registerUser(Login, Passwd, Email);
+		WorldConqApp.getServerAdapter().registerUser(Login, Passwd, Email);
 	}
 
 	public void createSession(String Login, String Passwd) throws Exception {
 		// TODO Comprobar si hay sesión activa y cerrarla antes.
-		mSession = ServerAdapter.getServerAdapter().createSession(Login, Passwd);
+		mSession = WorldConqApp.getServerAdapter().createSession(Login, Passwd);
 	}
 
 	public void closeSession() throws Exception {
-		ServerAdapter.getServerAdapter().closeSession(mSession);
+		WorldConqApp.getServerAdapter().closeSession(mSession);
 		mSession = null;
 	}
 	
