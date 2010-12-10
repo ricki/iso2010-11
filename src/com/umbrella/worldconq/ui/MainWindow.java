@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.domain.GameManager;
 
 public class MainWindow extends JFrame {
 
@@ -52,7 +53,7 @@ public class MainWindow extends JFrame {
 		mGameListToolBar.add(updateListButton);
 
 		JButton createGameButton = new JButton("Crear partida");
-		createGameButton.addMouseListener(new CreateGameMouseAdapter(this));
+		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
 		getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
@@ -92,13 +93,6 @@ public class MainWindow extends JFrame {
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
-
-		private MainWindow mw;
-
-		public CreateGameMouseAdapter(MainWindow mw) {
-			this.mw = mw;
-		}
-
 		public void mouseClicked(MouseEvent evt) {
 			JFrame f = new JFrame();
 			CreateGameDialog dlg = new CreateGameDialog(f,
@@ -108,18 +102,11 @@ public class MainWindow extends JFrame {
 
 			if (dlg.getSelection() == true) {
 				try {
-					// /* mw.Manager.registerUser(dlg.getUser(),
-					// dlg.getPasswd(), dlg.getEmail());
-					// mw.NoticeLabel.setText("Usuario :" +
-					// dlg.getUser()+" registrado");
-					// NoticeLabel.setForeground(new Color (0, 200, 0));*/
+					GameManager.createGame(dlg.getGameName(),dlg.getDescription(),dlg.getCalendarList());
 				} catch (Exception e) {
-					// stw.NoticeLabel.setText(" Error en el registro");
-					// NoticeLabel.setForeground(new Color (255, 0, 0));
+					e.printStackTrace();
 				}
 			}
-
-			mw.setVisible(true);
 			f.dispose();
 		}
 	}

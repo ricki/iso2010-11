@@ -23,6 +23,12 @@ public class GameInfo {
 		setPlayers(players);
 		setGameSessions(gameSessions);
 	}
+	
+	public GameInfo(String name, String description, ArrayList<Calendar> gameSessions) {
+		setName(name);
+		setDescription(description);
+		setGameSessions(gameSessions);
+	}
 
 	public UUID getId() {
 		return mId;

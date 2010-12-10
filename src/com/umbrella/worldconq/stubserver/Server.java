@@ -203,6 +203,11 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public UUID createGame(GameInfo info) throws Exception, RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println("IServer::createGame");
+		System.out.println("Nombre de la partida: "+info.Name);
+		System.out.println("Descripción de la partida: "+info.Description);
+		for(int i=0; i<info.GameSessions.size();i++){
+			System.out.println("Día de juego: " +info.GameSessions.get(i).getTime().toString());
+		}
 		return null;
 	}
 

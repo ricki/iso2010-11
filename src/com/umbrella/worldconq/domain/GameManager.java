@@ -1,6 +1,7 @@
 package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
 
@@ -35,5 +36,11 @@ public class GameManager {
 		ArrayList<GameInfo> l = WorldConqApp.getServerAdapter().fetchGameList();
 		mCurrentGameListModel.setData(l);
 		mOpenGameListModel.setData(l);
+	}
+	
+	public static void createGame(	String mName, String mDescription,
+			ArrayList<Calendar> mGameSessions) throws Exception{
+			WorldConqApp.getServerAdapter().createGame(new GameInfo(mName, mDescription, 
+					mGameSessions));
 	}
 }
