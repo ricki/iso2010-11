@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -97,7 +96,7 @@ public class CreateGameDialog extends JDialog{
 		calendarList = new ArrayList<Calendar>();
 		
 
-		c.fill = c.BOTH;
+		c.fill = GridBagConstraints.BOTH;
 
 		c.insets = new Insets(2, 2, 2, 2);
 		c.weighty = 0.5;
@@ -111,7 +110,7 @@ public class CreateGameDialog extends JDialog{
 		c.gridy=1;
 		mainPanel.add(gameDescLabel,c);
 		
-		c.fill = c.HORIZONTAL;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx=1;
 		c.gridy=0;
 		c.gridwidth=4;
@@ -135,7 +134,7 @@ public class CreateGameDialog extends JDialog{
 		c.gridheight=1;
 		mainPanel.add(deletePlaydateButton,c);
 			
-		c.fill = c.BOTH;
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx=0;
 		c.gridy=2;
 		c.gridwidth=1;
@@ -152,7 +151,7 @@ public class CreateGameDialog extends JDialog{
 		c.gridy=6;
 		c.gridwidth=5;
 		c.gridheight=1;
-		c.fill = c.HORIZONTAL;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		mainPanel.add(createButton,c);
 
 
