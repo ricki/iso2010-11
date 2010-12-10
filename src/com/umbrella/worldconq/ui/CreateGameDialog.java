@@ -177,22 +177,6 @@ public class CreateGameDialog extends JDialog{
 	
 
 	
-	private class AcceptDialogMouseAdapter extends MouseAdapter {
-
-		private CreateGameDialog dlg;
-		private boolean selection;	
-
-		public AcceptDialogMouseAdapter(CreateGameDialog dlg, boolean selection) {
-			this.dlg = dlg;
-			this.selection = selection;
-		}
-
-		public void mouseClicked(MouseEvent evt) {
-			dlg.selection = this.selection;
-			dlg.setVisible(false);
-		}
-	}
-	
 	private class NewDateMouseAdapter extends MouseAdapter {
 
 		private CreateGameDialog dlg;
