@@ -105,9 +105,14 @@ public class ServerAdapter {
 		}
 		return domainList;
 	}
+	
 	public void createGame(	GameInfo game) throws Exception{
+		com.umbrella.worldconq.stubserver.GameInfo info = new com.umbrella.worldconq.stubserver.GameInfo();
+		info.Description = game.getDescription();
+		info.Name = game.getName();
+		info.GameSessions=game.getGameSessions();
 		if (!isConnected()) throw new RemoteException();
-			mProxy.createGame(game);
+			mProxy.createGame(info);
 		
 	}
 	
