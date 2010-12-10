@@ -73,7 +73,7 @@ public class CreateGameDialog extends JDialog{
 		
 
 		addPlaydateButton = new JButton("Añadir fecha de juego");
-		addPlaydateButton .addMouseListener(new NewDateMouseAdapter(this, false));
+		addPlaydateButton .addMouseListener(new NewDateMouseAdapter());
 
 		deletePlaydateButton = new JButton("Eliminar fecha");
 		deletePlaydateButton .addMouseListener(new DeleteDateMouseAdapter(this, false));
@@ -178,28 +178,15 @@ public class CreateGameDialog extends JDialog{
 
 	
 	private class NewDateMouseAdapter extends MouseAdapter {
-
-		private CreateGameDialog dlg;
-		private boolean selection;	
-
-		public NewDateMouseAdapter(CreateGameDialog dlg, boolean selection) {
-			this.dlg = dlg;
-			this.selection = selection;
-		}
-
 		public void mouseClicked(MouseEvent evt) {
-			
 			DateDialog dlg= new DateDialog(new JFrame(), "Introduzca fecha", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 			if (dlg.getSelection() == true) {
-					calendarList.add(dlg.getDate());
-					datesListContent.addElement(DateFormat.getDateTimeInstance().format(dlg.getDate().getTime()));
-					datesListContent.setSelectedItem(null);
-								
+				calendarList.add(dlg.getDate());
+				datesListContent.addElement(DateFormat.getDateTimeInstance().format(dlg.getDate().getTime()));
+				datesListContent.setSelectedItem(null);
 			}
-
-
 		}
 	}
 	private class DeleteDateMouseAdapter extends MouseAdapter {
