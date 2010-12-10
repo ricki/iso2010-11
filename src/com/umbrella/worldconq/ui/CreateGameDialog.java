@@ -1,11 +1,18 @@
 package com.umbrella.worldconq.ui;
 
+
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -14,20 +21,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
-public class CreateGameDialog extends JDialog {
+public class CreateGameDialog extends JDialog{
 	
 	private static final long serialVersionUID = -5128501222928885944L;
 	private boolean selection;
@@ -42,6 +36,7 @@ public class CreateGameDialog extends JDialog {
 	private JList datesList;
 	private DefaultComboBoxModel datesListContent;
 	private JButton createButton;
+	private ArrayList<Calendar> calendarList;
 	
 	public CreateGameDialog(JFrame f, String string, boolean b) {
 		super(f, string, b);
@@ -52,50 +47,39 @@ public class CreateGameDialog extends JDialog {
 		this.setResizable(false);
 		this.setSize(500, 300);
 
-		mainPanel = new JPanel();
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
-		mainPanel.setLayout(null);
+		mainPanel = new JPanel(new GridBagLayout());
+		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		GridBagConstraints c = new GridBagConstraints();
 
-		try {
-			this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
-		} catch (Exception e) {
-			System.out.println("Imagen no encontrada");
-		}
+
+
 
 
 		gameNameLabel = new JLabel();
 		gameNameLabel.setText("Nombre de la partida:");
-		gameNameLabel.setBounds(30, 10, 143, 16);
+		gameNameLabel.setHorizontalAlignment(JLabel.CENTER);
+		gameNameLabel.setVerticalAlignment(JLabel.CENTER);
 
 		gameNameTextField = new JTextField();
-		gameNameTextField.setBounds(170, 10, 295, 30);
 		gameNameTextField.setToolTipText("Introduzca aqui el nombre de la partida");
-		//gameNameTextField.addKeyListener(new AcceptDialogKeyAdapter(this));
 
 		gameDescLabel = new JLabel();
-		gameDescLabel .setText("Descripción:");
-		gameDescLabel .setBounds(35, 40, 143, 16);
+		gameDescLabel.setText("Descripción:");
+		gameDescLabel.setHorizontalAlignment(JLabel.CENTER);
+		gameDescLabel.setVerticalAlignment(JLabel.CENTER);
 
 		gameDescTextField = new JTextField();
-		gameDescTextField.setBounds(170, 40, 295, 60);
 		gameDescTextField.setToolTipText("Introduzca una descripción de la partida");
-		//gameDescTextField.addKeyListener(new AcceptDialogKeyAdapter(this));
-
 		
 
 		addPlaydateButton = new JButton("Añadir fecha de juego");
-		addPlaydateButton .setBounds(260, 110, 100, 30);
-		addPlaydateButton.setSize(200, 25);
-		addPlaydateButton .addMouseListener(new NewDateMouseAdapter(this));
+		addPlaydateButton .addMouseListener(new NewDateMouseAdapter(this, false));
 
 		deletePlaydateButton = new JButton("Eliminar fecha");
-		deletePlaydateButton .setBounds(260, 150, 60, 25);
-		deletePlaydateButton.setSize(140, 25);
-		deletePlaydateButton .addMouseListener(new DeleteDateMouseAdapter(this));
+		deletePlaydateButton .addMouseListener(new DeleteDateMouseAdapter(this, false));
 		
 		datesLabel = new JLabel();
 		datesLabel.setText("Fechas de juego");
-		datesLabel.setBounds(45, 105, 143, 16);
 		
 		datesListContent = new DefaultComboBoxModel();
 		datesListContent.setSelectedItem(null);
@@ -103,31 +87,92 @@ public class CreateGameDialog extends JDialog {
 
 		
 		datesList = new JList();
-		datesList.setBounds(12, 133, 236, 117);
 		datesList.setModel(datesListContent);
 
 
 		
 		createButton = new JButton("Crear partida");
-		createButton.setBounds(320, 225, 140, 25);
-		createButton.addMouseListener(new AcceptDialogMouseAdapter(this, true));
+		createButton .addMouseListener(new CreateMouseAdapter(this, false));
+		
+		calendarList = new ArrayList<Calendar>();
 		
 
+		c.fill = c.BOTH;
 
-		mainPanel.add(gameNameLabel);
-		mainPanel.add(gameNameTextField );
-		mainPanel.add(gameDescLabel);
-		mainPanel.add(gameDescTextField);
-		mainPanel.add(addPlaydateButton);
-		mainPanel.add(deletePlaydateButton);
-		mainPanel.add(datesLabel);
-		mainPanel.add(datesList);
-		mainPanel.add(createButton);
+		c.insets = new Insets(2, 2, 2, 2);
+		c.weighty = 0.5;
+
+		c.gridx=0;
+		c.gridy=0;
+		mainPanel.add(gameNameLabel,c);
+
 		
+		c.gridx=0;
+		c.gridy=1;
+		mainPanel.add(gameDescLabel,c);
+		
+		c.fill = c.HORIZONTAL;
+		c.gridx=1;
+		c.gridy=0;
+		c.gridwidth=4;
+		mainPanel.add(gameNameTextField,c);
+		
+		c.gridx=1;
+		c.gridy=1;
+		c.gridwidth=4;
+		c.gridheight=1;
+		mainPanel.add(gameDescTextField,c);
+		 		
+		c.gridx=3;
+		c.gridy=3;
+		c.gridwidth=2;
+		c.gridheight=1;
+		mainPanel.add(addPlaydateButton,c);
+		
+		c.gridx=3;
+		c.gridy=4;
+		c.gridwidth=2;
+		c.gridheight=1;
+		mainPanel.add(deletePlaydateButton,c);
+			
+		c.fill = c.BOTH;
+		c.gridx=0;
+		c.gridy=2;
+		c.gridwidth=1;
+		c.gridheight=1;
+		mainPanel.add(datesLabel,c);
+		
+		c.gridx=0;
+		c.gridy=3;
+		c.gridwidth=2;
+		c.gridheight=3;
+		mainPanel.add(datesList,c);
+		
+		c.gridx=0;
+		c.gridy=6;
+		c.gridwidth=5;
+		c.gridheight=1;
+		c.fill = c.HORIZONTAL;
+		mainPanel.add(createButton,c);
+
+
+		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//this.pack();
 	}
 	
 	public boolean getSelection() {
 		return selection;
+	}
+	
+	public ArrayList<Calendar> getCalendarList(){
+		return calendarList;
+	}
+	public String getDescription(){
+		return gameDescTextField.getText();
+	}
+	public String getGameName(){
+		return gameNameTextField.getText();
 	}
 	
 
@@ -151,40 +196,61 @@ public class CreateGameDialog extends JDialog {
 	private class NewDateMouseAdapter extends MouseAdapter {
 
 		private CreateGameDialog dlg;
+		private boolean selection;	
 
-		public NewDateMouseAdapter(CreateGameDialog dlg) {
+		public NewDateMouseAdapter(CreateGameDialog dlg, boolean selection) {
 			this.dlg = dlg;
+			this.selection = selection;
 		}
 
 		public void mouseClicked(MouseEvent evt) {
-			DateDialog dlg = new DateDialog(new JFrame(), "Introduzca fecha", true);
+			
+			DateDialog dlg= new DateDialog(new JFrame(), "Introduzca fecha", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 			if (dlg.getSelection() == true) {
-				try{
-					this.dlg.datesListContent.addElement((dlg.getDateTextField().getText())+"/t("+dlg.getGameLenTextField().getText()+" minutos)");
-					this.dlg.datesListContent.setSelectedItem(null);
-					
-				} catch(Exception e) {
-//					stw.NoticeLabel.setText(" Error en el registro");
-//					NoticeLabel.setForeground(new Color (255, 0, 0));
-				}	
+					calendarList.add(dlg.getDate());
+					datesListContent.addElement(DateFormat.getDateTimeInstance().format(dlg.getDate().getTime()));
+					datesListContent.setSelectedItem(null);
+								
 			}
+
+
 		}
 	}
 	private class DeleteDateMouseAdapter extends MouseAdapter {
 
 		private CreateGameDialog dlg;
+		private boolean selection;	
 
-		public DeleteDateMouseAdapter(CreateGameDialog dlg) {
+		public DeleteDateMouseAdapter(CreateGameDialog dlg, boolean selection) {
 			this.dlg = dlg;
+			this.selection = selection;
 		}
 
 		public void mouseClicked(MouseEvent evt) {
-			datesListContent.removeElement(datesList.getSelectedValue());
+			dlg.selection = this.selection;
+			calendarList.remove(datesList.getSelectedIndex());
+			datesListContent.removeElement(datesList.getSelectedValue());	
 			dlg.setVisible(true);
 		}
 	}
 	
-}
+	private class CreateMouseAdapter extends MouseAdapter {
 
+		private CreateGameDialog dlg;
+		private boolean selection;	
+
+		public CreateMouseAdapter(CreateGameDialog dlg, boolean selection) {
+			this.dlg = dlg;
+
+			
+		}
+
+		public void mouseClicked(MouseEvent evt) {
+			this.selection = true;
+			dlg.selection = this.selection;
+			dlg.setVisible(false);
+		}
+	}
+}
