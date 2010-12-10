@@ -105,5 +105,10 @@ public class ServerAdapter {
 		}
 		return domainList;
 	}
+	public void createGame(	GameInfo game) throws Exception{
+		if (!isConnected()) throw new RemoteException();
+			mProxy.createGame(game);
+		
+	}
 	
 }
