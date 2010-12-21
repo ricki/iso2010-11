@@ -32,7 +32,7 @@ public class GameManager {
 
 	public void updateGameList() throws Exception {
 		// FIXME : Implementación temporal
-		String user = WorldConqApp.getUserManager().getmUser().getName();
+		String user = WorldConqApp.getUserManager().getActiveSession().getUser();
 		ArrayList<GameInfo> l = WorldConqApp.getServerAdapter().fetchGameList();
 
 		ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
