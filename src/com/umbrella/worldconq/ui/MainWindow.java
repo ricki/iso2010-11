@@ -79,7 +79,7 @@ public class MainWindow extends JFrame {
 			mGameListPanel = new JPanel();
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel, BoxLayout.Y_AXIS));
 			JTable currentList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
-			JTable openList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
+			JTable openList = new JTable(WorldConqApp.getGameManager().getOpenGameListModel());
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
