@@ -26,6 +26,8 @@ public class UserManagerTest  extends TestCase {
 		
 		try {
 			ServerProcess = Runtime.getRuntime().exec(comand);	
+			Thread.currentThread();
+			Thread.sleep(1000);
 		}
 		catch (Exception e) {
 			fail(e.toString());
@@ -89,14 +91,7 @@ public class UserManagerTest  extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		System.out.println("TestCase::tearDown");
-		/*String out;
-		in = new BufferedReader(new InputStreamReader(ServerProcess.getInputStream()));
-		while(true) {
-			out = in.readLine();
-			System.out.println(out);
-		 }*/
-		 
+		System.out.println("TestCase::tearDown"); 
 		ServerProcess.destroy();
 		WorldConqApp.getServerAdapter().disconnect();
 	}
