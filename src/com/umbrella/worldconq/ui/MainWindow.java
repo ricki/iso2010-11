@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
@@ -79,14 +80,16 @@ public class MainWindow extends JFrame {
 			mGameListPanel = new JPanel();
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel, BoxLayout.Y_AXIS));
 			JTable currentList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
+			JScrollPane currentListPanel = new JScrollPane(currentList);
 			JTable openList = new JTable(WorldConqApp.getGameManager().getOpenGameListModel());
+			JScrollPane openListPanel = new JScrollPane(openList);
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 			mGameListPanel.add(new JLabel("Mis partidas actuales"));
-			mGameListPanel.add(currentList);
+			mGameListPanel.add(currentListPanel);
 			mGameListPanel.add(new JLabel("Partidas disponibles"));
-			mGameListPanel.add(openList);
+			mGameListPanel.add(openListPanel);
 		}
 		return mGameListPanel;
 	}
