@@ -26,7 +26,6 @@ public class UserManagerTest  extends TestCase {
 		
 		try {
 			ServerProcess = Runtime.getRuntime().exec(comand);	
-			Thread.currentThread();
 			Thread.sleep(1000);
 		}
 		catch (Exception e) {
@@ -92,10 +91,13 @@ public class UserManagerTest  extends TestCase {
 	@After
 	public void tearDown() throws Exception {
 		System.out.println("TestCase::tearDown"); 
-		ServerProcess.destroy();
-		WorldConqApp.getServerAdapter().disconnect();
+		ServerProcess.destroy();	
+		try	{
+			ServerProcess.destroy();
+			ServerProcess.waitFor();
+			WorldConqApp.getServerAdapter().disconnect();
+		} catch (Exception e) { }	
 	}
-
 
 	public String  getClasspath() {
         ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
