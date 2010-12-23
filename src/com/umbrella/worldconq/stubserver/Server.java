@@ -16,7 +16,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	private String miIP;
 	private Registry reg;
 	
-	private String[][] registerUsers = {
+	private String[][] Users = {
 			{ "JorgeCA", "jorge", "jorge.colao@gmail.com"},
 			{ "ricki", "ricki", "ricardo.ruedas@gmail.com"},
 			{ "pobleteag", "antonio", "pobleteag@gmail.com"},
@@ -24,6 +24,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 			{ "Aduran", "angel", "anduraniz@gmail.com"},
 			{ "LauraN", "laura", "arualitan@gmail.com"},
 			{ "deejaytoni", "toni", "deejaytoni@gmail.com"} };
+	
+	private ArrayList<String[]> registerUsers;
 	
 	private ArrayList<GameInfo> gameList;
 	
@@ -33,6 +35,11 @@ public class Server extends UnicastRemoteObject implements IServer {
 		System.setProperty("java.security.policy", ClassLoader.getSystemResource("data/open.policy").toString());
 		
 		this.gameList = new ArrayList<GameInfo>();
+		this.registerUsers = new ArrayList<String[]>();
+		
+		for (int i = 0; i < 7; i++ )
+			this.registerUsers.add(Users[i]);
+			
 		{ // GameInfo 01
 			GameInfo info = new GameInfo();
 			info.ID = UUID.randomUUID();
@@ -161,9 +168,9 @@ public class Server extends UnicastRemoteObject implements IServer {
 		System.out.println("IServer::loginUser " + UserName);
 		boolean encontrado = false;
 		UUID id = null;
-		for (int i = 0; i < registerUsers.length && encontrado==false; i++) {
-			if (registerUsers[i][0].compareTo(UserName)==0
-					&& registerUsers[i][1].compareTo(Password)==0) {
+		for (int i = 0; i < registerUsers.size() && encontrado==false; i++) {
+			if (registerUsers.get(i)[0].compareTo(UserName)==0
+					&& registerUsers.get(i)[1].compareTo(Password)==0) {
 				encontrado = true;
 				id = UUID.randomUUID();
 			}
@@ -194,6 +201,14 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void registerUser(String UserName, String sPassword, String sEmail)
 			throws Exception, RemoteException {
 		System.out.println("IServer::registerUser " + UserName);
+		
+		String[] user = {UserName, sPassword, sEmail};
+		
+		for(int i=0; i<registerUsers.size(); i++){
+			if (registerUsers.get(i)[0].compareTo(UserName) == 0 ) 
+				throw new Exception("Nombre de usuario en uso");
+		}
+		registerUsers.add(user);
 	}
 
 	@Override
