@@ -32,10 +32,31 @@ public class GameManager {
 	}
 
 	public void updateGameList() throws Exception {
-		// FIXME : Implementación temporal
+		String user = WorldConqApp.getUserManager().getActiveSession().getUser();
 		ArrayList<GameInfo> l = WorldConqApp.getServerAdapter().fetchGameList();
-		mCurrentGameListModel.setData(l);
-		mOpenGameListModel.setData(l);
+
+		ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
+		ArrayList<GameInfo> listOpen = new ArrayList<GameInfo>();
+		int countPlayers = 0;
+		for (int i = 0; i < l.size(); i++) {
+			for (int j = 0; j < l.get(i).getPlayers().size(); j++) {
+				if (user.equals(l.get(i).getPlayers().get(j).getUserName())) {
+					listPlayer.add(l.get(i));
+				} else {
+					countPlayers++;
+				}
+
+				if ((countPlayers == l.get(i).getPlayers().size())
+						&& l.get(i).getOpenTerritories() > 0) {
+					listOpen.add(l.get(i));
+				}
+
+			}
+			countPlayers=0;
+		}
+
+		mCurrentGameListModel.setData(listPlayer);
+		mOpenGameListModel.setData(listOpen);
 	}
 	
 	public static void createGame(	String mName, String mDescription,

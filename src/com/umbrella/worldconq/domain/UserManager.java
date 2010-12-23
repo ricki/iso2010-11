@@ -9,6 +9,7 @@ public class UserManager {
 	
 	public UserManager(){
 		 mSession = null;
+
 	}
 	
 	public void registerUser(String Login, String Passwd, String Email) throws Exception {
@@ -18,6 +19,8 @@ public class UserManager {
 	public void createSession(String Login, String Passwd) throws Exception {
 		// TODO Comprobar si hay sesión activa y cerrarla antes.
 		mSession = WorldConqApp.getServerAdapter().createSession(Login, Passwd);
+		// TODO Poner el email y el uuid correcto
+		mSession.setUser(Login);
 	}
 
 	public void closeSession() throws Exception {

@@ -57,6 +57,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
+			info.NumeroTerritoriosLibres=3;
 			gameList.add(info);
 		}
 		{ // GameInfo 02
@@ -91,6 +92,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
+			info.NumeroTerritoriosLibres=6;
 			gameList.add(info);
 		}
 		{ // GameInfo 03
@@ -117,6 +119,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			}
 			info.GameSessions = new ArrayList<Calendar>();
 			info.GameSessions.add(Calendar.getInstance());
+			info.NumeroTerritoriosLibres=0;
 			gameList.add(info);
 		}
 		

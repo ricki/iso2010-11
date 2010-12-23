@@ -28,6 +28,10 @@ public class GameListModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	public String getColumnName(int col){
+		return colTitles[col];
+	}
+	
 	@Override
 	public int getColumnCount() {
 		return colTitles.length;
