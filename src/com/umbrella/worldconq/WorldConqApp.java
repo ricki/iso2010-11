@@ -30,14 +30,15 @@ public class WorldConqApp {
 		System.setProperty("java.security.policy",
 			ClassLoader.getSystemResource("data/open.policy").toString());
 
-		WorldConqApp.getServerAdapter().setRemoteInfo(
+		final WorldConqApp app = WorldConqApp.getWorldConqApp();
+
+		app.getServerAdapter().setRemoteInfo(
 			"WorldConqStubServer",
 			InetAddress.getByName("localhost"),
 			3234);
-		WorldConqApp.getServerAdapter().connect();
+		app.getServerAdapter().connect();
 
-		WorldConqApp.getStartupWindow().setLocationRelativeTo(null);
-		WorldConqApp.getStartupWindow().setVisible(true);
+		app.setStartupMode();
 	}
 
 	private WorldConqApp() {
