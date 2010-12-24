@@ -56,4 +56,36 @@ public class WorldConqApp {
 		return mMainWindow;
 	}
 
+	public void setStartupMode() {
+		if (mMainWindow != null) {
+			mMainWindow.setVisible(false);
+			mMainWindow.dispose();
+			mMainWindow = null;
+		}
+		this.getStartupWindow().setVisible(true);
+	}
+
+	public void freeResources() {
+		if (mStartupWindow != null) {
+			mStartupWindow.setVisible(false);
+			mStartupWindow.dispose();
+			mStartupWindow = null;
+		}
+
+		if (mMainWindow != null) {
+			mMainWindow.setVisible(false);
+			mMainWindow.dispose();
+			mMainWindow = null;
+		}
+
+		if (mGameManager != null) mGameManager = null;
+
+		if (mUserManager != null) mUserManager = null;
+
+		if (mServerAdapter != null) {
+			mServerAdapter.disconnect();
+			mServerAdapter = null;
+		}
+	}
+
 }
