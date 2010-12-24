@@ -22,6 +22,7 @@ public class UserManager {
 			Login, Passwd);
 		// TODO Poner el email y el uuid correcto
 		mSession.setUser(Login);
+		WorldConqApp.getWorldConqApp().setMainMode();
 	}
 
 	public void closeSession() throws Exception {

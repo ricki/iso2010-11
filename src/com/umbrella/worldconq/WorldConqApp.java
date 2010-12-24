@@ -112,9 +112,13 @@ public class WorldConqApp {
 	}
 
 	public void setMainMode() {
-		mStartupWindow.setVisible(false);
-		mStartupWindow.dispose();
-		mMainWindow.setVisible(true);
+		if (mStartupWindow != null) {
+			mStartupWindow.setVisible(false);
+			mStartupWindow.dispose();
+			mStartupWindow = null;
+		}
+
+		this.getMainWindow().setVisible(true);
 
 	}
 
