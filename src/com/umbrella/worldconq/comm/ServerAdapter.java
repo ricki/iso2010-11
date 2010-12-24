@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import com.umbrella.worldconq.domain.Session;
 
 import es.uclm.iso2.rmi.GameInfo;
+import es.uclm.iso2.rmi.IServer;
 
 public class ServerAdapter {
 
@@ -18,7 +19,7 @@ public class ServerAdapter {
 	private String mRemoteName;
 	private InetAddress mRemoteHost;
 	private int mRemotePort;
-	private es.uclm.iso2.rmi.IServer mProxy;
+	private IServer mProxy;
 
 	public ServerAdapter() {
 		mRemoteName = null;
@@ -52,7 +53,7 @@ public class ServerAdapter {
 				mRemotePort,
 				mRemoteName
 				);
-		mProxy = (es.uclm.iso2.rmi.IServer) Naming.lookup(url);
+		mProxy = (IServer) Naming.lookup(url);
 	}
 
 	public void disconnect() {
@@ -66,8 +67,8 @@ public class ServerAdapter {
 	public Session createSession(String Login, String Passwd) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
 		return new Session(mProxy.loginUser(Login, Passwd, null)); // TODO Falta
-																	// el
-																	// callback
+		// el
+		// callback
 	}
 
 	public void closeSession(Session session) throws Exception {

@@ -5,6 +5,8 @@ import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
 
+import es.uclm.iso2.rmi.GameInfo;
+
 public class GameManager {
 
 	private GameListModel mCurrentGameListModel;
@@ -33,10 +35,10 @@ public class GameManager {
 
 	public void updateGameList() throws Exception {
 		final String user = WorldConqApp.getWorldConqApp().getUserManager().getActiveSession().getUser();
-		final ArrayList<es.uclm.iso2.rmi.GameInfo> l = WorldConqApp.getWorldConqApp().getServerAdapter().fetchGameList();
+		final ArrayList<GameInfo> l = WorldConqApp.getWorldConqApp().getServerAdapter().fetchGameList();
 
-		final ArrayList<es.uclm.iso2.rmi.GameInfo> listPlayer = new ArrayList<es.uclm.iso2.rmi.GameInfo>();
-		final ArrayList<es.uclm.iso2.rmi.GameInfo> listOpen = new ArrayList<es.uclm.iso2.rmi.GameInfo>();
+		final ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
+		final ArrayList<GameInfo> listOpen = new ArrayList<GameInfo>();
 		int countPlayers = 0;
 		for (int i = 0; i < l.size(); i++) {
 			for (int j = 0; j < l.get(i).getPlayers().size(); j++) {
@@ -62,7 +64,7 @@ public class GameManager {
 	public static void createGame(String mName, String mDescription,
 			ArrayList<Calendar> mGameSessions) throws Exception {
 		WorldConqApp.getWorldConqApp().getServerAdapter().createGame(
-			new es.uclm.iso2.rmi.GameInfo(null, mName,
+			new GameInfo(null, mName,
 				mDescription,
 				null, mGameSessions, 0, 0, 0, 0));
 	}
