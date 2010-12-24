@@ -8,37 +8,37 @@ import com.umbrella.worldconq.ui.StartupWindow;
 
 public class WorldConqApp {
 
-	public static WorldConqApp wcApp = new WorldConqApp();
+	public static WorldConqApp mInstace = null;
 
-	private static UserManager mUserManager = null;
-	private static GameManager mGameManager = null;
+	private UserManager mUserManager = null;
+	private GameManager mGameManager = null;
 
-	private static StartupWindow mStartupWindow = null;
-	private static MainWindow mMainWindow = null;
+	private StartupWindow mStartupWindow = null;
+	private MainWindow mMainWindow = null;
 
-	private static ServerAdapter mServerAdapter = null;
+	private ServerAdapter mServerAdapter = null;
 
-	public static UserManager getUserManager() {
+	public UserManager getUserManager() {
 		if (mUserManager == null) mUserManager = new UserManager();
 		return mUserManager;
 	}
 
-	public static GameManager getGameManager() {
+	public GameManager getGameManager() {
 		if (mGameManager == null) mGameManager = new GameManager();
 		return mGameManager;
 	}
 
-	public static ServerAdapter getServerAdapter() {
+	public ServerAdapter getServerAdapter() {
 		if (mServerAdapter == null) mServerAdapter = new ServerAdapter();
 		return mServerAdapter;
 	}
 
-	public static StartupWindow getStartupWindow() {
+	public StartupWindow getStartupWindow() {
 		if (mStartupWindow == null) mStartupWindow = new StartupWindow();
 		return mStartupWindow;
 	}
 
-	public static MainWindow getMainWindow() {
+	public MainWindow getMainWindow() {
 		if (mMainWindow == null) mMainWindow = new MainWindow();
 		return mMainWindow;
 	}
