@@ -111,4 +111,11 @@ public class WorldConqApp {
 		}
 	}
 
+	public void setMainMode() {
+		mStartupWindow.setVisible(false);
+		mStartupWindow.dispose();
+		mMainWindow.setVisible(true);
+
+	}
+
 }
