@@ -1,5 +1,7 @@
 package com.umbrella.worldconq;
 
+import java.net.InetAddress;
+
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.UserManager;
@@ -17,6 +19,26 @@ public class WorldConqApp {
 	private MainWindow mMainWindow = null;
 
 	private ServerAdapter mServerAdapter = null;
+
+	public static void main(String[] args) throws Exception {
+		try {
+			javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+
+		System.setProperty("java.security.policy",
+			ClassLoader.getSystemResource("data/open.policy").toString());
+
+		WorldConqApp.getServerAdapter().setRemoteInfo(
+			"WorldConqStubServer",
+			InetAddress.getByName("localhost"),
+			3234);
+		WorldConqApp.getServerAdapter().connect();
+
+		WorldConqApp.getStartupWindow().setLocationRelativeTo(null);
+		WorldConqApp.getStartupWindow().setVisible(true);
+	}
 
 	private WorldConqApp() {
 		mUserManager = null;
