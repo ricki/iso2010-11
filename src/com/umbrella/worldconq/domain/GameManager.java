@@ -33,21 +33,21 @@ public class GameManager {
 
 	public void updateGameList() throws Exception {
 		final String user = WorldConqApp.getWorldConqApp().getUserManager().getActiveSession().getUser();
-		final ArrayList<GameInfo> l = WorldConqApp.getWorldConqApp().getServerAdapter().fetchGameList();
+		final ArrayList<es.uclm.iso2.rmi.GameInfo> l = WorldConqApp.getWorldConqApp().getServerAdapter().fetchGameList();
 
-		final ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
-		final ArrayList<GameInfo> listOpen = new ArrayList<GameInfo>();
+		final ArrayList<es.uclm.iso2.rmi.GameInfo> listPlayer = new ArrayList<es.uclm.iso2.rmi.GameInfo>();
+		final ArrayList<es.uclm.iso2.rmi.GameInfo> listOpen = new ArrayList<es.uclm.iso2.rmi.GameInfo>();
 		int countPlayers = 0;
 		for (int i = 0; i < l.size(); i++) {
 			for (int j = 0; j < l.get(i).getPlayers().size(); j++) {
-				if (user.equals(l.get(i).getPlayers().get(j).getUserName())) {
+				if (user.equals(l.get(i).getPlayers().get(j))) {
 					listPlayer.add(l.get(i));
 				} else {
 					countPlayers++;
 				}
 
 				if ((countPlayers == l.get(i).getPlayers().size())
-						&& l.get(i).getOpenTerritories() > 0) {
+						&& l.get(i).getnFreeTerritories() > 0) {
 					listOpen.add(l.get(i));
 				}
 
@@ -62,7 +62,8 @@ public class GameManager {
 	public static void createGame(String mName, String mDescription,
 			ArrayList<Calendar> mGameSessions) throws Exception {
 		WorldConqApp.getWorldConqApp().getServerAdapter().createGame(
-			new GameInfo(mName, mDescription,
-					mGameSessions));
+			new es.uclm.iso2.rmi.GameInfo(null, mName,
+				mDescription,
+				null, mGameSessions, 0, 0, 0, 0));
 	}
 }

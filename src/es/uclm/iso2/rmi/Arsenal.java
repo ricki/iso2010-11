@@ -10,6 +10,14 @@ public class Arsenal implements Serializable {
 	private int missiles;
 	private int ICBMs;
 
+	public Arsenal(int soldiers, int cannons, int missiles, int iCBMs) {
+		super();
+		this.soldiers = soldiers;
+		this.cannons = cannons;
+		this.missiles = missiles;
+		ICBMs = iCBMs;
+	}
+
 	public int getSoldiers() {
 		return soldiers;
 	}
