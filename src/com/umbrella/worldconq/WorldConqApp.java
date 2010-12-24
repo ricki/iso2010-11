@@ -18,6 +18,19 @@ public class WorldConqApp {
 
 	private ServerAdapter mServerAdapter = null;
 
+	private WorldConqApp() {
+		mUserManager = null;
+		mGameManager = null;
+		mStartupWindow = null;
+		mMainWindow = null;
+		mServerAdapter = null;
+	}
+
+	public static WorldConqApp getWorldConqApp() {
+		if (mInstace == null) mInstace = new WorldConqApp();
+		return mInstace;
+	}
+
 	public UserManager getUserManager() {
 		if (mUserManager == null) mUserManager = new UserManager();
 		return mUserManager;
