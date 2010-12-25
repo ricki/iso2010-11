@@ -17,11 +17,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.domain.GameManager;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
+
+	private final WorldConqApp app;
 
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
@@ -30,16 +31,17 @@ public class MainWindow extends JFrame {
 
 	public MainWindow() {
 		super();
-		initGUI();
+		app = WorldConqApp.getWorldConqApp();
+		this.initGUI();
 	}
 
 	private void initGUI() {
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		try {
-			this.setIconImage(new ImageIcon(ClassLoader
-					.getSystemResource("image/logo.png")).getImage());
-		} catch (Exception e) {
+			this.setIconImage(new ImageIcon(
+				ClassLoader.getSystemResource("image/logo.png")).getImage());
+		} catch (final Exception e) {
 			System.out.println("Imagen no encontrada");
 		}
 		this.setResizable(false);
@@ -49,41 +51,43 @@ public class MainWindow extends JFrame {
 		mGameListToolBar = new JToolBar();
 		mPlayToolBar = new JToolBar();
 
-		JButton updateListButton = new JButton("Actualizar lista");
+		final JButton updateListButton = new JButton("Actualizar lista");
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
-		JButton createGameButton = new JButton("Crear partida");
+		final JButton createGameButton = new JButton("Crear partida");
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
-
-		getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
-//		getContentPane().add(mPlayToolBar, BorderLayout.NORTH); FIXME Esto no funciona.
-		getContentPane().add(getGameListPanel(), BorderLayout.CENTER);
-		setGameListMode();
 	}
 
-	public void setGameListMode() {
+	public void setupListGUI() {
+		this.getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
+		// FIXME Esto no funciona.
+		// getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
+		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
 		mPlayToolBar.setVisible(false);
-		getGameListPanel().setVisible(true);
+		this.getGameListPanel().setVisible(true);
 	}
 
-	public void setPlayMode() {
+	public void setupGameGUI() {
 		// TODO : Creo ya la función. A completar en próximas iteraciones.
 		mGameListToolBar.setVisible(false);
 		mPlayToolBar.setVisible(true);
-		getGameListPanel().setVisible(false);
+		this.getGameListPanel().setVisible(false);
 	}
 
 	private JPanel getGameListPanel() {
 		if (mGameListPanel == null) {
 			mGameListPanel = new JPanel();
-			mGameListPanel.setLayout(new BoxLayout(mGameListPanel, BoxLayout.Y_AXIS));
-			JTable currentList = new JTable(WorldConqApp.getGameManager().getCurrentGameListModel());
-			JScrollPane currentListPanel = new JScrollPane(currentList);
-			JTable openList = new JTable(WorldConqApp.getGameManager().getOpenGameListModel());
-			JScrollPane openListPanel = new JScrollPane(openList);
+			mGameListPanel.setLayout(new BoxLayout(mGameListPanel,
+				BoxLayout.Y_AXIS));
+			final JTable currentList = new JTable(
+				app.getGameManager().getCurrentGameListModel());
+			final JScrollPane currentListPanel = new JScrollPane(currentList);
+			final JTable openList = new JTable(
+				app.getGameManager().getOpenGameListModel());
+			final JScrollPane openListPanel = new JScrollPane(openList);
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -96,17 +100,19 @@ public class MainWindow extends JFrame {
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
+		@Override
 		public void mouseClicked(MouseEvent evt) {
-			JFrame f = new JFrame();
-			CreateGameDialog dlg = new CreateGameDialog(f,
-					"La Conquista del Mundo - Nueva partida", true);
+			final JFrame f = new JFrame();
+			final CreateGameDialog dlg = new CreateGameDialog(f,
+				"La Conquista del Mundo - Nueva partida", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 
 			if (dlg.getSelection() == true) {
 				try {
-					GameManager.createGame(dlg.getGameName(),dlg.getDescription(),dlg.getCalendarList());
-				} catch (Exception e) {
+					app.getGameManager().createGame(dlg.getGameName(),
+						dlg.getDescription(), dlg.getCalendarList());
+				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -115,10 +121,11 @@ public class MainWindow extends JFrame {
 	}
 
 	private class UpdateListMouseAdapter extends MouseAdapter {
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 			try {
-				WorldConqApp.getGameManager().updateGameList();
-			} catch (Exception e) {
+				app.getGameManager().updateGameList();
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		}

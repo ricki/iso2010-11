@@ -1,4 +1,5 @@
 package com.umbrella.worldconq.ui;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
@@ -16,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-
 
 public class StartupWindow extends JFrame {
 
@@ -38,15 +38,16 @@ public class StartupWindow extends JFrame {
 
 	public StartupWindow() {
 		super();
-		initGUI();
+		this.initGUI();
 	}
 
 	private void initGUI() {
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		try {
-			this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
-		} catch (Exception e) {
+			this.setIconImage(new ImageIcon(
+				this.getClass().getClassLoader().getResource("image/logo.png")).getImage());
+		} catch (final Exception e) {
 			System.out.println("Imagen no encontrada");
 		}
 		this.setResizable(false);
@@ -54,14 +55,13 @@ public class StartupWindow extends JFrame {
 		this.setSize(400, 250);
 
 		StartupPanel = new JPanel();
-		getContentPane().add(StartupPanel, BorderLayout.CENTER);
+		this.getContentPane().add(StartupPanel, BorderLayout.CENTER);
 		StartupPanel.setLayout(null);
 
 		NoticeLabel = new JLabel();
 		NoticeLabel.setText("");
 		NoticeLabel.setBounds(50, 10, 300, 25);
-		NoticeLabel.setForeground(new Color (255, 0, 0));
-
+		NoticeLabel.setForeground(new Color(255, 0, 0));
 
 		UserLabel = new JLabel();
 		UserLabel.setText("Login :");
@@ -89,11 +89,10 @@ public class StartupWindow extends JFrame {
 		RegisterButton.setBounds(225, 160, 100, 30);
 		RegisterButton.addMouseListener(new StartupRegisterMouseAdapter(this));
 
-
 		mapLabel = new JLabel();
-		mapLabel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("image/mapa.png")));
+		mapLabel.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource("image/mapa.png")));
 		mapLabel.setBounds(20, 0, 357, 215);
-
 
 		StartupPanel.add(NoticeLabel);
 		StartupPanel.add(UserLabel);
@@ -110,90 +109,96 @@ public class StartupWindow extends JFrame {
 
 	}
 
-
 	@SuppressWarnings("deprecation")
 	private String getPasswd() {
-		return PasswdField.getText();		
+		return PasswdField.getText();
 	}
-
 
 	private class StartupRegisterMouseAdapter extends MouseAdapter {
 
-		private StartupWindow stw;
+		private final StartupWindow stw;
 
 		public StartupRegisterMouseAdapter(StartupWindow stw) {
 			this.stw = stw;
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 
 			stw.setVisible(false);
-			JFrame f = new JFrame();
-			RegisterDialog dlg = new RegisterDialog(f, "La Conquista del Mundo - Registro", true);
+			final JFrame f = new JFrame();
+			final RegisterDialog dlg = new RegisterDialog(f,
+				"La Conquista del Mundo - Registro", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 
 			if (dlg.getSelection() == true) {
-				try{
-					WorldConqApp.getUserManager().registerUser(dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
-					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()+" registrado");
-					NoticeLabel.setForeground(new Color (0, 200, 0));
-				}
-				catch(Exception e) {
+				try {
+					WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+						dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
+							+ " registrado");
+					NoticeLabel.setForeground(new Color(0, 200, 0));
+				} catch (final Exception e) {
 					stw.NoticeLabel.setText("Error en el registro");
-					NoticeLabel.setForeground(new Color (255, 0, 0));
+					NoticeLabel.setForeground(new Color(255, 0, 0));
 				}
 			}
 
 			stw.setVisible(true);
 			f.dispose();
 
-
 		}
 	}
 
 	private class StartupAcceptMouseAdapter extends MouseAdapter {
 
-		private StartupWindow stw;
+		private final StartupWindow stw;
 
 		public StartupAcceptMouseAdapter(StartupWindow stw) {
 			this.stw = stw;
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
-			try{
-				WorldConqApp.getUserManager().createSession(stw.getUser(), stw.getPasswd());
-				WorldConqApp.getStartupWindow().setVisible(false);
-				WorldConqApp.getMainWindow().setLocationRelativeTo(null);
-				WorldConqApp.getMainWindow().setVisible(true);
-			}
-			catch(Exception e) {
+			try {
+				WorldConqApp.getWorldConqApp().getUserManager().createSession(
+					stw.getUser(), stw.getPasswd());
+				WorldConqApp.getWorldConqApp().getStartupWindow().setVisible(
+					false);
+				WorldConqApp.getWorldConqApp().getMainWindow().setLocationRelativeTo(
+					null);
+				WorldConqApp.getWorldConqApp().getMainWindow().setVisible(true);
+			} catch (final Exception e) {
 				stw.NoticeLabel.setText("Contraseña o login Erroneos");
-				NoticeLabel.setForeground(new Color (255, 0, 0));
+				NoticeLabel.setForeground(new Color(255, 0, 0));
 			}
 
 		}
 	}
 
-
 	private class StartupKeyAdapter extends KeyAdapter {
-		private StartupWindow stw;
+		private final StartupWindow stw;
 
-		public  StartupKeyAdapter(StartupWindow stw) {
+		public StartupKeyAdapter(StartupWindow stw) {
 			this.stw = stw;
 		}
 
+		@Override
 		public void keyPressed(KeyEvent evt) {
-			if(evt.getKeyCode() == 10) {
+			if (evt.getKeyCode() == 10) {
 				try {
-					WorldConqApp.getUserManager().createSession(stw.getUser(), stw.getPasswd());
-					WorldConqApp.getStartupWindow().setVisible(false);
-					WorldConqApp.getMainWindow().setLocationRelativeTo(null);
-					WorldConqApp.getMainWindow().setVisible(true);
-				}
-				catch(Exception e) {
+					WorldConqApp.getWorldConqApp().getUserManager().createSession(
+						stw.getUser(), stw.getPasswd());
+					WorldConqApp.getWorldConqApp().getStartupWindow().setVisible(
+						false);
+					WorldConqApp.getWorldConqApp().getMainWindow().setLocationRelativeTo(
+						null);
+					WorldConqApp.getWorldConqApp().getMainWindow().setVisible(
+						true);
+				} catch (final Exception e) {
 					stw.NoticeLabel.setText("Contraseña o login Erroneos");
-					NoticeLabel.setForeground(new Color (255, 0, 0));
+					NoticeLabel.setForeground(new Color(255, 0, 0));
 				}
 			}
 		}

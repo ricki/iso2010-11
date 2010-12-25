@@ -5,14 +5,18 @@ import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
 
+import es.uclm.iso2.rmi.GameInfo;
+
 public class GameManager {
 
+	private final WorldConqApp app;
 	private GameListModel mCurrentGameListModel;
 	private GameListModel mOpenGameListModel;
 
 	public GameManager() {
-		setCurrentGameListModel(new GameListModel());
-		setOpenGameListModel(new GameListModel());
+		app = WorldConqApp.getWorldConqApp();
+		this.setCurrentGameListModel(new GameListModel());
+		this.setOpenGameListModel(new GameListModel());
 	}
 
 	public void setCurrentGameListModel(GameListModel mCurrentGameListModel) {
@@ -32,36 +36,25 @@ public class GameManager {
 	}
 
 	public void updateGameList() throws Exception {
-		String user = WorldConqApp.getUserManager().getActiveSession().getUser();
-		ArrayList<GameInfo> l = WorldConqApp.getServerAdapter().fetchGameList();
+		final String user = app.getUserManager().getSession().getUser();
+		final ArrayList<GameInfo> fullList = app.getServerAdapter().fetchGameList();
+		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
+		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
 
-		ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
-		ArrayList<GameInfo> listOpen = new ArrayList<GameInfo>();
-		int countPlayers = 0;
-		for (int i = 0; i < l.size(); i++) {
-			for (int j = 0; j < l.get(i).getPlayers().size(); j++) {
-				if (user.equals(l.get(i).getPlayers().get(j).getUserName())) {
-					listPlayer.add(l.get(i));
-				} else {
-					countPlayers++;
-				}
-
-				if ((countPlayers == l.get(i).getPlayers().size())
-						&& l.get(i).getOpenTerritories() > 0) {
-					listOpen.add(l.get(i));
-				}
-
+		for (final GameInfo info : fullList) {
+			if (info.getPlayers().contains(user)) {
+				currentList.add(info);
+			} else if (info.getnFreeTerritories() > 0) {
+				openList.add(info);
 			}
-			countPlayers=0;
 		}
 
-		mCurrentGameListModel.setData(listPlayer);
-		mOpenGameListModel.setData(listOpen);
+		mCurrentGameListModel.setData(currentList);
+		mOpenGameListModel.setData(openList);
 	}
-	
-	public static void createGame(	String mName, String mDescription,
-			ArrayList<Calendar> mGameSessions) throws Exception{
-			WorldConqApp.getServerAdapter().createGame(new GameInfo(mName, mDescription, 
-					mGameSessions));
+
+	public void createGame(String name, String description, ArrayList<Calendar> gameSessions) throws Exception {
+		app.getServerAdapter().createGame(new GameInfo(null, name,
+			description, null, gameSessions, 0, 0, 0, 0));
 	}
 }

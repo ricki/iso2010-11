@@ -1,34 +1,36 @@
 package com.umbrella.worldconq.domain;
 
+import java.util.UUID;
+
 import com.umbrella.worldconq.WorldConqApp;
 
-
 public class UserManager {
-	
+
+	private final WorldConqApp app;
 	private Session mSession;
-	
-	public UserManager(){
-		 mSession = null;
 
-	}
-	
-	public void registerUser(String Login, String Passwd, String Email) throws Exception {
-		WorldConqApp.getServerAdapter().registerUser(Login, Passwd, Email);
+	public UserManager() {
+		app = WorldConqApp.getWorldConqApp();
+		mSession = null;
 	}
 
-	public void createSession(String Login, String Passwd) throws Exception {
-		// TODO Comprobar si hay sesión activa y cerrarla antes.
-		mSession = WorldConqApp.getServerAdapter().createSession(Login, Passwd);
-		// TODO Poner el email y el uuid correcto
-		mSession.setUser(Login);
+	public Session getSession() {
+		return mSession;
+	}
+
+	public void registerUser(String login, String passwd, String email) throws Exception {
+		app.getServerAdapter().registerUser(login, passwd, email);
+	}
+
+	public void createSession(String login, String passwd) throws Exception {
+		if (mSession != null) this.closeSession();
+		final UUID id = app.getServerAdapter().createSession(login, passwd);
+		mSession = new Session(id, login);
+		app.setMainMode();
 	}
 
 	public void closeSession() throws Exception {
-		WorldConqApp.getServerAdapter().closeSession(mSession);
+		app.getServerAdapter().closeSession(mSession);
 		mSession = null;
-	}
-	
-	public Session getActiveSession() {
-		return mSession;
 	}
 }
