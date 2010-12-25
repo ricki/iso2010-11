@@ -5,6 +5,16 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import es.uclm.iso2.rmi.exceptions.FullGameException;
+import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
+import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
+import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
+import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
+import es.uclm.iso2.rmi.exceptions.InvalidTimeException;
+import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
+import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
+import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+
 public interface IServer {
 
 	void registerUser(String name, String password, String email)
@@ -36,7 +46,7 @@ public interface IServer {
 			InvalidTimeException;
 
 	void updateGame(UUID session, UUID game, ArrayList<Player> playerUpdate,
-			ArrayList<Territory> territoryUpdate,EventType event) throws RemoteException,
+			ArrayList<Territory> territoryUpdate, EventType event) throws RemoteException,
 			GameNotFoundException, InvalidSessionException,
 			NotCurrentPlayerGameException;
 

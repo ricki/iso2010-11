@@ -11,6 +11,13 @@ public class Game implements Serializable {
 	private ArrayList<Territory> map;
 	private ArrayList<Player> players;
 
+	public Game() {
+		super();
+		gameInfo = null;
+		map = null;
+		players = null;
+	}
+
 	public Game(GameInfo gameInfo, ArrayList<Territory> map, ArrayList<Player> players) {
 		super();
 		this.gameInfo = gameInfo;

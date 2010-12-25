@@ -9,6 +9,18 @@ public class Spy implements Serializable {
 	private int uses;
 	private Territory location; // Association
 
+	public Spy() {
+		super();
+		uses = 0;
+		location = null;
+	}
+
+	public Spy(int uses, Territory location) {
+		super();
+		this.uses = uses;
+		this.location = location;
+	}
+
 	public int getUses() {
 		return uses;
 	}

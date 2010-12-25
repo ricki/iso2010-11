@@ -19,6 +19,32 @@ public class Territory implements Serializable {
 	private int numICBMs; // Intercontinental Ballistic Missiles
 	private int numAntiMissiles;
 
+	public Territory() {
+		super();
+		idTerritory = 0;
+		continent = null;
+		owner = null;
+		numSoldiers = 0;
+		numCannons[0] = 0;
+		numCannons[1] = 0;
+		numCannons[2] = 0;
+		numMissiles = 0;
+		numICBMs = 0;
+		numAntiMissiles = 0;
+	}
+
+	public Territory(int idTerritory, Continent continent, Player owner, int numSoldiers, int[] numCannons, int numMissiles, int numICBMs, int numAntiMissiles) {
+		super();
+		this.idTerritory = idTerritory;
+		this.continent = continent;
+		this.owner = owner;
+		this.numSoldiers = numSoldiers;
+		this.numCannons = numCannons;
+		this.numMissiles = numMissiles;
+		this.numICBMs = numICBMs;
+		this.numAntiMissiles = numAntiMissiles;
+	}
+
 	public int getIdTerritory() {
 		return idTerritory;
 	}

@@ -13,6 +13,24 @@ public class Player implements Serializable {
 	private boolean hasTurn;
 	private ArrayList<Spy> spies;
 
+	public Player() {
+		super();
+		name = null;
+		money = 0;
+		online = false;
+		hasTurn = false;
+		spies = null;
+	}
+
+	public Player(String name, int money, boolean online, boolean hasTurn, ArrayList<Spy> spies) {
+		super();
+		this.name = name;
+		this.money = money;
+		this.online = online;
+		this.hasTurn = hasTurn;
+		this.spies = spies;
+	}
+
 	public String getName() {
 		return name;
 	}

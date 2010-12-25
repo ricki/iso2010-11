@@ -10,12 +10,20 @@ public class Arsenal implements Serializable {
 	private int missiles;
 	private int ICBMs;
 
-	public Arsenal(int soldiers, int cannons, int missiles, int iCBMs) {
+	public Arsenal() {
+		super();
+		soldiers = 0;
+		cannons = 0;
+		missiles = 0;
+		ICBMs = 0;
+	}
+
+	public Arsenal(int soldiers, int cannons, int missiles, int ICBMs) {
 		super();
 		this.soldiers = soldiers;
 		this.cannons = cannons;
 		this.missiles = missiles;
-		ICBMs = iCBMs;
+		this.ICBMs = ICBMs;
 	}
 
 	public int getSoldiers() {
@@ -46,8 +54,8 @@ public class Arsenal implements Serializable {
 		return ICBMs;
 	}
 
-	public void setICBMs(int iCBMs) {
-		ICBMs = iCBMs;
+	public void setICBMs(int ICBMs) {
+		this.ICBMs = ICBMs;
 	}
 
 }

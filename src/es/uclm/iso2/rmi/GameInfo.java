@@ -18,6 +18,19 @@ public class GameInfo implements Serializable {
 	private int defenseTime;
 	private int negotiationTime;
 
+	public GameInfo() {
+		super();
+		id = null;
+		name = null;
+		description = null;
+		players = null;
+		gameSessions = null;
+		nFreeTerritories = 0;
+		turnTime = 0;
+		defenseTime = 0;
+		negotiationTime = 0;
+	}
+
 	public GameInfo(UUID id, String name, String description, ArrayList<String> players, ArrayList<Calendar> gameSessions, int nFreeTerritories, int turnTime, int defenseTime, int negotiationTime) {
 		super();
 		this.id = id;
