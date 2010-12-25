@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import es.uclm.iso2.rmi.GameInfo;
+
 public class GameListModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 7356294494185290462L;
@@ -15,14 +17,14 @@ public class GameListModel extends AbstractTableModel {
 			"N° Territorios Libres"
 	};
 
-	private final ArrayList<es.uclm.iso2.rmi.GameInfo> mGameList;
+	private final ArrayList<GameInfo> mGameList;
 
 	public GameListModel() {
 		super();
-		mGameList = new ArrayList<es.uclm.iso2.rmi.GameInfo>();
+		mGameList = new ArrayList<GameInfo>();
 	}
 
-	public void setData(ArrayList<es.uclm.iso2.rmi.GameInfo> data) {
+	public void setData(ArrayList<GameInfo> data) {
 		mGameList.clear();
 		mGameList.addAll(data);
 		this.fireTableDataChanged();
