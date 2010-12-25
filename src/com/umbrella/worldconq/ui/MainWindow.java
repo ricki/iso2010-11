@@ -37,8 +37,8 @@ public class MainWindow extends JFrame {
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		try {
-			this.setIconImage(new ImageIcon(ClassLoader
-					.getSystemResource("image/logo.png")).getImage());
+			this.setIconImage(new ImageIcon(
+				ClassLoader.getSystemResource("image/logo.png")).getImage());
 		} catch (final Exception e) {
 			System.out.println("Imagen no encontrada");
 		}
@@ -56,21 +56,19 @@ public class MainWindow extends JFrame {
 		final JButton createGameButton = new JButton("Crear partida");
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
-
-		this.getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
-		// getContentPane().add(mPlayToolBar, BorderLayout.NORTH); FIXME Esto no
-		// funciona.
-		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
-		this.setGameListMode();
 	}
 
-	public void setGameListMode() {
+	public void setupListGUI() {
+		this.getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
+		// FIXME Esto no funciona.
+		// getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
+		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
 		mPlayToolBar.setVisible(false);
 		this.getGameListPanel().setVisible(true);
 	}
 
-	public void setPlayMode() {
+	public void setupGameGUI() {
 		// TODO : Creo ya la función. A completar en próximas iteraciones.
 		mGameListToolBar.setVisible(false);
 		mPlayToolBar.setVisible(true);
@@ -104,7 +102,7 @@ public class MainWindow extends JFrame {
 		public void mouseClicked(MouseEvent evt) {
 			final JFrame f = new JFrame();
 			final CreateGameDialog dlg = new CreateGameDialog(f,
-					"La Conquista del Mundo - Nueva partida", true);
+				"La Conquista del Mundo - Nueva partida", true);
 			dlg.setLocationRelativeTo(null);
 			dlg.setVisible(true);
 

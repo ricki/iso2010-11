@@ -88,6 +88,16 @@ public class WorldConqApp {
 		this.getStartupWindow().setVisible(true);
 	}
 
+	public void setMainMode() {
+		if (mStartupWindow != null) {
+			mStartupWindow.setVisible(false);
+			mStartupWindow.dispose();
+			mStartupWindow = null;
+		}
+		this.getMainWindow().setupListGUI();
+		this.getMainWindow().setVisible(true);
+	}
+
 	public void freeResources() {
 		if (mStartupWindow != null) {
 			mStartupWindow.setVisible(false);
@@ -109,17 +119,6 @@ public class WorldConqApp {
 			mServerAdapter.disconnect();
 			mServerAdapter = null;
 		}
-	}
-
-	public void setMainMode() {
-		if (mStartupWindow != null) {
-			mStartupWindow.setVisible(false);
-			mStartupWindow.dispose();
-			mStartupWindow = null;
-		}
-
-		this.getMainWindow().setVisible(true);
-
 	}
 
 }
