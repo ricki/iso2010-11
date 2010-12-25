@@ -70,7 +70,7 @@ public class UserManagerTest extends TestCase {
 				"Luis", "Luis");
 			assertTrue(
 				"Error Session null ",
-				WorldConqApp.getWorldConqApp().getUserManager().getActiveSession() != null);
+				WorldConqApp.getWorldConqApp().getUserManager().getSession() != null);
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Error al logear un usuario");
 		}

@@ -34,7 +34,7 @@ public class GameManager {
 	}
 
 	public void updateGameList() throws Exception {
-		final String user = WorldConqApp.getWorldConqApp().getUserManager().getActiveSession().getUser();
+		final String user = WorldConqApp.getWorldConqApp().getUserManager().getSession().getUser();
 		final ArrayList<GameInfo> l = WorldConqApp.getWorldConqApp().getServerAdapter().fetchGameList();
 
 		final ArrayList<GameInfo> listPlayer = new ArrayList<GameInfo>();
