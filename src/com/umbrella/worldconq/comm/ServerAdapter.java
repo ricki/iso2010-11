@@ -6,6 +6,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
 
@@ -13,8 +14,6 @@ import es.uclm.iso2.rmi.GameInfo;
 import es.uclm.iso2.rmi.IServer;
 
 public class ServerAdapter {
-
-	protected static ServerAdapter mInstance = null;
 
 	private String mRemoteName;
 	private InetAddress mRemoteHost;
@@ -30,14 +29,7 @@ public class ServerAdapter {
 
 	public ServerAdapter(String remoteName, InetAddress remoteHost, int remotePort) {
 		this.setRemoteInfo(remoteName, remoteHost, remotePort);
-	}
-
-	public static ServerAdapter getServerAdapter() {
-		if (mInstance == null) {
-			mInstance = new ServerAdapter();
-		}
-
-		return mInstance;
+		mProxy = null;
 	}
 
 	public void setRemoteInfo(String remoteName, InetAddress remoteHost, int remotePort) {
@@ -49,10 +41,9 @@ public class ServerAdapter {
 	public void connect() throws MalformedURLException, RemoteException, NotBoundException {
 		this.disconnect();
 		final String url = String.format("rmi://%s:%d/%s",
-				mRemoteHost.getHostAddress(),
-				mRemotePort,
-				mRemoteName
-				);
+			mRemoteHost.getHostAddress(),
+			mRemotePort,
+			mRemoteName);
 		mProxy = (IServer) Naming.lookup(url);
 	}
 
@@ -64,11 +55,10 @@ public class ServerAdapter {
 		return mProxy != null;
 	}
 
-	public Session createSession(String Login, String Passwd) throws Exception {
+	public UUID createSession(String login, String passwd) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
-		return new Session(mProxy.loginUser(Login, Passwd, null)); // TODO Falta
-		// el
-		// callback
+		// TODO Falta el callback
+		return mProxy.loginUser(login, passwd, null);
 	}
 
 	public void closeSession(Session session) throws Exception {
@@ -76,9 +66,9 @@ public class ServerAdapter {
 		mProxy.logoutUser(session.getId());
 	}
 
-	public void registerUser(String Login, String Passwd, String Email) throws Exception {
+	public void registerUser(String login, String passwd, String email) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
-		mProxy.registerUser(Login, Passwd, Email);
+		mProxy.registerUser(login, passwd, email);
 	}
 
 	public ArrayList<GameInfo> fetchGameList() throws Exception {
@@ -89,7 +79,6 @@ public class ServerAdapter {
 	public void createGame(GameInfo game) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
 		mProxy.createGame(game);
-
 	}
 
 }
