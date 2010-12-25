@@ -17,11 +17,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.domain.GameManager;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
+
+	private final WorldConqApp app;
 
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
@@ -30,6 +31,7 @@ public class MainWindow extends JFrame {
 
 	public MainWindow() {
 		super();
+		app = WorldConqApp.getWorldConqApp();
 		this.initGUI();
 	}
 
@@ -81,10 +83,10 @@ public class MainWindow extends JFrame {
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel,
 				BoxLayout.Y_AXIS));
 			final JTable currentList = new JTable(
-				WorldConqApp.getWorldConqApp().getGameManager().getCurrentGameListModel());
+				app.getGameManager().getCurrentGameListModel());
 			final JScrollPane currentListPanel = new JScrollPane(currentList);
 			final JTable openList = new JTable(
-				WorldConqApp.getWorldConqApp().getGameManager().getOpenGameListModel());
+				app.getGameManager().getOpenGameListModel());
 			final JScrollPane openListPanel = new JScrollPane(openList);
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -108,7 +110,7 @@ public class MainWindow extends JFrame {
 
 			if (dlg.getSelection() == true) {
 				try {
-					GameManager.createGame(dlg.getGameName(),
+					app.getGameManager().createGame(dlg.getGameName(),
 						dlg.getDescription(), dlg.getCalendarList());
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -122,7 +124,7 @@ public class MainWindow extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			try {
-				WorldConqApp.getWorldConqApp().getGameManager().updateGameList();
+				app.getGameManager().updateGameList();
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
