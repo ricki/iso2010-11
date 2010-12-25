@@ -15,7 +15,7 @@ import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
 import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
 import es.uclm.iso2.rmi.exceptions.WrongLoginException;
 
-public interface IServer {
+public interface IServer extends java.rmi.Remote {
 
 	void registerUser(String name, String password, String email)
 			throws RemoteException, UserAlreadyExistsException;

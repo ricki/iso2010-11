@@ -9,7 +9,7 @@ import es.uclm.iso2.rmi.exceptions.InvalidArsenalException;
 import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
 import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
 
-public interface IClient {
+public interface IClient extends java.rmi.Remote {
 
 	public enum TimeType {
 		TurnExpired, DefenseExpired, NegotiationExpired
