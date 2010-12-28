@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +29,10 @@ public class MainWindow extends JFrame {
 	private JPanel mGameListPanel = null;
 
 	private JToolBar mPlayToolBar = null;
+
+	private JToolBar mOptionButton = null;
+
+	private JTable openList = null;
 
 	public MainWindow() {
 		super();
@@ -85,7 +90,7 @@ public class MainWindow extends JFrame {
 			final JTable currentList = new JTable(
 				app.getGameManager().getCurrentGameListModel());
 			final JScrollPane currentListPanel = new JScrollPane(currentList);
-			final JTable openList = new JTable(
+			openList = new JTable(
 				app.getGameManager().getOpenGameListModel());
 			final JScrollPane openListPanel = new JScrollPane(openList);
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -125,8 +130,45 @@ public class MainWindow extends JFrame {
 		public void mouseClicked(MouseEvent evt) {
 			try {
 				app.getGameManager().updateGameList();
+				if (mOptionButton == null) {
+					mOptionButton = new JToolBar();
+
+					final JButton joinGameButton = new JButton(
+						"Unirse a la partida");
+					joinGameButton.addMouseListener(new JoinGameMouseAdapter());
+
+					mOptionButton.add(joinGameButton);
+					mGameListPanel.add(mOptionButton);
+				}
+
 			} catch (final Exception e) {
 				e.printStackTrace();
+			}
+		}
+	}
+
+	private class JoinGameMouseAdapter extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			final int gameSelected = openList.getSelectedRow();
+			System.out.println(gameSelected);
+			if (openList.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(mGameListPanel,
+					"No ha seleccionado ninguna partida");
+			} else {
+				final int confirm = JOptionPane.showConfirmDialog(
+					mGameListPanel,
+					"¿Desea unirse a esta partida?", "Confirmar",
+					JOptionPane.YES_NO_OPTION);
+
+				if (confirm == 0) {
+					try {
+						app.getGameManager().joinGame(gameSelected);
+						app.getGameManager().updateGameList();
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}

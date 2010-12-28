@@ -2,6 +2,7 @@ package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 
 import com.umbrella.worldconq.WorldConqApp;
 
@@ -56,5 +57,16 @@ public class GameManager {
 	public void createGame(String name, String description, ArrayList<Calendar> gameSessions) throws Exception {
 		app.getServerAdapter().createGame(new GameInfo(null, name,
 			description, null, gameSessions, 0, 0, 0, 0));
+	}
+
+	public void joinGame(int gameSelected) {
+		final UUID gameUuid = mOpenGameListModel.getGameAt(gameSelected).getId();
+		final Session user = app.getUserManager().getSession();
+		try {
+			app.getServerAdapter().joinGame(user, gameUuid);
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

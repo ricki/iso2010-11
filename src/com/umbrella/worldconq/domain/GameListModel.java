@@ -59,8 +59,21 @@ public class GameListModel extends AbstractTableModel {
 		case 3:
 			return new Integer(mGameList.get(rowIndex).getnFreeTerritories());
 		default:
+			mGameList.get(0).getId();
 			return null;
 		}
+	}
+
+	/**
+	 * Función que devuelve el objeto juego que se encuentra en la posición
+	 * indicada
+	 * 
+	 * @param gameSelected
+	 *            : Posición del objeto que queremos obtener.
+	 * @return
+	 */
+	public GameInfo getGameAt(int gameSelected) {
+		return mGameList.get(gameSelected);
 	}
 
 }
