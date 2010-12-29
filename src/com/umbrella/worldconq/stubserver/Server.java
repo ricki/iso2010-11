@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
+import com.umbrella.worldconq.domain.Session;
+
 import es.uclm.iso2.rmi.Arsenal;
 import es.uclm.iso2.rmi.EventType;
 import es.uclm.iso2.rmi.Game;
@@ -61,6 +63,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	private final ArrayList<GameInfo> gameList;
 
+	private final ArrayList<Session> sessionsList;
+
 	public Server() throws Exception, RemoteException {
 		super();
 
@@ -69,6 +73,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 		gameList = new ArrayList<GameInfo>();
 		registerUsers = new ArrayList<String[]>();
+		sessionsList = new ArrayList<Session>();
 
 		for (final String[] user : Users)
 			registerUsers.add(user);
@@ -148,6 +153,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 					&& registerUsers.get(i)[1].compareTo(password) == 0) {
 				encontrado = true;
 				id = UUID.randomUUID();
+				final Session session = new Session(id, name);
+				sessionsList.add(session);
 			}
 		}
 		if (encontrado == false) throw new WrongLoginException();
@@ -181,6 +188,27 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public void joinGame(UUID session, UUID partida) throws RemoteException, GameNotFoundException, InvalidSessionException {
 		System.out.println("IServer::joinGame");
+		boolean foundGame = false;
+		boolean foundSession = false;
+		//compruebo que la sesion se encuentra dentro de la lista de sesiones activas.
+		for (int i = 0; i < sessionsList.size() && foundSession == false; i++) {
+			if (sessionsList.get(i).getId().compareTo(session) == 0) {
+				foundSession = true;
+				//La sesion existe, ahora compruebo que la partida existe.
+				for (int j = 0; j < gameList.size() && foundGame == false; j++) {
+					if (gameList.get(j).getId().compareTo(partida) == 0) {
+						gameList.get(j).getPlayers().add(
+							sessionsList.get(i).getUser());
+						foundGame = true;
+					}
+				}
+			}
+		}
+		if (foundSession == false) {
+			throw new InvalidSessionException();
+		} else if (foundGame == false) {
+			throw new GameNotFoundException();
+		}
 	}
 
 	@Override

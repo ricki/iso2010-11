@@ -57,4 +57,15 @@ public class GameManager {
 		app.getServerAdapter().createGame(new GameInfo(null, name,
 			description, null, gameSessions, 0, 0, 0, 0));
 	}
+
+	public void joinGame(int gameSelected) {
+		final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
+		final Session user = app.getUserManager().getSession();
+		try {
+			app.getServerAdapter().joinGame(user, gameUuid);
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
