@@ -187,6 +187,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	@Override
 	public void joinGame(UUID session, UUID partida) throws RemoteException, GameNotFoundException, InvalidSessionException {
+		System.out.println("IServer::joinGame");
 		boolean foundGame = false;
 		boolean foundSession = false;
 		//compruebo que la sesion se encuentra dentro de la lista de sesiones activas.

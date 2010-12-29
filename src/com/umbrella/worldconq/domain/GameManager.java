@@ -2,7 +2,6 @@ package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.UUID;
 
 import com.umbrella.worldconq.WorldConqApp;
 
@@ -60,7 +59,7 @@ public class GameManager {
 	}
 
 	public void joinGame(int gameSelected) {
-		final UUID gameUuid = mOpenGameListModel.getGameAt(gameSelected).getId();
+		final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
 		final Session user = app.getUserManager().getSession();
 		try {
 			app.getServerAdapter().joinGame(user, gameUuid);
