@@ -162,7 +162,8 @@ public class MainWindow extends JFrame {
 
 					//Recorro las sessiones de la partida seleccionada, si la resta es menos a dos horas se puede jugar
 					for (int i = 0; i < session.size() && onLine == false; i++) {
-						if (date - session.get(i).getTimeInMillis() < 7200000) {
+						if ((date - session.get(i).getTimeInMillis() < 7200000)
+								&& (date - session.get(i).getTimeInMillis() > 0)) {
 							onLine = true;
 						}
 					}
