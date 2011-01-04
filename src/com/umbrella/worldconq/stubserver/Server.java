@@ -65,6 +65,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	private final ArrayList<Session> sessionsList;
 
+	private final Game testGame;
+
 	public Server() throws Exception, RemoteException {
 		super();
 
@@ -74,6 +76,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 		gameList = new ArrayList<GameInfo>();
 		registerUsers = new ArrayList<String[]>();
 		sessionsList = new ArrayList<Session>();
+		testGame = new Game();
 
 		for (final String[] user : Users)
 			registerUsers.add(user);
@@ -88,6 +91,23 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game01",
 				"desc from game01", player, session, 3, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(0));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("JorgeCA", 200, true, true, null));
+			playerList.add(new Player("Aduran", 250, true, false, null));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			final int[] p = {
+					1, 2, 3
+			};
+			mapList.add(new Territory(1, Territory.Continent.Europe,
+				playerList.get(0), 20, p, 1, 0, 1));
+			mapList.add(new Territory(3, Territory.Continent.Europe,
+				playerList.get(1), 10, p, 2, 0, 1));
+			testGame.setMap(mapList);
 		}
 		{ // GameInfo 02
 			final ArrayList<String> player = new ArrayList<String>();
@@ -101,6 +121,26 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game02",
 				"desc from game02", player, session, 6, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(1));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("ricki", 200, true, true, null));
+			playerList.add(new Player("DaniLR", 250, true, false, null));
+			playerList.add(new Player("deejaytoni", 300, true, false, null));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			final int[] p = {
+					1, 2, 3
+			};
+			mapList.add(new Territory(1, Territory.Continent.Africa,
+				playerList.get(0), 20, p, 1, 0, 1));
+			mapList.add(new Territory(3, Territory.Continent.Africa,
+				playerList.get(1), 10, p, 2, 0, 1));
+			mapList.add(new Territory(3, Territory.Continent.Africa,
+				playerList.get(2), 15, p, 2, 0, 1));
+			testGame.setMap(mapList);
 		}
 		{ // GameInfo 03
 			final ArrayList<String> player = new ArrayList<String>();
@@ -112,6 +152,23 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game03",
 				"desc from game03", player, session, 6, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(2));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("pobleteag", 200, true, true, null));
+			playerList.add(new Player("LauraN", 250, true, false, null));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			final int[] p = {
+					1, 2, 3
+			};
+			mapList.add(new Territory(1, Territory.Continent.Asia,
+				playerList.get(0), 20, p, 1, 0, 1));
+			mapList.add(new Territory(3, Territory.Continent.Asia,
+				playerList.get(1), 10, p, 2, 0, 1));
+			testGame.setMap(mapList);
 		}
 
 		miIP = (InetAddress.getLocalHost()).toString();
@@ -219,7 +276,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public Game playGame(UUID session, UUID game) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		System.out.println("IServer::playGame");
-		return null;
+		return testGame;
 	}
 
 	@Override
