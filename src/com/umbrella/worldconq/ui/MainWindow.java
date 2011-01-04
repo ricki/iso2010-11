@@ -21,6 +21,8 @@ import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
 
+import es.uclm.iso2.rmi.GameInfo;
+
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
@@ -30,12 +32,10 @@ public class MainWindow extends JFrame {
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
 	private JPanel mGamePanel = null;
-
 	private JToolBar mPlayToolBar = null;
-
 	private JTable mOpenList = null;
-
 	private JTable mCurrentList = null;
+	private JTable mMap = null;
 
 	public MainWindow() {
 		super();
@@ -125,6 +125,9 @@ public class MainWindow extends JFrame {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
+			mMap = new JTable(app.getGameEngine().getMapListModel());
+			final JScrollPane mapPanel = new JScrollPane(mMap);
+			mGamePanel.add(mapPanel);
 		}
 		return mGamePanel;
 	}
@@ -218,12 +221,15 @@ public class MainWindow extends JFrame {
 			final int gameSelected = mCurrentList.getSelectedRow();
 			System.out.println(gameSelected);
 			if (mCurrentList.getSelectedRow() == -1) {
-				JOptionPane.showMessageDialog(mGameListPanel,
+				JOptionPane.showMessageDialog(mGamePanel,
 					"No ha seleccionado ninguna partida");
 			} else {
 				try {
 					app.getGameManager().connectToGame(gameSelected);
 					MainWindow.this.setupGameGUI();
+					final GameInfo gi = app.getGameManager().getCurrentGameListModel().getGameAt(
+						gameSelected);
+					app.getGameEngine().updatePlay(gi);
 				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -66,6 +66,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	private final ArrayList<Session> sessionsList;
 
 	private final Game testGame;
+	private final ArrayList<Game> testGameList;
 
 	public Server() throws Exception, RemoteException {
 		super();
@@ -77,6 +78,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 		registerUsers = new ArrayList<String[]>();
 		sessionsList = new ArrayList<Session>();
 		testGame = new Game();
+		testGameList = new ArrayList<Game>();
 
 		for (final String[] user : Users)
 			registerUsers.add(user);
@@ -108,6 +110,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			mapList.add(new Territory(3, Territory.Continent.Europe,
 				playerList.get(1), 10, p, 2, 0, 1));
 			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 		{ // GameInfo 02
 			final ArrayList<String> player = new ArrayList<String>();
@@ -141,6 +144,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			mapList.add(new Territory(3, Territory.Continent.Africa,
 				playerList.get(2), 15, p, 2, 0, 1));
 			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 		{ // GameInfo 03
 			final ArrayList<String> player = new ArrayList<String>();
@@ -169,6 +173,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			mapList.add(new Territory(3, Territory.Continent.Asia,
 				playerList.get(1), 10, p, 2, 0, 1));
 			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 
 		miIP = (InetAddress.getLocalHost()).toString();
@@ -276,7 +281,13 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public Game playGame(UUID session, UUID game) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		System.out.println("IServer::playGame");
-		return testGame;
+		Game ret = null;
+		for (int i = 0; i < testGameList.size(); i++) {
+			if (game == testGameList.get(i).getGameInfo().getId()) {
+				ret = testGameList.get(i);
+			}
+		}
+		return ret;
 	}
 
 	@Override
