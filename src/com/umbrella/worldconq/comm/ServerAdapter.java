@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
 
+import es.uclm.iso2.rmi.Game;
 import es.uclm.iso2.rmi.GameInfo;
 import es.uclm.iso2.rmi.IServer;
 
@@ -86,9 +87,9 @@ public class ServerAdapter {
 		mProxy.joinGame(session.getId(), game.getId());
 	}
 
-	public void playGame(Session session, GameInfo game) throws Exception {
+	public Game playGame(Session session, GameInfo game) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
-		mProxy.playGame(session.getId(), game.getId());
+		return mProxy.playGame(session.getId(), game.getId());
 
 	}
 

@@ -209,6 +209,7 @@ public class MainWindow extends JFrame {
 			} else {
 				try {
 					app.getGameManager().connectToGame(gameSelected);
+
 				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
