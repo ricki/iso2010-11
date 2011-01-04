@@ -19,6 +19,7 @@ import es.uclm.iso2.rmi.GameInfo;
 import es.uclm.iso2.rmi.IServer;
 import es.uclm.iso2.rmi.Player;
 import es.uclm.iso2.rmi.Territory;
+import es.uclm.iso2.rmi.Territory.Continent;
 import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
 import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
 import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
@@ -69,7 +70,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	public Server() throws Exception, RemoteException {
 		super();
+		//cremamos la chapuza para la tabla inicial
+		//final ArrayList<Territory> mapListInicial = new ArrayList<Territory>();
 
+		//se acaba la chapuza
 		System.setProperty("java.security.policy",
 			ClassLoader.getSystemResource("data/open.policy").toString());
 
@@ -101,11 +105,14 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGame.setPlayers(playerList);
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
 			final int[] p = {
 					1, 2, 3
 			};
+			this.borrarCosasMapa(mapList, 1, Territory.Continent.Europe);
 			mapList.add(new Territory(1, Territory.Continent.Europe,
 				playerList.get(0), 20, p, 1, 0, 1));
+			this.borrarCosasMapa(mapList, 3, Territory.Continent.Europe);
 			mapList.add(new Territory(3, Territory.Continent.Europe,
 				playerList.get(1), 10, p, 2, 0, 1));
 			testGame.setMap(mapList);
@@ -134,14 +141,18 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGame.setPlayers(playerList);
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
 			final int[] p = {
 					1, 2, 3
 			};
+			this.borrarCosasMapa(mapList, 1, Territory.Continent.Africa);
 			mapList.add(new Territory(1, Territory.Continent.Africa,
 				playerList.get(0), 20, p, 1, 0, 1));
+			this.borrarCosasMapa(mapList, 3, Territory.Continent.Africa);
 			mapList.add(new Territory(3, Territory.Continent.Africa,
 				playerList.get(1), 10, p, 2, 0, 1));
-			mapList.add(new Territory(3, Territory.Continent.Africa,
+			this.borrarCosasMapa(mapList, 4, Territory.Continent.Africa);
+			mapList.add(new Territory(4, Territory.Continent.Africa,
 				playerList.get(2), 15, p, 2, 0, 1));
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
@@ -166,11 +177,14 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGame.setPlayers(playerList);
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
 			final int[] p = {
 					1, 2, 3
 			};
+			this.borrarCosasMapa(mapList, 1, Territory.Continent.Asia);
 			mapList.add(new Territory(1, Territory.Continent.Asia,
 				playerList.get(0), 20, p, 1, 0, 1));
+			this.borrarCosasMapa(mapList, 3, Territory.Continent.Asia);
 			mapList.add(new Territory(3, Territory.Continent.Asia,
 				playerList.get(1), 10, p, 2, 0, 1));
 			testGame.setMap(mapList);
@@ -185,6 +199,62 @@ public class Server extends UnicastRemoteObject implements IServer {
 		reg.rebind("WorldConqStubServer", this);
 
 		System.out.println("Esperando peticiones...");
+	}
+
+	private void borrarCosasMapa(ArrayList<Territory> mapList, int id, Continent c) {
+		for (int i = 0; i < mapList.size(); i++) {
+			if (mapList.get(i).getIdTerritory() == id
+					&& mapList.get(i).getContinent() == c) {
+				mapList.remove(i);
+			}
+		}
+
+	}
+
+	public void rellenarMapaInicial(ArrayList<Territory> mapList) {
+		final int[] numTerritorios = {
+				7, 12, 6, 9, 4, 4
+		};
+		final int[] ca = {
+				-1, -1, -1
+		};
+		for (int i = 0; i < 6; i++) {
+			for (int j = 1; j <= numTerritorios[i]; j++) {
+				switch (i) {
+				case 0:
+					mapList.add(new Territory(j,
+						Territory.Continent.Europe,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 1:
+					mapList.add(new Territory(j,
+						Territory.Continent.Asia,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 2:
+					mapList.add(new Territory(j,
+						Territory.Continent.Africa,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 3:
+					mapList.add(new Territory(j,
+						Territory.Continent.NorthAmerica,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 4:
+					mapList.add(new Territory(j,
+						Territory.Continent.SouthAmerica,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 5:
+					mapList.add(new Territory(j,
+						Territory.Continent.Oceania,
+						null, -1, ca, -1, -1, -1));
+					break;
+
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) throws Exception {

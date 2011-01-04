@@ -61,7 +61,10 @@ public class MapModel extends AbstractTableModel {
 		case 1:
 			return mMapList.get(rowIndex).getContinent();
 		case 2:
-			return mMapList.get(rowIndex).getOwner().getName();
+			if (mMapList.get(rowIndex).getOwner() == null)
+				return null;
+			else
+				return mMapList.get(rowIndex).getOwner().getName();
 		case 3:
 			return mMapList.get(rowIndex).getNumSoldiers();
 		case 4:
