@@ -74,6 +74,9 @@ public class GameManager {
 		final Session user = app.getUserManager().getSession();
 		try {
 			app.getServerAdapter().playGame(user, gameUuid);
+			final GameInfo gi = app.getGameManager().getCurrentGameListModel().getGameAt(
+				gameSelected);
+			app.getGameEngine().updatePlay(gi);
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

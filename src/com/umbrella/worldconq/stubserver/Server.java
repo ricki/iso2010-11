@@ -65,7 +65,6 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	private final ArrayList<Session> sessionsList;
 
-	private final Game testGame;
 	private final ArrayList<Game> testGameList;
 
 	public Server() throws Exception, RemoteException {
@@ -77,13 +76,13 @@ public class Server extends UnicastRemoteObject implements IServer {
 		gameList = new ArrayList<GameInfo>();
 		registerUsers = new ArrayList<String[]>();
 		sessionsList = new ArrayList<Session>();
-		testGame = new Game();
 		testGameList = new ArrayList<Game>();
 
 		for (final String[] user : Users)
 			registerUsers.add(user);
 
 		{ // GameInfo 01
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("JorgeCA", 1000, true, true, new ArrayList<Spy>());
 			// new Player("Aduran", 1000, true, true, new ArrayList<Spy>());
@@ -113,6 +112,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGameList.add(testGame);
 		}
 		{ // GameInfo 02
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("ricki", 1000, true, true, new ArrayList<Spy>());
 			// new Player("DaniLR", 1000, true, false, new ArrayList<Spy>());
@@ -147,6 +147,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGameList.add(testGame);
 		}
 		{ // GameInfo 03
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("pobleteag", 1000, true, true, new ArrayList<Spy>());
 			// new Player("LauraN", 1000, true, false, new ArrayList<Spy>());
@@ -281,9 +282,9 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public Game playGame(UUID session, UUID game) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		System.out.println("IServer::playGame");
-		Game ret = null;
+		Game ret = new Game();
 		for (int i = 0; i < testGameList.size(); i++) {
-			if (game == testGameList.get(i).getGameInfo().getId()) {
+			if (game.equals(testGameList.get(i).getGameInfo().getId())) {
 				ret = testGameList.get(i);
 			}
 		}

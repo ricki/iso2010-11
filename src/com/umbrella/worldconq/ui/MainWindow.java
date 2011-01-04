@@ -21,8 +21,6 @@ import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
 
-import es.uclm.iso2.rmi.GameInfo;
-
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
@@ -227,9 +225,7 @@ public class MainWindow extends JFrame {
 				try {
 					app.getGameManager().connectToGame(gameSelected);
 					MainWindow.this.setupGameGUI();
-					final GameInfo gi = app.getGameManager().getCurrentGameListModel().getGameAt(
-						gameSelected);
-					app.getGameEngine().updatePlay(gi);
+
 				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
