@@ -34,6 +34,8 @@ public class MainWindow extends JFrame {
 
 	private JTable openList = null;
 
+	private JTable currentList = null;
+
 	public MainWindow() {
 		super();
 		app = WorldConqApp.getWorldConqApp();
@@ -67,6 +69,10 @@ public class MainWindow extends JFrame {
 		final JButton joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 
+		final JButton connectGameButton = new JButton("Conectarse a partida");
+		connectGameButton.addMouseListener(new ConnectGameMouseAdapter());
+		mGameListToolBar.add(connectGameButton);
+
 		mGameListToolBar.add(joinGameButton);
 	}
 
@@ -92,7 +98,7 @@ public class MainWindow extends JFrame {
 			mGameListPanel = new JPanel();
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel,
 				BoxLayout.Y_AXIS));
-			final JTable currentList = new JTable(
+			currentList = new JTable(
 				app.getGameManager().getCurrentGameListModel());
 			final JScrollPane currentListPanel = new JScrollPane(currentList);
 			openList = new JTable(
@@ -186,6 +192,25 @@ public class MainWindow extends JFrame {
 						app.getGameManager().updateGameList();
 					}
 				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private class ConnectGameMouseAdapter extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			final int gameSelected = currentList.getSelectedRow();
+			System.out.println(gameSelected);
+			if (currentList.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(mGameListPanel,
+					"No ha seleccionado ninguna partida");
+			} else {
+				try {
+					app.getGameManager().connectToGame(gameSelected);
+				} catch (final Exception e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

@@ -68,4 +68,15 @@ public class GameManager {
 			e.printStackTrace();
 		}
 	}
+
+	public void connectToGame(int gameSelected) throws Exception {
+		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameSelected);
+		final Session user = app.getUserManager().getSession();
+		try {
+			app.getServerAdapter().playGame(user, gameUuid);
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

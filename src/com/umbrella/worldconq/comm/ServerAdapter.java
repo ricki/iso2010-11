@@ -86,4 +86,10 @@ public class ServerAdapter {
 		mProxy.joinGame(session.getId(), game.getId());
 	}
 
+	public void playGame(Session session, GameInfo game) throws Exception {
+		if (!this.isConnected()) throw new RemoteException();
+		mProxy.playGame(session.getId(), game.getId());
+
+	}
+
 }
