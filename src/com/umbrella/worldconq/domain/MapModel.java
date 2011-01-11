@@ -12,7 +12,6 @@ public class MapModel extends AbstractTableModel {
 
 	private static final String[] colTitles = {
 			"Territorio",
-			"Continente",
 			"Jugador",
 			"Nº Soldados",
 			"Nº Canones 1",
@@ -57,27 +56,28 @@ public class MapModel extends AbstractTableModel {
 
 		switch (columnIndex) {
 		case 0:
-			return mMapList.get(rowIndex).getIdTerritory();
+			return TerritoryData.getIndex(
+				mMapList.get(rowIndex).getContinent(),
+				mMapList.get(rowIndex).getIdTerritory());
+
 		case 1:
-			return mMapList.get(rowIndex).getContinent();
-		case 2:
 			if (mMapList.get(rowIndex).getOwner() == null)
 				return null;
 			else
 				return mMapList.get(rowIndex).getOwner().getName();
-		case 3:
+		case 2:
 			return mMapList.get(rowIndex).getNumSoldiers();
-		case 4:
+		case 3:
 			return mMapList.get(rowIndex).getNumCannons()[0];
-		case 5:
+		case 4:
 			return mMapList.get(rowIndex).getNumCannons()[1];
-		case 6:
+		case 5:
 			return mMapList.get(rowIndex).getNumCannons()[2];
-		case 7:
+		case 6:
 			return mMapList.get(rowIndex).getNumMissiles();
-		case 8:
+		case 7:
 			return mMapList.get(rowIndex).getNumICBMs();
-		case 9:
+		case 8:
 			return mMapList.get(rowIndex).getNumAntiMissiles();
 		default:
 			//mirar esto que no sabemos bien que poner
