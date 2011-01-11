@@ -123,7 +123,9 @@ public class MainWindow extends JFrame {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
-			mMap = new JTable(app.getGameEngine().getMapListModel());
+			//mMap = new JTable(app.getGameEngine().getMapListModel());
+			mMap = new JTable(
+				app.getGameManager().getGameEngine().getMapListModel());
 			final JScrollPane mapPanel = new JScrollPane(mMap);
 			mGamePanel.add(mapPanel);
 		}

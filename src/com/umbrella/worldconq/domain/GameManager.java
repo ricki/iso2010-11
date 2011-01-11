@@ -12,6 +12,7 @@ public class GameManager {
 	private final WorldConqApp app;
 	private GameListModel mCurrentGameListModel;
 	private GameListModel mOpenGameListModel;
+	private GameEngine mGameEngine;
 
 	public GameManager() {
 		app = WorldConqApp.getWorldConqApp();
@@ -58,8 +59,8 @@ public class GameManager {
 			description, null, gameSessions, 0, 0, 0, 0));
 	}
 
-	public void joinGame(int gameSelected) {
-		final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
+	public void joinGame(int gameIndex) {
+		final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameIndex);
 		final Session user = app.getUserManager().getSession();
 		try {
 			app.getServerAdapter().joinGame(user, gameUuid);
@@ -69,17 +70,21 @@ public class GameManager {
 		}
 	}
 
-	public void connectToGame(int gameSelected) throws Exception {
-		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameSelected);
+	public void connectToGame(int gameIndex) throws Exception {
+		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
 		final Session user = app.getUserManager().getSession();
 		try {
 			app.getServerAdapter().playGame(user, gameUuid);
-			final GameInfo gi = app.getGameManager().getCurrentGameListModel().getGameAt(
-				gameSelected);
-			app.getGameEngine().updatePlay(gi);
+			//app.getGameEngine().updatePlay(gameUuid);
+			mGameEngine = new GameEngine();
+			mGameEngine.updatePlay(gameUuid);
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public GameEngine getGameEngine() {
+		return mGameEngine;
 	}
 }

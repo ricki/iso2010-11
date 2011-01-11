@@ -3,7 +3,6 @@ package com.umbrella.worldconq;
 import java.net.InetAddress;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
-import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.ui.MainWindow;
@@ -20,7 +19,6 @@ public class WorldConqApp {
 	private MainWindow mMainWindow = null;
 
 	private ServerAdapter mServerAdapter = null;
-	private GameEngine mGameEngine = null;
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -79,11 +77,6 @@ public class WorldConqApp {
 	public MainWindow getMainWindow() {
 		if (mMainWindow == null) mMainWindow = new MainWindow();
 		return mMainWindow;
-	}
-
-	public GameEngine getGameEngine() {
-		if (mGameEngine == null) mGameEngine = new GameEngine();
-		return mGameEngine;
 	}
 
 	public void setStartupMode() {
