@@ -44,7 +44,8 @@ public class TerritoryData {
 		return nameList[getIndex(t)];
 	}
 
-	//public static ArrayList<int> getAdjacentIndices(int idx){
-	//	Falta por hacer
-	//}
+	//	public static ArrayList<Integer> getAdjacentIndices(int idx) {
+	//		final ArrayList<Integer> adj = new ArrayList<Integer>();
+	//		return adj;
+	//	}
 }
