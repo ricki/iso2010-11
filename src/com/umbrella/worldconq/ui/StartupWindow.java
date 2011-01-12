@@ -102,6 +102,8 @@ public class StartupWindow extends JFrame {
 		StartupPanel.add(AcceptButton);
 		StartupPanel.add(RegisterButton);
 		StartupPanel.add(mapLabel);
+		this.setLocationRelativeTo(null);
+
 	}
 
 	private String getUser() {

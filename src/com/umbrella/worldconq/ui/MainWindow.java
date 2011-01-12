@@ -3,9 +3,13 @@ package com.umbrella.worldconq.ui;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +24,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.domain.TerritoryData;
 
 public class MainWindow extends JFrame {
 
@@ -34,6 +39,7 @@ public class MainWindow extends JFrame {
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
 	private JTable mMap = null;
+	private BufferedImage bi = null;
 
 	public MainWindow() {
 		super();
@@ -94,6 +100,9 @@ public class MainWindow extends JFrame {
 		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
 		mPlayToolBar.setVisible(true);
 		this.getGamePanel().setVisible(true);
+		this.pack();
+		this.setLocationRelativeTo(null);
+
 	}
 
 	private JPanel getGameListPanel() {
@@ -118,7 +127,7 @@ public class MainWindow extends JFrame {
 		return mGameListPanel;
 	}
 
-	private JPanel getGamePanel() {
+	private JPanel getGamePanel2() {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
@@ -127,6 +136,32 @@ public class MainWindow extends JFrame {
 			mMap = new JTable(
 				app.getGameManager().getGameEngine().getMapListModel());
 			final JScrollPane mapPanel = new JScrollPane(mMap);
+			mGamePanel.add(mapPanel);
+		}
+		return mGamePanel;
+	}
+
+	private JPanel getGamePanel() {
+		if (mGamePanel == null) {
+			mGamePanel = new JPanel();
+			mGamePanel.setLayout(new BoxLayout(mGamePanel,
+				BoxLayout.Y_AXIS));
+			mMap = new JTable(
+				app.getGameManager().getGameEngine().getMapListModel());
+			final JLabel mapLabel = new JLabel();
+			mapLabel.setPreferredSize(new java.awt.Dimension(1227, 628));
+			mapLabel.setIcon(new javax.swing.ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/Map_risk.png")));
+			try {
+				bi = ImageIO.read(new File(
+					"/Users/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/image/Map_risk.png"));
+			} catch (final IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mapLabel.addMouseListener(new MapMouseAdapter(mapLabel));
+			final JScrollPane mapPanel = new JScrollPane(mapLabel);
 			mGamePanel.add(mapPanel);
 		}
 		return mGamePanel;
@@ -233,6 +268,28 @@ public class MainWindow extends JFrame {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	private class MapMouseAdapter extends MouseAdapter {
+		private JLabel info = null;
+
+		public MapMouseAdapter(JLabel mapLabel) {
+			super();
+			info = mapLabel;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			final int gameSelected = TerritoryData.getIndex(bi.getRGB(
+				evt.getX(), evt.getY()));
+			if (gameSelected != -1) {
+
+				final String infoText = app.getGameManager().getGameEngine().getMapListModel().getRowInfo(
+					gameSelected);
+				info.setToolTipText(infoText);
+			}
+
 		}
 	}
 }
