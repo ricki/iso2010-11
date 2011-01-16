@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
 		this.initGUI();
 	}
 
-	private void initGUI() {
+	void initGUI() {
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		try {
@@ -100,7 +100,8 @@ public class MainWindow extends JFrame {
 		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
 		mPlayToolBar.setVisible(true);
 		this.getGamePanel().setVisible(true);
-		this.pack();
+		//this.pack();
+		this.setSize(1227, 628);
 		this.setLocationRelativeTo(null);
 
 	}
@@ -127,22 +128,45 @@ public class MainWindow extends JFrame {
 		return mGameListPanel;
 	}
 
+	private JPanel getGamePanel() {
+		if (mGamePanel == null) {
+			mGamePanel = new JPanel();
+			mGamePanel.setLayout(new BoxLayout(mGamePanel,
+				BoxLayout.Y_AXIS));
+			mGamePanel = new JPanel();
+			mGamePanel.setLayout(new BoxLayout(mGamePanel,
+				BoxLayout.Y_AXIS));
+			mMap = new JTable(
+				app.getGameManager().getGameEngine().getMapListModel());
+
+			//final JLabel mapLabel = new JLabel();
+			//mapLabel.setPreferredSize(new java.awt.Dimension(1227, 628));
+			//mapLabel.setIcon(new javax.swing.ImageIcon(
+			//	this.getClass().getClassLoader().getResource(
+			//		"image/Map_risk.png")));
+			try {
+				final String dir = System.getProperty("user.dir")
+						+ "/src/image/";
+				bi = ImageIO.read(new File(dir + "Map_risk.png"));
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+			//mapLabel.addMouseListener(new MapMouseAdapter(mapLabel));
+			//final JScrollPane mapPanel = new JScrollPane(mapLabel);
+
+			final MapView mv = new MapView();
+			mv.setFondo(bi);
+			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
+			mGamePanel.add(mv);
+		}
+		return mGamePanel;
+	}
+
 	private JPanel getGamePanel2() {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
-			//mMap = new JTable(app.getGameEngine().getMapListModel());
-			mMap = new JTable(
-				app.getGameManager().getGameEngine().getMapListModel());
-			final JScrollPane mapPanel = new JScrollPane(mMap);
-			mGamePanel.add(mapPanel);
-		}
-		return mGamePanel;
-	}
-
-	private JPanel getGamePanel() {
-		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
@@ -154,10 +178,10 @@ public class MainWindow extends JFrame {
 				this.getClass().getClassLoader().getResource(
 					"image/Map_risk.png")));
 			try {
-				bi = ImageIO.read(new File(
-					"/Users/jorgeca/Dropbox/5º Informatica/ISO II/Laboratorio/Repos/workspace/iso2010-11/src/image/Map_risk.png"));
+				final String dir = System.getProperty("user.dir")
+						+ "/src/image/";
+				bi = ImageIO.read(new File(dir + "Map_risk.png"));
 			} catch (final IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			mapLabel.addMouseListener(new MapMouseAdapter(mapLabel));
@@ -273,10 +297,16 @@ public class MainWindow extends JFrame {
 
 	private class MapMouseAdapter extends MouseAdapter {
 		private JLabel info = null;
+		private MapView mv = null;
 
 		public MapMouseAdapter(JLabel mapLabel) {
 			super();
 			info = mapLabel;
+		}
+
+		public MapMouseAdapter(MapView mv) {
+			super();
+			this.mv = mv;
 		}
 
 		@Override
@@ -284,12 +314,18 @@ public class MainWindow extends JFrame {
 			final int gameSelected = TerritoryData.getIndex(bi.getRGB(
 				evt.getX(), evt.getY()));
 			if (gameSelected != -1) {
-
-				final String infoText = app.getGameManager().getGameEngine().getMapListModel().getRowInfo(
-					gameSelected);
-				info.setToolTipText(infoText);
+				mv.removeAll();
+				mv.setFondo(bi);
+				mv.ponerSel(gameSelected);
+				mv.repaint();
+				final String infoText =
+						app.getGameManager().getGameEngine().getMapListModel().getRowInfo(
+							gameSelected);
+				//info.setToolTipText(infoText);
+				//System.out.println(infoText);
 			}
 
 		}
 	}
+
 }

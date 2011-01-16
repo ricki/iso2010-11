@@ -25,9 +25,20 @@ public class TerritoryData {
 			-13673450, -16744320, -5439744, -8323328, -16744384, -16744448,
 			-16760832, -8323200, -16735488, -16766464, -16735360, -12582848,
 			-8388353, -65281, -8388544
+	}; //color agua -7228984
+
+	private static int[] xTerritory = {
+			5, 100, 93, 132, 375, 96, 190, 265, 80
+	};
+	private static int[] yTerritory = {
+			50, 95, 215, 140, 8, 38, 95, 85, 142
 	};
 
-	//color agua -7228984
+	private static String[] imageTerritory = {
+			"ameunosel.png", "amedossel.png", "ametressel.png",
+			"amecuatrosel.png", "amecincosel.png", "ameseissel.png",
+			"amesietesel.png", "ameochosel.png", "amenuevesel.png"
+	};
 
 	public static int getIndex(Continent c, int idx) {
 		final int[] numTerritorios = {
@@ -61,6 +72,21 @@ public class TerritoryData {
 			if (color == colorTerritory[i]) ret = i;
 		}
 		return ret;
+	}
+
+	public static int getX(int idx) {
+		return xTerritory[idx];
+
+	}
+
+	public static int getY(int idx) {
+		return yTerritory[idx];
+
+	}
+
+	public static String getImageTerrirtory(int idx) {
+		return imageTerritory[idx];
+
 	}
 
 	//	public static ArrayList<Integer> getAdjacentIndices(int idx) {
