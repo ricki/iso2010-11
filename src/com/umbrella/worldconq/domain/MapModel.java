@@ -50,23 +50,6 @@ public class MapModel extends AbstractTableModel {
 		return mMapList.size();
 	}
 
-	public String getRowInfo(int idx) {
-		final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
-				+ TerritoryData.getName(idx)
-				+ "</BIG><BR>\n<B> Controlado por: <EM>"
-				+ this.getValueAt(idx, 1)
-				+ "</em></b></P>\n<HR>\n<P ALIGN=\"right\">\nSoldados: "
-				+ this.getValueAt(idx, 2)
-				+ "<BR>\nCañones Tipo 1: " + this.getValueAt(idx, 3)
-				+ "<BR>\nCañones Tipo 2: " + this.getValueAt(idx, 4)
-				+ "<BR>\nCañones Tipo 3: " + this.getValueAt(idx, 5)
-				+ "<BR>\nMisiles: " + this.getValueAt(idx, 6)
-				+ "<BR>\nICBMs: " + this.getValueAt(idx, 7)
-				+ "<BR>\nAntimisiles: " + this.getValueAt(idx, 8)
-				+ "<BR>\n</P>";
-		return ret;
-	}
-
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;

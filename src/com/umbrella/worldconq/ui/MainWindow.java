@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,6 +34,7 @@ public class MainWindow extends JFrame {
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
 	private JPanel mGamePanel = null;
+	private JPanel mGameInfoPanel = null;
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
@@ -96,10 +97,14 @@ public class MainWindow extends JFrame {
 		this.getGameListPanel().setVisible(false);
 		mGameListToolBar.setVisible(false);
 		// mostramos el mapa y lo demas
+		mMap = new JTable(
+			app.getGameManager().getGameEngine().getMapListModel());
+		final MapView mv = new MapView(mMap.getModel());
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
-		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
+		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
+		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
 		mPlayToolBar.setVisible(true);
-		this.getGamePanel().setVisible(true);
+		this.getGamePanel(mv).setVisible(true);
 		//this.pack();
 		this.setSize(1227, 628);
 		this.setLocationRelativeTo(null);
@@ -128,32 +133,17 @@ public class MainWindow extends JFrame {
 		return mGameListPanel;
 	}
 
-	private JPanel getGamePanel() {
+	private JPanel getGamePanel(MapView mv) {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
-			mGamePanel = new JPanel();
-			mGamePanel.setLayout(new BoxLayout(mGamePanel,
-				BoxLayout.Y_AXIS));
-			mMap = new JTable(
-				app.getGameManager().getGameEngine().getMapListModel());
-
-			//final JLabel mapLabel = new JLabel();
-			//mapLabel.setPreferredSize(new java.awt.Dimension(1227, 628));
-			//mapLabel.setIcon(new javax.swing.ImageIcon(
-			//	this.getClass().getClassLoader().getResource(
-			//		"image/Map_risk.png")));
 			try {
 				bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk_buffer.png"));
 				bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk.png"));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-			//mapLabel.addMouseListener(new MapMouseAdapter(mapLabel));
-			//final JScrollPane mapPanel = new JScrollPane(mapLabel);
-
-			final MapView mv = new MapView();
 			mv.setFondo(bufferImageMap);
 			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
 			mGamePanel.add(mv);
@@ -161,34 +151,19 @@ public class MainWindow extends JFrame {
 		return mGamePanel;
 	}
 
-	private JPanel getGamePanel2() {
-		if (mGamePanel == null) {
-			mGamePanel = new JPanel();
-			mGamePanel.setLayout(new BoxLayout(mGamePanel,
+	private JPanel getGameInfoPanel(MapView mv) {
+		if (mGameInfoPanel == null) {
+			mGameInfoPanel = new JPanel();
+			mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
 				BoxLayout.Y_AXIS));
-			mGamePanel = new JPanel();
-			mGamePanel.setLayout(new BoxLayout(mGamePanel,
-				BoxLayout.Y_AXIS));
-			mMap = new JTable(
-				app.getGameManager().getGameEngine().getMapListModel());
-			final JLabel mapLabel = new JLabel();
-			mapLabel.setPreferredSize(new java.awt.Dimension(1227, 628));
-			mapLabel.setIcon(new javax.swing.ImageIcon(
-				this.getClass().getClassLoader().getResource(
-					"image/Map_risk.png")));
-			try {
-				final String dir = System.getProperty("user.dir")
-						+ "/src/image/";
-				bufferImageColorPixel = ImageIO.read(new File(dir
-						+ "Map_risk.png"));
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-			mapLabel.addMouseListener(new MapMouseAdapter(mapLabel));
-			final JScrollPane mapPanel = new JScrollPane(mapLabel);
-			mGamePanel.add(mapPanel);
+
+			mv.setInfoPlayer(new JEditorPane());
+			final JScrollPane ScrollInfoPanel = new JScrollPane(
+				mv.getInfoPlayer());
+
+			mGameInfoPanel.add(ScrollInfoPanel);
 		}
-		return mGamePanel;
+		return mGameInfoPanel;
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
@@ -296,13 +271,7 @@ public class MainWindow extends JFrame {
 	}
 
 	private class MapMouseAdapter extends MouseAdapter {
-		private JLabel info = null;
 		private MapView mv = null;
-
-		public MapMouseAdapter(JLabel mapLabel) {
-			super();
-			info = mapLabel;
-		}
 
 		public MapMouseAdapter(MapView mv) {
 			super();
@@ -315,13 +284,10 @@ public class MainWindow extends JFrame {
 				evt.getX(), evt.getY()));
 			//System.out.print(bufferImageColorPixel.getRGB(evt.getX(), evt.getY()));
 			if (gameSelected != -1) {
-				final String infoText =
-						app.getGameManager().getGameEngine().getMapListModel().getRowInfo(
-							gameSelected);
+				mv.getRowInfo(gameSelected);
 				mv.removeAll();
 				mv.setFondo(bufferImageMap);
 				mv.ponerSel(gameSelected);
-				mv.setInfo(infoText);
 				mv.repaint();
 
 				//info.setToolTipText(infoText);
@@ -329,6 +295,7 @@ public class MainWindow extends JFrame {
 			}
 
 		}
+
 	}
 
 }

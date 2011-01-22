@@ -2,11 +2,15 @@ package com.umbrella.worldconq.ui;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableModel;
+
+import com.umbrella.worldconq.domain.TerritoryData;
 
 public class MapView extends JComponent {
 
@@ -14,9 +18,12 @@ public class MapView extends JComponent {
 
 	private java.awt.Image fondo;
 	private java.awt.Image pais;
-	private String info;
 	private int x;
 	private int y;
+	private final TableModel dm;
+	protected ListSelectionModel lsm;
+	private JEditorPane infoPlayer;
+
 	private static int[] xTerritory = {
 			514, 492, 568, 579, 581, 632, 521, 728, 839, 793, 877, 1069, 1008,
 			657, 877, 931, 797, 746, 883, 591, 645, 593, 730, 483, 602, 5, 100,
@@ -51,8 +58,10 @@ public class MapView extends JComponent {
 			-8388353, -65281, -8388544
 	}; //color agua -7228984
 
-	public MapView() {
+	public MapView(TableModel dm) {
 		super();
+		this.dm = dm;
+		//lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
 	public static int getIndex(int color) {
@@ -84,10 +93,9 @@ public class MapView extends JComponent {
 	}
 
 	public void ponerSel(int numTerritory) {
-		final String dir = System.getProperty("user.dir") + "/src/image/";
-		BufferedImage bi = null;
+		BufferedImage bufferImage = null;
 		try {
-			bi = ImageIO.read(new File(dir
+			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/"
 					+ getImageTerrirtory(numTerritory)));
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
@@ -95,7 +103,7 @@ public class MapView extends JComponent {
 		}
 		x = getX(numTerritory);
 		y = getY(numTerritory);
-		this.setPais(bi);
+		this.setPais(bufferImage);
 	}
 
 	public java.awt.Image getFondo() {
@@ -106,22 +114,39 @@ public class MapView extends JComponent {
 		this.fondo = fondo;
 	}
 
-	public String getInfo() {
-		return info;
-	}
-
-	public void setInfo(String info) {
-		this.info = info;
-	}
-
 	@Override
 	public void paint(Graphics g) {
 		g.drawImage(fondo, 0, 0, null);
 		if (pais != null) {
 			g.drawImage(pais, x, y, null);
 		}
-		if (info != null) {
-			g.drawString(info, x + 10, y + 10);
-		}
+	}
+
+	public void getRowInfo(int idx) {
+		final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
+				+ TerritoryData.getName(idx)
+				+ "</BIG><BR>\n<B> Controlado por: <EM>"
+				+ dm.getValueAt(idx, 1)
+				+ "</em></b></P>\n<HR>\n<P ALIGN=\"right\">\nSoldados: "
+				+ dm.getValueAt(idx, 2)
+				+ "<BR>\nCañones Tipo 1: " + dm.getValueAt(idx, 3)
+				+ "<BR>\nCañones Tipo 2: " + dm.getValueAt(idx, 4)
+				+ "<BR>\nCañones Tipo 3: " + dm.getValueAt(idx, 5)
+				+ "<BR>\nMisiles: " + dm.getValueAt(idx, 6)
+				+ "<BR>\nICBMs: " + dm.getValueAt(idx, 7)
+				+ "<BR>\nAntimisiles: " + dm.getValueAt(idx, 8)
+				+ "<BR>\n</P>";
+		this.getInfoPlayer().setContentType("text/html");
+		this.getInfoPlayer().setText(ret);
+	}
+
+	public void setInfoPlayer(JEditorPane infoPlayer) {
+		infoPlayer.setEditable(false);
+		infoPlayer.setSize(150, 300);
+		this.infoPlayer = infoPlayer;
+	}
+
+	public JEditorPane getInfoPlayer() {
+		return infoPlayer;
 	}
 }
