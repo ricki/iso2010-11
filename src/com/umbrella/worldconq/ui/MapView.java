@@ -93,7 +93,7 @@ public class MapView extends JComponent {
 		return imageTerritory[idx];
 	}
 
-	public void ponerSel(int numTerritory) {
+	public void setSelection(int numTerritory) {
 		BufferedImage bufferImage = null;
 		try {
 			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/"
@@ -124,21 +124,26 @@ public class MapView extends JComponent {
 	}
 
 	public void getRowInfo(int idx) {
-		final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
-				+ TerritoryData.getName(idx)
-				+ "</BIG><BR>\n<B> Controlado por: <EM>"
-				+ dm.getValueAt(idx, 1)
-				+ "</em></b></P>\n<HR>\n<P ALIGN=\"right\">\nSoldados: "
-				+ dm.getValueAt(idx, 2)
-				+ "<BR>\nCañones Tipo 1: " + dm.getValueAt(idx, 3)
-				+ "<BR>\nCañones Tipo 2: " + dm.getValueAt(idx, 4)
-				+ "<BR>\nCañones Tipo 3: " + dm.getValueAt(idx, 5)
-				+ "<BR>\nMisiles: " + dm.getValueAt(idx, 6)
-				+ "<BR>\nICBMs: " + dm.getValueAt(idx, 7)
-				+ "<BR>\nAntimisiles: " + dm.getValueAt(idx, 8)
-				+ "<BR>\n</P>";
-		this.getInfoPlayer().setContentType("text/html");
-		this.getInfoPlayer().setText(ret);
+		if (idx != -1) {
+			final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
+					+ TerritoryData.getName(idx)
+					+ "</BIG><BR>\n<B> Controlado por: <EM>"
+					+ dm.getValueAt(idx, 1)
+					+ "</em></b></P>\n<HR>\n<P ALIGN=\"right\">\nSoldados: "
+					+ dm.getValueAt(idx, 2)
+					+ "<BR>\nCañones Tipo 1: " + dm.getValueAt(idx, 3)
+					+ "<BR>\nCañones Tipo 2: " + dm.getValueAt(idx, 4)
+					+ "<BR>\nCañones Tipo 3: " + dm.getValueAt(idx, 5)
+					+ "<BR>\nMisiles: " + dm.getValueAt(idx, 6)
+					+ "<BR>\nICBMs: " + dm.getValueAt(idx, 7)
+					+ "<BR>\nAntimisiles: " + dm.getValueAt(idx, 8)
+					+ "<BR>\n</P>";
+			this.getInfoPlayer().setContentType("text/html");
+			this.getInfoPlayer().setText(ret);
+		} else {
+			this.setPais(null);
+			this.getInfoPlayer().setText("");
+		}
 	}
 
 	public void setInfoPlayer(JEditorPane infoPlayer) {

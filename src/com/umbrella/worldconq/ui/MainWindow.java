@@ -283,16 +283,18 @@ public class MainWindow extends JFrame {
 		public void mouseClicked(MouseEvent evt) {
 			final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
 				evt.getX(), evt.getY()));
-			//System.out.print(bufferImageColorPixel.getRGB(evt.getX(), evt.getY()));
 			if (gameSelected != -1) {
 				mv.getRowInfo(gameSelected);
 				mv.removeAll();
 				mv.setFondo(bufferImageMap);
-				mv.ponerSel(gameSelected);
+				mv.setSelection(gameSelected);
 				mv.repaint();
-
-				//info.setToolTipText(infoText);
-				//System.out.println(infoText);
+			} else {
+				// pinchamos sobre agua
+				mv.removeAll();
+				mv.setFondo(bufferImageMap);
+				mv.getRowInfo(gameSelected);
+				mv.repaint();
 			}
 
 		}

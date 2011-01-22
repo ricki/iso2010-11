@@ -72,10 +72,6 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	public Server() throws Exception, RemoteException {
 		super();
-		//cremamos la chapuza para la tabla inicial
-		//final ArrayList<Territory> mapListInicial = new ArrayList<Territory>();
-
-		//se acaba la chapuza
 		System.setProperty("java.security.policy",
 			ClassLoader.getSystemResource("data/open.policy").toString());
 
