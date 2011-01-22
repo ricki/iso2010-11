@@ -1,5 +1,6 @@
 package com.umbrella.worldconq.ui;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class MapView extends JComponent {
 	public MapView(TableModel dm) {
 		super();
 		this.dm = dm;
+		this.setPreferredSize(new Dimension(1227, 628));
 		//lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
@@ -148,7 +150,6 @@ public class MapView extends JComponent {
 
 	public void setInfoPlayer(JEditorPane infoPlayer) {
 		infoPlayer.setEditable(false);
-		infoPlayer.setSize(150, 300);
 		this.infoPlayer = infoPlayer;
 	}
 
@@ -158,7 +159,6 @@ public class MapView extends JComponent {
 
 	public void setListPlayer(JEditorPane listPlayer) {
 		listPlayer.setEditable(false);
-		listPlayer.setSize(150, 300);
 		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
 				+ "Jugadores"
 				+ "</BIG><BR></P><HR><P ALIGN=\"right\">";
@@ -166,7 +166,6 @@ public class MapView extends JComponent {
 		for (int i = 0; i < 42; i++) {
 			if (!dm.getValueAt(i, 1).equals("¿?")) {
 				list += dm.getValueAt(i, 1) + "<BR>";
-
 			}
 		}
 		list += "</P>";

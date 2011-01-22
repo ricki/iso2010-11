@@ -1,6 +1,7 @@
 package com.umbrella.worldconq.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -106,8 +107,8 @@ public class MainWindow extends JFrame {
 		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
 		mPlayToolBar.setVisible(true);
 		this.getGamePanel(mv).setVisible(true);
-		//this.pack();
-		this.setSize(1227, 628);
+		this.pack();
+		//this.setSize(1227, 628);
 		this.setLocationRelativeTo(null);
 
 	}
@@ -146,8 +147,10 @@ public class MainWindow extends JFrame {
 				e.printStackTrace();
 			}
 			mv.setFondo(bufferImageMap);
-			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
-			mGamePanel.add(mv);
+			final JScrollPane mapScroll = new JScrollPane(mv);
+			mapScroll.setPreferredSize(new Dimension(1024, 628));
+			mapScroll.addMouseListener(new MapMouseAdapter(mv, mapScroll));
+			mGamePanel.add(mapScroll);
 		}
 		return mGamePanel;
 	}
@@ -160,9 +163,15 @@ public class MainWindow extends JFrame {
 
 			mv.setInfoPlayer(new JEditorPane());
 			mv.setListPlayer(new JEditorPane());
+			final JScrollPane listPlayerSroll = new JScrollPane(
+				mv.getListPlayer());
+			listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
-			mGameInfoPanel.add(new JScrollPane(mv.getListPlayer()));
-			mGameInfoPanel.add(new JScrollPane(mv.getInfoPlayer()));
+			final JScrollPane listInfoSroll = new JScrollPane(
+				mv.getInfoPlayer());
+			listInfoSroll.setPreferredSize(new Dimension(150, 300));
+			mGameInfoPanel.add(listPlayerSroll);
+			mGameInfoPanel.add(listInfoSroll);
 		}
 		return mGameInfoPanel;
 	}
@@ -273,16 +282,19 @@ public class MainWindow extends JFrame {
 
 	private class MapMouseAdapter extends MouseAdapter {
 		private MapView mv = null;
+		private JScrollPane sp = null;
 
-		public MapMouseAdapter(MapView mv) {
+		public MapMouseAdapter(MapView mv, JScrollPane sp) {
 			super();
 			this.mv = mv;
+			this.sp = sp;
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
-				evt.getX(), evt.getY()));
+				evt.getX() + sp.getHorizontalScrollBar().getValue(), evt.getY()
+						+ sp.getVerticalScrollBar().getValue()));
 			if (gameSelected != -1) {
 				mv.getRowInfo(gameSelected);
 				mv.removeAll();
