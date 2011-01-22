@@ -23,6 +23,7 @@ public class MapView extends JComponent {
 	private final TableModel dm;
 	protected ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
+	private JEditorPane listPlayer;
 
 	private static int[] xTerritory = {
 			514, 492, 568, 579, 581, 632, 521, 728, 839, 793, 877, 1069, 1008,
@@ -149,4 +150,28 @@ public class MapView extends JComponent {
 	public JEditorPane getInfoPlayer() {
 		return infoPlayer;
 	}
+
+	public void setListPlayer(JEditorPane listPlayer) {
+		listPlayer.setEditable(false);
+		listPlayer.setSize(150, 300);
+		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
+				+ "Jugadores"
+				+ "</BIG><BR></P><HR><P ALIGN=\"right\">";
+
+		for (int i = 0; i < 42; i++) {
+			if (!dm.getValueAt(i, 1).equals("¿?")) {
+				list += dm.getValueAt(i, 1) + "<BR>";
+
+			}
+		}
+		list += "</P>";
+		this.listPlayer = listPlayer;
+		this.getListPlayer().setContentType("text/html");
+		this.getListPlayer().setText(list);
+	}
+
+	public JEditorPane getListPlayer() {
+		return listPlayer;
+	}
+
 }

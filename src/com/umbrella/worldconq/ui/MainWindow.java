@@ -35,6 +35,7 @@ public class MainWindow extends JFrame {
 	private JPanel mGameListPanel = null;
 	private JPanel mGamePanel = null;
 	private JPanel mGameInfoPanel = null;
+	private final JPanel mGameInfoPanel2 = null;
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
@@ -158,10 +159,10 @@ public class MainWindow extends JFrame {
 				BoxLayout.Y_AXIS));
 
 			mv.setInfoPlayer(new JEditorPane());
-			final JScrollPane ScrollInfoPanel = new JScrollPane(
-				mv.getInfoPlayer());
+			mv.setListPlayer(new JEditorPane());
 
-			mGameInfoPanel.add(ScrollInfoPanel);
+			mGameInfoPanel.add(new JScrollPane(mv.getListPlayer()));
+			mGameInfoPanel.add(new JScrollPane(mv.getInfoPlayer()));
 		}
 		return mGameInfoPanel;
 	}
