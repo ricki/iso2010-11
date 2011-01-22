@@ -24,7 +24,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.domain.TerritoryData;
 
 public class MainWindow extends JFrame {
 
@@ -39,7 +38,8 @@ public class MainWindow extends JFrame {
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
 	private JTable mMap = null;
-	private BufferedImage bi = null;
+	private BufferedImage bufferImageColorPixel = null;
+	private BufferedImage bufferImageMap = null;
 
 	public MainWindow() {
 		super();
@@ -145,9 +145,8 @@ public class MainWindow extends JFrame {
 			//	this.getClass().getClassLoader().getResource(
 			//		"image/Map_risk.png")));
 			try {
-				final String dir = System.getProperty("user.dir")
-						+ "/src/image/";
-				bi = ImageIO.read(new File(dir + "Map_risk.png"));
+				bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk_buffer.png"));
+				bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk.png"));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -155,7 +154,7 @@ public class MainWindow extends JFrame {
 			//final JScrollPane mapPanel = new JScrollPane(mapLabel);
 
 			final MapView mv = new MapView();
-			mv.setFondo(bi);
+			mv.setFondo(bufferImageMap);
 			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
 			mGamePanel.add(mv);
 		}
@@ -180,7 +179,8 @@ public class MainWindow extends JFrame {
 			try {
 				final String dir = System.getProperty("user.dir")
 						+ "/src/image/";
-				bi = ImageIO.read(new File(dir + "Map_risk.png"));
+				bufferImageColorPixel = ImageIO.read(new File(dir
+						+ "Map_risk.png"));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -311,16 +311,19 @@ public class MainWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-			final int gameSelected = TerritoryData.getIndex(bi.getRGB(
+			final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
 				evt.getX(), evt.getY()));
+			//System.out.print(bufferImageColorPixel.getRGB(evt.getX(), evt.getY()));
 			if (gameSelected != -1) {
-				mv.removeAll();
-				mv.setFondo(bi);
-				mv.ponerSel(gameSelected);
-				mv.repaint();
 				final String infoText =
 						app.getGameManager().getGameEngine().getMapListModel().getRowInfo(
 							gameSelected);
+				mv.removeAll();
+				mv.setFondo(bufferImageMap);
+				mv.ponerSel(gameSelected);
+				mv.setInfo(infoText);
+				mv.repaint();
+
 				//info.setToolTipText(infoText);
 				//System.out.println(infoText);
 			}

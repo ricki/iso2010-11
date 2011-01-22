@@ -5,39 +5,23 @@ import es.uclm.iso2.rmi.Territory.Continent;
 
 public class TerritoryData {
 	private final static String[] nameList = {
-			"Alaska", "Alberta", "América Central", "Estados Unidos del Este",
-			"Groenlandia", "Territorios del Noroeste", "Ontario", "Quebec",
-			"Estados Unidos del Oeste", "Argentina", "Brasil", "Perú",
-			"Venezuela", "Gran Bretaña", "Iceland", "Europa del Norte",
-			"Escandinavia", "Europa del Sur", "Ucrania",
-			"Europa Occidental", "Congo", "África Oriental", "Egipto",
-			"Madagascar", "África del Norte", "Sudáfrica", "Afghanistan",
+			"Gran Bretaña", "Iceland", "Europa del Norte", "Escandinavia",
+			"Europa del Sur", "Ucrania", "Europa Occidental", "Afghanistan",
 			"China", "India", "Irkutsk", "Japón", "Kamchatka", "Oriente Medio",
-			"Mongolia", "Siam", "Siberia", "Ural", "Yakutsk",
-			"Australia Oriental", "Indonesia", "Nueva Guinea",
+			"Mongolia", "Siam", "Siberia", "Ural", "Yakutsk", "Congo",
+			"África Oriental", "Egipto", "Madagascar", "África del Norte",
+			"Sudáfrica", "Alaska", "Alberta", "América Central",
+			"Estados Unidos del Este", "Groenlandia",
+			"Territorios del Noroeste", "Ontario", "Quebec",
+			"Estados Unidos del Oeste", "Argentina", "Brasil", "Perú",
+			"Venezuela", "Australia Oriental", "Indonesia", "Nueva Guinea",
 			"Australia Occidental"
 	};
-	private static int[] colorTerritory = {
-			-6382080, -4938639, -128, -9342720, -256, -10987477, -7039927,
-			-5784176, -13356007, -65536, -8372160, -8388608, -32640, -16750593,
-			-16724737, -16776961, -16744193, -16760704, -16777088, -10452737,
-			-5351680, -32768, -10670336, -6001920, -28325, -8372224, -8323129,
-			-13673450, -16744320, -5439744, -8323328, -16744384, -16744448,
-			-16760832, -8323200, -16735488, -16766464, -16735360, -12582848,
-			-8388353, -65281, -8388544
-	}; //color agua -7228984
-
-	private static int[] xTerritory = {
-			5, 100, 93, 132, 375, 96, 190, 265, 80
-	};
-	private static int[] yTerritory = {
-			50, 95, 215, 140, 8, 38, 95, 85, 142
-	};
-
-	private static String[] imageTerritory = {
-			"ameunosel.png", "amedossel.png", "ametressel.png",
-			"amecuatrosel.png", "amecincosel.png", "ameseissel.png",
-			"amesietesel.png", "ameochosel.png", "amenuevesel.png"
+	private static int[] priceTerritory = {
+			279, 197, 191, 296, 183, 288, 109, 212, 294, 298, 189, 171, 234,
+			273, 247, 140, 275, 193, 261, 280, 146, 143, 211, 176, 188, 122,
+			172, 285, 274, 141, 198, 236, 129, 118, 281, 116, 251, 170, 125,
+			245, 124, 150
 	};
 
 	public static int getIndex(Continent c, int idx) {
@@ -66,27 +50,8 @@ public class TerritoryData {
 		return nameList[getIndex(t)];
 	}
 
-	public static int getIndex(int color) {
-		int ret = -1;
-		for (int i = 0; i < colorTerritory.length; i++) {
-			if (color == colorTerritory[i]) ret = i;
-		}
-		return ret;
-	}
-
-	public static int getX(int idx) {
-		return xTerritory[idx];
-
-	}
-
-	public static int getY(int idx) {
-		return yTerritory[idx];
-
-	}
-
-	public static String getImageTerrirtory(int idx) {
-		return imageTerritory[idx];
-
+	public static int getPrice(int idx) {
+		return priceTerritory[idx];
 	}
 
 	//	public static ArrayList<Integer> getAdjacentIndices(int idx) {
