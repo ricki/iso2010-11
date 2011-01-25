@@ -141,16 +141,26 @@ public class MainWindow extends JFrame {
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
 			try {
-				bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk_buffer.png"));
-				bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk.png"));
+				//bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk_buffer.png"));
+				//bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk.png"));
+				bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
+				bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			mv.setFondo(bufferImageMap);
-			final JScrollPane mapScroll = new JScrollPane(mv);
-			mapScroll.setPreferredSize(new Dimension(1024, 628));
-			mapScroll.addMouseListener(new MapMouseAdapter(mv, mapScroll));
-			mGamePanel.add(mapScroll);
+			//final JScrollPane mapScroll = new JScrollPane(mv);
+			//mapScroll.setPreferredSize(new Dimension(1024, 628));
+			//mapScroll.addMouseListener(new MapMouseAdapter(mv, mapScroll));
+			//mGamePanel.add(mapScroll);
+			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
+			mGamePanel.add(mv);
+			//añadimos el panel para la informacion de la partida
+			mv.setActionGame(new JEditorPane());
+			final JScrollPane ActionGameScroll = new JScrollPane(
+				mv.getActionGame());
+			ActionGameScroll.setPreferredSize(new Dimension(300, 125));
+			mGamePanel.add(ActionGameScroll);
 		}
 		return mGamePanel;
 	}
@@ -282,19 +292,22 @@ public class MainWindow extends JFrame {
 
 	private class MapMouseAdapter extends MouseAdapter {
 		private MapView mv = null;
-		private JScrollPane sp = null;
+		private final JScrollPane sp = null;
 
-		public MapMouseAdapter(MapView mv, JScrollPane sp) {
+		//public MapMouseAdapter(MapView mv, JScrollPane sp) {
+		public MapMouseAdapter(MapView mv) {
 			super();
 			this.mv = mv;
-			this.sp = sp;
+			//this.sp = sp;
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
+			//final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
+			//	evt.getX() + sp.getHorizontalScrollBar().getValue(), evt.getY()
+			//			+ sp.getVerticalScrollBar().getValue()));
 			final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
-				evt.getX() + sp.getHorizontalScrollBar().getValue(), evt.getY()
-						+ sp.getVerticalScrollBar().getValue()));
+				evt.getX(), evt.getY()));
 			if (gameSelected != -1) {
 				mv.getRowInfo(gameSelected);
 				mv.removeAll();

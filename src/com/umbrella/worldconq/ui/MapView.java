@@ -25,6 +25,7 @@ public class MapView extends JComponent {
 	protected ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
+	private JEditorPane actionGame;
 
 	private static int[] xTerritory = {
 			514, 492, 568, 579, 581, 632, 521, 728, 839, 793, 877, 1069, 1008,
@@ -63,7 +64,8 @@ public class MapView extends JComponent {
 	public MapView(TableModel dm) {
 		super();
 		this.dm = dm;
-		this.setPreferredSize(new Dimension(1227, 628));
+		//this.setPreferredSize(new Dimension(1227, 628));
+		this.setPreferredSize(new Dimension(920, 471));
 		//lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
@@ -84,11 +86,11 @@ public class MapView extends JComponent {
 	}
 
 	public static int getX(int idx) {
-		return xTerritory[idx];
+		return (int) (0.75 * xTerritory[idx]);
 	}
 
 	public static int getY(int idx) {
-		return yTerritory[idx];
+		return (int) (0.75 * yTerritory[idx]);
 	}
 
 	public static String getImageTerrirtory(int idx) {
@@ -98,7 +100,9 @@ public class MapView extends JComponent {
 	public void setSelection(int numTerritory) {
 		BufferedImage bufferImage = null;
 		try {
-			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/"
+			//bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/"
+			//		+ getImageTerrirtory(numTerritory)));
+			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/half."
 					+ getImageTerrirtory(numTerritory)));
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
@@ -178,4 +182,20 @@ public class MapView extends JComponent {
 		return listPlayer;
 	}
 
+	public JEditorPane getActionGame() {
+		return actionGame;
+	}
+
+	public void setActionGame(JEditorPane actionGame) {
+
+		actionGame.setEditable(false);
+		String list = "<html>\n<P ALIGN=\"left\"><BIG>"
+				+ "Información de la Partida"
+				+ "</BIG><BR></P><HR>";
+		list += "iran las acciones que se generen en la partida\n";
+		list += "</P>";
+		this.actionGame = actionGame;
+		this.getActionGame().setContentType("text/html");
+		this.getActionGame().setText(list);
+	}
 }
