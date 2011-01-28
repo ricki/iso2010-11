@@ -4,12 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,13 +33,10 @@ public class MainWindow extends JFrame {
 	private JPanel mGameListPanel = null;
 	private JPanel mGamePanel = null;
 	private JPanel mGameInfoPanel = null;
-	private final JPanel mGameInfoPanel2 = null;
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
 	private JTable mMap = null;
-	private BufferedImage bufferImageColorPixel = null;
-	private BufferedImage bufferImageMap = null;
 
 	public MainWindow() {
 		super();
@@ -108,7 +102,6 @@ public class MainWindow extends JFrame {
 		mPlayToolBar.setVisible(true);
 		this.getGamePanel(mv).setVisible(true);
 		this.pack();
-		//this.setSize(1227, 628);
 		this.setLocationRelativeTo(null);
 
 	}
@@ -140,19 +133,8 @@ public class MainWindow extends JFrame {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel,
 				BoxLayout.Y_AXIS));
-			try {
-				//bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk_buffer.png"));
-				//bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/Map_risk.png"));
-				bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
-				bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-			mv.setFondo(bufferImageMap);
-			//final JScrollPane mapScroll = new JScrollPane(mv);
-			//mapScroll.setPreferredSize(new Dimension(1024, 628));
-			//mapScroll.addMouseListener(new MapMouseAdapter(mv, mapScroll));
-			//mGamePanel.add(mapScroll);
+
+			mv.setFondo();
 			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
 			mGamePanel.add(mv);
 			//añadimos el panel para la informacion de la partida
@@ -283,7 +265,6 @@ public class MainWindow extends JFrame {
 					MainWindow.this.setupGameGUI();
 
 				} catch (final Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -292,36 +273,16 @@ public class MainWindow extends JFrame {
 
 	private class MapMouseAdapter extends MouseAdapter {
 		private MapView mv = null;
-		private final JScrollPane sp = null;
 
-		//public MapMouseAdapter(MapView mv, JScrollPane sp) {
 		public MapMouseAdapter(MapView mv) {
 			super();
 			this.mv = mv;
-			//this.sp = sp;
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-			//final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
-			//	evt.getX() + sp.getHorizontalScrollBar().getValue(), evt.getY()
-			//			+ sp.getVerticalScrollBar().getValue()));
-			final int gameSelected = MapView.getIndex(bufferImageColorPixel.getRGB(
-				evt.getX(), evt.getY()));
-			if (gameSelected != -1) {
-				mv.getRowInfo(gameSelected);
-				mv.removeAll();
-				mv.setFondo(bufferImageMap);
-				mv.setSelection(gameSelected);
-				mv.repaint();
-			} else {
-				// pinchamos sobre agua
-				mv.removeAll();
-				mv.setFondo(bufferImageMap);
-				mv.getRowInfo(gameSelected);
-				mv.repaint();
-			}
-
+			mv.getSelectedRow(evt);
+			mv.repaint();
 		}
 
 	}

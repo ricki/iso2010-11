@@ -2,8 +2,10 @@ package com.umbrella.worldconq.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -26,6 +28,9 @@ public class MapView extends JComponent {
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
 	private JEditorPane actionGame;
+	private static int gameSelected;
+	private BufferedImage bufferImageMap;
+	private static BufferedImage bufferImageColorPixel;
 
 	private static int[] xTerritory = {
 			514, 492, 568, 579, 581, 632, 521, 728, 839, 793, 877, 1069, 1008,
@@ -64,12 +69,18 @@ public class MapView extends JComponent {
 	public MapView(TableModel dm) {
 		super();
 		this.dm = dm;
-		//this.setPreferredSize(new Dimension(1227, 628));
+		gameSelected = -1;
 		this.setPreferredSize(new Dimension(920, 471));
-		//lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		try {
+			bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
+			bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
-	public static int getIndex(int color) {
+	public int getIndex(int color) {
 		int ret = -1;
 		for (int i = 0; i < colorTerritory.length; i++) {
 			if (color == colorTerritory[i]) ret = i;
@@ -85,44 +96,48 @@ public class MapView extends JComponent {
 		this.pais = pais;
 	}
 
-	public static int getX(int idx) {
+	public int getX(int idx) {
 		return (int) (0.75 * xTerritory[idx]);
 	}
 
-	public static int getY(int idx) {
+	public int getY(int idx) {
 		return (int) (0.75 * yTerritory[idx]);
 	}
 
-	public static String getImageTerrirtory(int idx) {
+	public String getImageTerrirtory(int idx) {
 		return imageTerritory[idx];
 	}
 
 	public void setSelection(int numTerritory) {
 		BufferedImage bufferImage = null;
 		try {
-			//bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/"
-			//		+ getImageTerrirtory(numTerritory)));
 			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/half."
-					+ getImageTerrirtory(numTerritory)));
+					+ this.getImageTerrirtory(numTerritory)));
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		x = getX(numTerritory);
-		y = getY(numTerritory);
+		x = this.getX(numTerritory);
+		y = this.getY(numTerritory);
 		this.setPais(bufferImage);
 	}
 
-	public java.awt.Image getFondo() {
-		return fondo;
-	}
-
-	public void setFondo(java.awt.Image fondo) {
-		this.fondo = fondo;
+	public void setFondo() {
+		fondo = bufferImageMap;
 	}
 
 	@Override
 	public void paint(Graphics g) {
+		if (gameSelected != -1) {
+			this.getRowInfo(gameSelected);
+			this.removeAll();
+			this.setFondo();
+			this.setSelection(gameSelected);
+		} else {
+			// pinchamos sobre agua
+			this.removeAll();
+			this.setFondo();
+			this.getRowInfo(gameSelected);
+		}
 		g.drawImage(fondo, 0, 0, null);
 		if (pais != null) {
 			g.drawImage(pais, x, y, null);
@@ -163,15 +178,19 @@ public class MapView extends JComponent {
 
 	public void setListPlayer(JEditorPane listPlayer) {
 		listPlayer.setEditable(false);
+		final ArrayList<String> playerList = new ArrayList<String>();
 		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
 				+ "Jugadores"
 				+ "</BIG><BR></P><HR><P ALIGN=\"right\">";
 
 		for (int i = 0; i < 42; i++) {
-			if (!dm.getValueAt(i, 1).equals("¿?")) {
+			if ((!dm.getValueAt(i, 1).equals("¿?"))
+					&& (!playerList.contains(dm.getValueAt(i, 1)))) {
+				playerList.add((String) dm.getValueAt(i, 1));
 				list += dm.getValueAt(i, 1) + "<BR>";
 			}
 		}
+
 		list += "</P>";
 		this.listPlayer = listPlayer;
 		this.getListPlayer().setContentType("text/html");
@@ -197,5 +216,11 @@ public class MapView extends JComponent {
 		this.actionGame = actionGame;
 		this.getActionGame().setContentType("text/html");
 		this.getActionGame().setText(list);
+	}
+
+	public int getSelectedRow(MouseEvent evt) {
+		gameSelected = this.getIndex(bufferImageColorPixel.getRGB(evt.getX(),
+			evt.getY()));
+		return gameSelected;
 	}
 }
