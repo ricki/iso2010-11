@@ -212,6 +212,14 @@ public class MapView extends JComponent {
 					&& (!playerList.contains(dm.getValueAt(i, 1)))) {
 				playerList.add((String) dm.getValueAt(i, 1));
 				list += dm.getValueAt(i, 1) + "<BR>";
+				/*
+				 * A espera de saber como sacar el turno
+				 * 
+				 * if (dm.getValueAt(i, 9).equals(1)) { //tenemos turno list +=
+				 * "<font color=\"lime\">"; list += dm.getValueAt(i, 1); list +=
+				 * "</font><BR>"; } else { list += dm.getValueAt(i, 1) + "<BR>";
+				 * }
+				 */
 			}
 		}
 
