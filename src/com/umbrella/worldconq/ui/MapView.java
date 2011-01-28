@@ -1,6 +1,8 @@
 package com.umbrella.worldconq.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -30,6 +32,8 @@ public class MapView extends JComponent {
 	private JEditorPane actionGame;
 	private static int gameSelected;
 	private BufferedImage bufferImageMap;
+
+	private final BufferedImage[] bufferTerritoryImage = new BufferedImage[42];
 	private static BufferedImage bufferImageColorPixel;
 
 	private static int[] xTerritory = {
@@ -74,6 +78,10 @@ public class MapView extends JComponent {
 		try {
 			bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
 			bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
+			for (int i = 0; i < 42; i++) {
+				bufferTerritoryImage[i] = ImageIO.read(ClassLoader.getSystemResource("image/half."
+						+ this.getImageTerrirtory(i)));
+			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -109,16 +117,9 @@ public class MapView extends JComponent {
 	}
 
 	public void setSelection(int numTerritory) {
-		BufferedImage bufferImage = null;
-		try {
-			bufferImage = ImageIO.read(ClassLoader.getSystemResource("image/half."
-					+ this.getImageTerrirtory(numTerritory)));
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 		x = this.getX(numTerritory);
 		y = this.getY(numTerritory);
-		this.setPais(bufferImage);
+		this.setPais(bufferTerritoryImage[numTerritory]);
 	}
 
 	public void setFondo() {
@@ -141,6 +142,29 @@ public class MapView extends JComponent {
 		g.drawImage(fondo, 0, 0, null);
 		if (pais != null) {
 			g.drawImage(pais, x, y, null);
+		}
+		// añadimos los nombre de los jugadores
+		this.setPlayerName(g);
+	}
+
+	public void setPlayerName(Graphics g) {
+		BufferedImage aux = null;
+		for (int i = 0; i < 42; i++) {
+			if (!dm.getValueAt(i, 1).equals("¿?")) {
+				aux = bufferTerritoryImage[i];
+				if (i <= 18 || (i > 24 && i <= 33)) {
+					g.setColor(Color.RED);
+				} else {
+					g.setColor(Color.GREEN);
+				}
+
+				final Font f = new Font((String) dm.getValueAt(i, 1),
+					Font.BOLD, 8);
+				g.setFont(f);
+				final int mediaX = (aux.getWidth() / 2) + this.getX(i);
+				final int mediaY = (aux.getHeight() / 2) + this.getY(i);
+				g.drawString(f.getName(), mediaX, mediaY);
+			}
 		}
 	}
 
