@@ -37,7 +37,8 @@ public class UserManager {
 	}
 
 	public void createSession(String login, String passwd) throws Exception {
-		if (login == null || passwd == null || login == "" || passwd == "")
+		if (login == null || passwd == null || login.equals("")
+				|| passwd.equals(""))
 			throw new InvalidArgumentException();
 		else {
 			if (mSession != null) this.closeSession();
