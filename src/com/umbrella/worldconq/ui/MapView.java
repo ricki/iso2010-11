@@ -12,10 +12,14 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
 
+import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryData;
+
+import es.uclm.iso2.rmi.GameInfo;
 
 public class MapView extends JComponent {
 
@@ -26,6 +30,7 @@ public class MapView extends JComponent {
 	private int x;
 	private int y;
 	private final TableModel dm;
+	private final GameManager gm;
 	protected ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
@@ -34,6 +39,8 @@ public class MapView extends JComponent {
 	private BufferedImage bufferImageMap;
 
 	private final BufferedImage[] bufferTerritoryImage = new BufferedImage[42];
+
+	private final JTable mCurrentList;
 	private static BufferedImage bufferImageColorPixel;
 
 	private static int[] xTerritory = {
@@ -70,9 +77,11 @@ public class MapView extends JComponent {
 			-8388353, -65281, -8388544
 	}; //color agua -7228984
 
-	public MapView(TableModel dm) {
+	public MapView(TableModel dm, GameManager gm, JTable mCurrentList) {
 		super();
 		this.dm = dm;
+		this.gm = gm;
+		this.mCurrentList = mCurrentList;
 		gameSelected = -1;
 		this.setPreferredSize(new Dimension(920, 471));
 		try {
@@ -174,15 +183,23 @@ public class MapView extends JComponent {
 					+ TerritoryData.getName(idx)
 					+ "</BIG><BR>\n<B> Controlado por: <EM>"
 					+ dm.getValueAt(idx, 1)
-					+ "</em></b></P>\n<HR>\n<P ALIGN=\"right\">\nSoldados: "
+					+ "</em></b></P>\n<HR>"
+					+ "<TABLE BORDER=0>"
+					+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
 					+ dm.getValueAt(idx, 2)
-					+ "<BR>\nCañones Tipo 1: " + dm.getValueAt(idx, 3)
-					+ "<BR>\nCañones Tipo 2: " + dm.getValueAt(idx, 4)
-					+ "<BR>\nCañones Tipo 3: " + dm.getValueAt(idx, 5)
-					+ "<BR>\nMisiles: " + dm.getValueAt(idx, 6)
-					+ "<BR>\nICBMs: " + dm.getValueAt(idx, 7)
-					+ "<BR>\nAntimisiles: " + dm.getValueAt(idx, 8)
-					+ "<BR>\n</P>";
+					+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 3)
+					+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 4)
+					+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 5)
+					+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 6)
+					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 7)
+					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
+					+ dm.getValueAt(idx, 8)
+					+ "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {
@@ -202,28 +219,34 @@ public class MapView extends JComponent {
 
 	public void setListPlayer(JEditorPane listPlayer) {
 		listPlayer.setEditable(false);
-		final ArrayList<String> playerList = new ArrayList<String>();
+		final GameInfo gi = gm.getCurrentGameListModel().getGameAt(
+			mCurrentList.getSelectedRow());
+		final ArrayList<String> players = gi.getPlayers();
+
 		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
 				+ "Jugadores"
-				+ "</BIG><BR></P><HR><P ALIGN=\"right\">";
-
-		for (int i = 0; i < 42; i++) {
-			if ((!dm.getValueAt(i, 1).equals("¿?"))
-					&& (!playerList.contains(dm.getValueAt(i, 1)))) {
-				playerList.add((String) dm.getValueAt(i, 1));
-				list += dm.getValueAt(i, 1) + "<BR>";
-				/*
-				 * A espera de saber como sacar el turno
-				 * 
-				 * if (dm.getValueAt(i, 9).equals(1)) { //tenemos turno list +=
-				 * "<font color=\"lime\">"; list += dm.getValueAt(i, 1); list +=
-				 * "</font><BR>"; } else { list += dm.getValueAt(i, 1) + "<BR>";
-				 * }
-				 */
+				+ "</BIG><BR></P>\n<HR>"
+				+ "<TABLE BORDER=0>";
+		//+ "<TR><TD Align=\"right\">Estado<TD Align=\"right\">Jugador";
+		for (final String s : players) {
+			if (gm.getGameEngine().getNamePlayerOnline().contains(s)) {
+				if (s.equals(gm.getGameEngine().getNamePlayerTurn())) {
+					list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
+							+ ClassLoader.getSystemResource("image/turn.png")
+							+ "\"><TD Align=\"left\">" + s;
+				} else {
+					list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
+							+ ClassLoader.getSystemResource("image/online.png")
+							+ "\"><TD Align=\"left\">" + s;
+				}
+			} else {
+				list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
+						+ ClassLoader.getSystemResource("image/offline.png")
+						+ "\"><TD Align=\"left\">" + s;
 			}
 		}
 
-		list += "</P>";
+		list += "</TABLE>\n</P>";
 		this.listPlayer = listPlayer;
 		this.getListPlayer().setContentType("text/html");
 		this.getListPlayer().setText(list);

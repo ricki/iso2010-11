@@ -12,6 +12,8 @@ import es.uclm.iso2.rmi.Territory;
 public class GameEngine {
 	private final WorldConqApp app;
 	private MapModel mMapListModel;
+	private String mNamePlayerTurn;
+	private ArrayList<String> mNamePlayerOnline;
 
 	public GameEngine() {
 		app = WorldConqApp.getWorldConqApp();
@@ -54,5 +56,28 @@ public class GameEngine {
 			}
 		}
 		mMapListModel.setData(finalList);
+		final ArrayList<Player> playerList = app.getServerAdapter().playGame(
+			sess, game).getPlayers();
+		int numPlayer = -1;
+		mNamePlayerOnline = new ArrayList<String>();
+		for (int i = 0; i < playerList.size(); i++) {
+			if (playerList.get(i).isHasTurn() == true) {
+				numPlayer = i;
+			}
+			if (playerList.get(i).isOnline() == true) {
+				mNamePlayerOnline.add(playerList.get(i).getName());
+			}
+		}
+		mNamePlayerTurn = app.getServerAdapter().playGame(sess, game).getPlayers().get(
+			numPlayer).getName();
 	}
+
+	public String getNamePlayerTurn() {
+		return mNamePlayerTurn;
+	}
+
+	public ArrayList<String> getNamePlayerOnline() {
+		return mNamePlayerOnline;
+	}
+
 }
