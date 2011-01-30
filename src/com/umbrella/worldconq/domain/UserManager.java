@@ -11,7 +11,7 @@ public class UserManager {
 
 	private final WorldConqApp app;
 	private Session mSession;
-	private final String emailReEx = "^[A-Za-z0-9_%-]+@[A-Za-z0-9_%-]+\\.[A-Za-z0-9_%-]{2,4}$";
+	private final String emailReEx = "^[A-Za-z0-9][A-Za-z0-9_%-\\·]*@[A-Za-z0-9][A-Za-z0-9_%-\\.]*\\.[A-Za-z0-9_%-]{2,4}$";
 
 	public UserManager() {
 		app = WorldConqApp.getWorldConqApp();
@@ -22,7 +22,7 @@ public class UserManager {
 		return mSession;
 	}
 
-	public void registerUser(String login, String passwd, String email) throws InvalidArgumentException, Exception {
+	public void registerUser(String login, String passwd, String email) throws Exception {
 		if (login == null || passwd == null || email == null ||
 				login.equals("") || passwd.equals("") || email.equals("")) {
 			throw new InvalidArgumentException();

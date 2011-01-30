@@ -13,6 +13,8 @@ import org.junit.Before;
 import com.umbrella.worldconq.WorldConqApp;
 import com.umbrella.worldconq.exception.InvalidArgumentException;
 
+import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
+
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
 	BufferedReader in;
@@ -79,8 +81,12 @@ public class UserManagerTest extends TestCase {
 			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
 				"JorgeCA", "jorge", "jorge.colao@gmail.com");
 			fail("Esperaba UserAlreadyExistsException");
+		} catch (final UserAlreadyExistsException e) {
 		} catch (final Exception e) {
+			System.out.println(e.getClass().getName());
+			fail(e.toString() + "\n Esperaba UserAlreadyExistsException");
 		}
+
 	}
 
 	public void testRegisterUser4() {
