@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.domain.PlayerListModel;
 
 public class MainWindow extends JFrame {
 
@@ -154,9 +155,10 @@ public class MainWindow extends JFrame {
 				BoxLayout.Y_AXIS));
 
 			mv.setInfoPlayer(new JEditorPane());
-			mv.setListPlayer(new JEditorPane());
-			final JScrollPane listPlayerSroll = new JScrollPane(
-				mv.getListPlayer());
+			//mv.setListPlayer(new JEditorPane());
+			//final JScrollPane listPlayerSroll = new JScrollPane(mv.getListPlayer());
+			final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
+				app.getGameManager().getGameEngine().getPlayerListModel()));
 			listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
 			final JScrollPane listInfoSroll = new JScrollPane(
@@ -263,6 +265,8 @@ public class MainWindow extends JFrame {
 				try {
 					app.getGameManager().connectToGame(gameSelected);
 					MainWindow.this.setupGameGUI();
+					//new MapView(app.getGameManager().getGameEngine().getMapListModel());
+					//new PlayerView(app.getGameManager().getGameEngine().getPlayerListModel());
 
 				} catch (final Exception e) {
 					e.printStackTrace();
