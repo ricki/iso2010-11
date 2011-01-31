@@ -7,19 +7,16 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
 
 import com.umbrella.worldconq.domain.GameManager;
+import com.umbrella.worldconq.domain.PlayerListModel;
 import com.umbrella.worldconq.domain.TerritoryData;
-
-import es.uclm.iso2.rmi.GameInfo;
 
 public class MapView extends JComponent {
 
@@ -40,7 +37,6 @@ public class MapView extends JComponent {
 
 	private final BufferedImage[] bufferTerritoryImage = new BufferedImage[42];
 
-	private final JTable mCurrentList;
 	private static BufferedImage bufferImageColorPixel;
 
 	private static int[] xTerritory = {
@@ -77,11 +73,10 @@ public class MapView extends JComponent {
 			-8388353, -65281, -8388544
 	}; //color agua -7228984
 
-	public MapView(TableModel dm, GameManager gm, JTable mCurrentList) {
+	public MapView(TableModel dm, GameManager gm) {
 		super();
 		this.dm = dm;
 		this.gm = gm;
-		this.mCurrentList = mCurrentList;
 		gameSelected = -1;
 		this.setPreferredSize(new Dimension(920, 471));
 		try {
@@ -219,31 +214,25 @@ public class MapView extends JComponent {
 
 	public void setListPlayer(JEditorPane listPlayer) {
 		listPlayer.setEditable(false);
-		final GameInfo gi = gm.getCurrentGameListModel().getGameAt(
-			mCurrentList.getSelectedRow());
-		final ArrayList<String> players = gi.getPlayers();
 
 		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
 				+ "Jugadores"
 				+ "</BIG><BR></P>\n<HR>"
 				+ "<TABLE BORDER=0>";
-		//+ "<TR><TD Align=\"right\">Estado<TD Align=\"right\">Jugador";
-		for (final String s : players) {
-			if (gm.getGameEngine().getNamePlayerOnline().contains(s)) {
-				if (s.equals(gm.getGameEngine().getNamePlayerTurn())) {
-					list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
-							+ ClassLoader.getSystemResource("image/turn.png")
-							+ "\"><TD Align=\"left\">" + s;
+		final PlayerListModel plm = gm.getGameEngine().getPlayerListModel();
+
+		for (int i = 0; i < plm.getRowCount(); i++) {
+			list += "<TR><TD Align=\"left\">" + "<IMG SRC=\"";
+			if ((Boolean) plm.getValueAt(i, 2)) {
+				if ((Boolean) plm.getValueAt(i, 1)) {
+					list += ClassLoader.getSystemResource("image/turn.png");
 				} else {
-					list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
-							+ ClassLoader.getSystemResource("image/online.png")
-							+ "\"><TD Align=\"left\">" + s;
+					list += ClassLoader.getSystemResource("image/online.png");
 				}
 			} else {
-				list += "<TR><TD Align=\"left\">" + "<IMG SRC=\""
-						+ ClassLoader.getSystemResource("image/offline.png")
-						+ "\"><TD Align=\"left\">" + s;
+				list += ClassLoader.getSystemResource("image/offline.png");
 			}
+			list += "\"><TD Align=\"left\">" + plm.getValueAt(i, 0);
 		}
 
 		list += "</TABLE>\n</P>";

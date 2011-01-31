@@ -95,8 +95,7 @@ public class MainWindow extends JFrame {
 		// mostramos el mapa y lo demas
 		mMap = new JTable(
 			app.getGameManager().getGameEngine().getMapListModel());
-		final MapView mv = new MapView(mMap.getModel(), app.getGameManager(),
-			mCurrentList);
+		final MapView mv = new MapView(mMap.getModel(), app.getGameManager());
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
 		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);

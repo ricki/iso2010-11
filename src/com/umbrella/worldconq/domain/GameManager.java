@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.comm.ServerAdapter;
 
+import es.uclm.iso2.rmi.Game;
 import es.uclm.iso2.rmi.GameInfo;
 
 public class GameManager {
@@ -65,18 +67,18 @@ public class GameManager {
 		try {
 			app.getServerAdapter().joinGame(user, gameUuid);
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void connectToGame(int gameIndex) throws Exception {
 		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
+		final Session session = app.getUserManager().getSession();
+		final ServerAdapter adapter = app.getServerAdapter();
+		final Game game = app.getServerAdapter().playGame(session, gameUuid);
 		try {
-			mGameEngine = new GameEngine();
-			mGameEngine.updatePlay(gameUuid);
+			mGameEngine = new GameEngine(game, session, adapter);
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
