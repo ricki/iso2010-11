@@ -21,10 +21,8 @@ public class PlayerView extends JEditorPane implements TableModelListener {
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		System.out.println(e.toString());
-		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
-					+ "Jugadores"
-					+ "</BIG><BR></P>\n<HR>"
-					+ "<TABLE BORDER=0>";
+		String list = "<html>\n<P ALIGN=\"center\"><BIG>" + "Jugadores"
+				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
 		//final PlayerListModel plm = gm.getGameEngine().getPlayerListModel();
 
 		for (int i = 0; i < plm.getRowCount(); i++) {

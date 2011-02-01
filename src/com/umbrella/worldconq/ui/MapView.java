@@ -89,7 +89,6 @@ public class MapView extends JComponent {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public int getIndex(int color) {

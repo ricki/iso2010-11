@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.umbrella.worldconq.ui.PlayerView;
-
 import es.uclm.iso2.rmi.Player;
 
 public class PlayerListModel extends AbstractTableModel {
@@ -13,9 +11,7 @@ public class PlayerListModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	private static final String[] colTitles = {
-			"Jugador",
-			"Turno",
-			"Online"
+			"Jugador", "Turno", "Online"
 	};
 
 	private final ArrayList<Player> mPlayerList;
@@ -23,7 +19,6 @@ public class PlayerListModel extends AbstractTableModel {
 	public PlayerListModel() {
 		super();
 		mPlayerList = new ArrayList<Player>();
-		this.addTableModelListener(new PlayerView(this));
 	}
 
 	public void setData(ArrayList<Player> data) {
