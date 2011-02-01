@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.exception.InvalidArgumentException;
 
 import es.uclm.iso2.rmi.GameInfo;
 
@@ -58,14 +59,13 @@ public class GameManager {
 			description, null, gameSessions, 0, 0, 0, 0));
 	}
 
-	public void joinGame(int gameSelected) {
-		final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
-		final Session user = app.getUserManager().getSession();
-		try {
+	public void joinGame(int gameSelected) throws Exception {
+		if (gameSelected > mOpenGameListModel.getRowCount()) {
+			throw new InvalidArgumentException();
+		} else {
+			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
+			final Session user = app.getUserManager().getSession();
 			app.getServerAdapter().joinGame(user, gameUuid);
-		} catch (final Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }
