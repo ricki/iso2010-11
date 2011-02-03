@@ -13,8 +13,6 @@ import org.junit.Before;
 import com.umbrella.worldconq.WorldConqApp;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
-import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
-
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
 	BufferedReader in;
@@ -38,10 +36,9 @@ public class UserManagerTest extends TestCase {
 				ClassLoader.getSystemResource("data/open.policy").toString());
 
 			WorldConqApp.getWorldConqApp().getServerAdapter().setRemoteInfo(
-					"WorldConqStubServer",
-					InetAddress.getByName("localhost"),
-					3234
-					);
+				"WorldConqStubServer",
+				InetAddress.getByName("localhost"),
+				3234);
 			WorldConqApp.getWorldConqApp().getServerAdapter().connect();
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -81,12 +78,8 @@ public class UserManagerTest extends TestCase {
 			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
 				"JorgeCA", "jorge", "jorge.colao@gmail.com");
 			fail("Esperaba UserAlreadyExistsException");
-		} catch (final UserAlreadyExistsException e) {
 		} catch (final Exception e) {
-			System.out.println(e.getClass().getName());
-			fail(e.toString() + "\n Esperaba UserAlreadyExistsException");
 		}
-
 	}
 
 	public void testRegisterUser4() {
@@ -199,6 +192,163 @@ public class UserManagerTest extends TestCase {
 		try {
 			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
 				"LuisAn", "luis", "luis@gmail.com");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession1() {
+		System.out.println("TestCase::testCreateSession1");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession("",
+				"");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession2() {
+		System.out.println("TestCase::testCreateSession2");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"Aduran", "");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession3() {
+		System.out.println("TestCase::testCreateSession3");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession("",
+				"angel");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession4() {
+		System.out.println("TestCase::testCreateSession4");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"Aduran", "angel");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession5() {
+		System.out.println("TestCase::testCreateSession5");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(null,
+				"angel");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession6() {
+		System.out.println("TestCase::testCreateSession6");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"Aduran",
+				null);
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession7() {
+		System.out.println("TestCase::testCreateSession7");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(null,
+				null);
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession8() {
+		System.out.println("TestCase::testCreateSession8");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"ADuran",
+				"angel");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession9() {
+		System.out.println("TestCase::testCreateSession9");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"Aduran",
+				"Angel");
+			fail("Esperaba InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testCreateSession10() {
+		System.out.println("TestCase::testCreateSession10");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+				"1111", "2222", "1111@1111.com");
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"1111", "2222");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession11() {
+		System.out.println("TestCase::testCreateSession11");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+				"-1", "2222", "2222@3333.com");
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"-1", "2222");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession12() {
+		System.out.println("TestCase::testCreateSession12");
+		/*  */
+		try {
+			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+				"Angel&Duran", "angel", "a@d.com");
+			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+				"Angel&Duran", "angel");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
