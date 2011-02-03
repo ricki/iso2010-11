@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.exception.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class StartupWindow extends JFrame {
 

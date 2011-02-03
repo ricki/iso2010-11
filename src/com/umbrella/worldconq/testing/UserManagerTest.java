@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.exception.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
 

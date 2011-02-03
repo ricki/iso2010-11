@@ -1,4 +1,4 @@
-package com.umbrella.worldconq.exception;
+package com.umbrella.worldconq.exceptions;
 
 public class InvalidArgumentException extends Exception {
 

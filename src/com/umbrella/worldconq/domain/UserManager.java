@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.exception.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class UserManager {
 
