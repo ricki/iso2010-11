@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.exception.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import es.uclm.iso2.rmi.GameInfo;
 
