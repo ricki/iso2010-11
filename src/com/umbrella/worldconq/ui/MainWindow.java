@@ -150,10 +150,6 @@ public class MainWindow extends JFrame {
 			if (openList.getSelectedRow() == -1) {
 				JOptionPane.showMessageDialog(mGameListPanel,
 					"No ha seleccionado ninguna partida");
-			} else if (gameSelected >= openList.getRowCount()) {
-				JOptionPane.showMessageDialog(
-					mGameListPanel,
-					"Ha ocurrido un error, la partida seleccionada no se puede cargar");
 			} else {
 				try {
 					app.getGameManager().joinGame(gameSelected);
