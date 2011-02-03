@@ -11,12 +11,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class StartupWindow extends JFrame {
 
@@ -124,30 +126,43 @@ public class StartupWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
+			boolean invalidArgument = false;
 
-			stw.setVisible(false);
-			final JFrame f = new JFrame();
-			final RegisterDialog dlg = new RegisterDialog(f,
-				"La Conquista del Mundo - Registro", true);
-			dlg.setLocationRelativeTo(null);
-			dlg.setVisible(true);
+			do {
+				stw.setVisible(false);
+				final JFrame f = new JFrame();
+				final RegisterDialog dlg = new RegisterDialog(f,
+					"La Conquista del Mundo - Registro", true);
+				dlg.setLocationRelativeTo(null);
+				dlg.setVisible(true);
 
-			if (dlg.getSelection() == true) {
-				try {
-					WorldConqApp.getWorldConqApp().getUserManager().registerUser(
-						dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
-					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
-							+ " registrado");
-					NoticeLabel.setForeground(new Color(0, 200, 0));
-				} catch (final Exception e) {
-					stw.NoticeLabel.setText("Error en el registro");
-					NoticeLabel.setForeground(new Color(255, 0, 0));
+				if (dlg.getSelection() == true) {
+					try {
+						WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+							dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+						stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
+								+ " registrado");
+						NoticeLabel.setForeground(new Color(0, 200, 0));
+						invalidArgument = false;
+						stw.setVisible(true);
+					} catch (final InvalidArgumentException e) {
+						JOptionPane.showMessageDialog(null,
+							"Algún argumento es erroneo", "Error",
+							JOptionPane.ERROR_MESSAGE);
+						invalidArgument = true;
+					} catch (final Exception e) {
+						stw.NoticeLabel.setText("El servidor idica: Error en el registro");
+						NoticeLabel.setForeground(new Color(255, 0, 0));
+						stw.setVisible(true);
+						invalidArgument = false;
+					}
+				} else {
+					stw.NoticeLabel.setText("");
+					invalidArgument = false;
+					stw.setVisible(true);
 				}
-			}
-
-			stw.setVisible(true);
-			f.dispose();
-
+				f.dispose();
+			} while (invalidArgument);
 		}
 	}
 
