@@ -19,13 +19,13 @@ import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
-import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.domain.GameManager;
 
 public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -5107198177153703399L;
 
-	private final WorldConqApp app;
+	private final GameManager gameMgr;
 
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
@@ -34,9 +34,9 @@ public class MainWindow extends JFrame {
 
 	private JTable openList = null;
 
-	public MainWindow() {
+	public MainWindow(GameManager gameMgr) {
 		super();
-		app = WorldConqApp.getWorldConqApp();
+		this.gameMgr = gameMgr;
 		this.initGUI();
 	}
 
@@ -93,10 +93,10 @@ public class MainWindow extends JFrame {
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel,
 				BoxLayout.Y_AXIS));
 			final JTable currentList = new JTable(
-				app.getGameManager().getCurrentGameListModel());
+				gameMgr.getCurrentGameListModel());
 			final JScrollPane currentListPanel = new JScrollPane(currentList);
 			openList = new JTable(
-				app.getGameManager().getOpenGameListModel());
+				gameMgr.getOpenGameListModel());
 			final JScrollPane openListPanel = new JScrollPane(openList);
 			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -120,7 +120,7 @@ public class MainWindow extends JFrame {
 
 			if (dlg.getSelection() == true) {
 				try {
-					app.getGameManager().createGame(dlg.getGameName(),
+					gameMgr.createGame(dlg.getGameName(),
 						dlg.getDescription(), dlg.getCalendarList());
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -134,7 +134,7 @@ public class MainWindow extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			try {
-				app.getGameManager().updateGameList();
+				gameMgr.updateGameList();
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
@@ -152,8 +152,8 @@ public class MainWindow extends JFrame {
 					"No ha seleccionado ninguna partida");
 			} else {
 				try {
-					app.getGameManager().joinGame(gameSelected);
-					final ArrayList<Calendar> session = app.getGameManager().getOpenGameListModel().getGameAt(
+					gameMgr.joinGame(gameSelected);
+					final ArrayList<Calendar> session = gameMgr.getOpenGameListModel().getGameAt(
 						gameSelected).getGameSessions();
 
 					boolean onLine = false;
@@ -180,11 +180,11 @@ public class MainWindow extends JFrame {
 							//app.getGameManager().connectToGame();
 						} else {
 							//No se desea jugar, se actualiza la lista de partidas.
-							app.getGameManager().updateGameList();
+							gameMgr.updateGameList();
 						}
 					} else {
 						//No hay ninguna sesión activa, se actuliza la lista de partidas.
-						app.getGameManager().updateGameList();
+						gameMgr.updateGameList();
 					}
 				} catch (final Exception e) {
 					e.printStackTrace();
