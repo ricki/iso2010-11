@@ -145,7 +145,8 @@ public class MainWindow extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			final int gameSelected = openList.getSelectedRow();
-			System.out.println(gameSelected);
+			System.out.println("Seleccionado: " + gameSelected);
+			System.out.println(openList.getRowCount());
 			if (openList.getSelectedRow() == -1) {
 				JOptionPane.showMessageDialog(mGameListPanel,
 					"No ha seleccionado ninguna partida");
