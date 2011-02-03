@@ -10,12 +10,15 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
-import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.comm.ServerAdapter;
+import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
 	BufferedReader in;
+
+	private ServerAdapter srvAdapter;
 
 	@Override
 	@Before
@@ -35,11 +38,12 @@ public class UserManagerTest extends TestCase {
 			System.setProperty("java.security.policy",
 				ClassLoader.getSystemResource("data/open.policy").toString());
 
-			WorldConqApp.getWorldConqApp().getServerAdapter().setRemoteInfo(
+			srvAdapter = new ServerAdapter();
+			srvAdapter.setRemoteInfo(
 				"WorldConqStubServer",
 				InetAddress.getByName("localhost"),
 				3234);
-			WorldConqApp.getWorldConqApp().getServerAdapter().connect();
+			srvAdapter.connect();
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -49,7 +53,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser1");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"", "", "");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -62,7 +66,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser2");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				null, null, null);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -75,7 +79,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser3");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "jorge.colao@gmail.com");
 			fail("Esperaba UserAlreadyExistsException");
 		} catch (final Exception e) {
@@ -86,7 +90,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser4");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "", "jorge.colao@gmail.com");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -99,7 +103,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser5");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", null, "jorge.colao@gmail.com");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -112,7 +116,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser6");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -125,7 +129,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser7");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", null);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -138,7 +142,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser8");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -151,7 +155,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser9");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "jorge@");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -164,7 +168,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser10");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge@gmail");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -177,7 +181,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser11");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge@gmail.");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -190,7 +194,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testRegisterUser12");
 		/* */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"LuisAn", "luis", "luis@gmail.com");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -201,7 +205,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession1");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession("",
+			new UserManager(srvAdapter).createSession("",
 				"");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -214,7 +218,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession2");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"Aduran", "");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -227,7 +231,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession3");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession("",
+			new UserManager(srvAdapter).createSession("",
 				"angel");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -240,7 +244,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession4");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"Aduran", "angel");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -251,7 +255,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession5");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(null,
+			new UserManager(srvAdapter).createSession(null,
 				"angel");
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -264,7 +268,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession6");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"Aduran",
 				null);
 			fail("Esperaba InvalidArgumentException");
@@ -278,7 +282,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession7");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(null,
+			new UserManager(srvAdapter).createSession(null,
 				null);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
@@ -291,7 +295,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession8");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"ADuran",
 				"angel");
 			fail("Esperaba InvalidArgumentException");
@@ -305,7 +309,7 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession9");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"Aduran",
 				"Angel");
 			fail("Esperaba InvalidArgumentException");
@@ -319,9 +323,9 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession10");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"1111", "2222", "1111@1111.com");
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"1111", "2222");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -332,9 +336,9 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession11");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"-1", "2222", "2222@3333.com");
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"-1", "2222");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -345,9 +349,9 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession12");
 		/*  */
 		try {
-			WorldConqApp.getWorldConqApp().getUserManager().registerUser(
+			new UserManager(srvAdapter).registerUser(
 				"Angel&Duran", "angel", "a@d.com");
-			WorldConqApp.getWorldConqApp().getUserManager().createSession(
+			new UserManager(srvAdapter).createSession(
 				"Angel&Duran", "angel");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -362,7 +366,7 @@ public class UserManagerTest extends TestCase {
 		try {
 			ServerProcess.destroy();
 			ServerProcess.waitFor();
-			WorldConqApp.getWorldConqApp().getServerAdapter().disconnect();
+			srvAdapter.disconnect();
 		} catch (final Exception e) {
 		}
 	}

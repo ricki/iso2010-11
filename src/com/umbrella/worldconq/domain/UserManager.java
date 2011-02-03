@@ -4,17 +4,17 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class UserManager {
 
-	private final WorldConqApp app;
+	private final ServerAdapter srvAdapter;
 	private Session mSession;
 	private final String emailReEx = "^[A-Za-z0-9][A-Za-z0-9_%-\\·]*@[A-Za-z0-9][A-Za-z0-9_%-\\.]*\\.[A-Za-z0-9_%-]{2,4}$";
 
-	public UserManager() {
-		app = WorldConqApp.getWorldConqApp();
+	public UserManager(ServerAdapter srvAdapter) {
+		this.srvAdapter = srvAdapter;
 		mSession = null;
 	}
 
@@ -30,7 +30,7 @@ public class UserManager {
 			final Pattern p = Pattern.compile(emailReEx);
 			final Matcher m = p.matcher(email);
 			if (m.find())
-				app.getServerAdapter().registerUser(login, passwd, email);
+				srvAdapter.registerUser(login, passwd, email);
 			else
 				throw new InvalidArgumentException();
 		}
@@ -42,14 +42,13 @@ public class UserManager {
 			throw new InvalidArgumentException();
 		else {
 			if (mSession != null) this.closeSession();
-			final UUID id = app.getServerAdapter().createSession(login, passwd);
+			final UUID id = srvAdapter.createSession(login, passwd);
 			mSession = new Session(id, login);
-			app.setMainMode();
 		}
 	}
 
 	public void closeSession() throws Exception {
-		app.getServerAdapter().closeSession(mSession);
+		srvAdapter.closeSession(mSession);
 		mSession = null;
 	}
 }
