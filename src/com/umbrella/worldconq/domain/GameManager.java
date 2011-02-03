@@ -3,19 +3,22 @@ package com.umbrella.worldconq.domain;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import es.uclm.iso2.rmi.GameInfo;
 
 public class GameManager {
 
-	private final WorldConqApp app;
+	private final UserManager usrMgr;
+	private final ServerAdapter srvAdapter;
+
 	private GameListModel mCurrentGameListModel;
 	private GameListModel mOpenGameListModel;
 
-	public GameManager() {
-		app = WorldConqApp.getWorldConqApp();
+	public GameManager(UserManager usrMgr, ServerAdapter srvAdapter) {
+		this.usrMgr = usrMgr;
+		this.srvAdapter = srvAdapter;
 		this.setCurrentGameListModel(new GameListModel());
 		this.setOpenGameListModel(new GameListModel());
 	}
@@ -37,8 +40,8 @@ public class GameManager {
 	}
 
 	public void updateGameList() throws Exception {
-		final String user = app.getUserManager().getSession().getUser();
-		final ArrayList<GameInfo> fullList = app.getServerAdapter().fetchGameList();
+		final String user = usrMgr.getSession().getUser();
+		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList();
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
 		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
 
@@ -55,7 +58,7 @@ public class GameManager {
 	}
 
 	public void createGame(String name, String description, ArrayList<Calendar> gameSessions) throws Exception {
-		app.getServerAdapter().createGame(new GameInfo(null, name,
+		srvAdapter.createGame(new GameInfo(null, name,
 			description, null, gameSessions, 0, 0, 0, 0));
 	}
 
@@ -64,8 +67,8 @@ public class GameManager {
 			throw new InvalidArgumentException();
 		} else {
 			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
-			final Session user = app.getUserManager().getSession();
-			app.getServerAdapter().joinGame(user, gameUuid);
+			final Session user = usrMgr.getSession();
+			srvAdapter.joinGame(user, gameUuid);
 		}
 	}
 }
