@@ -33,7 +33,7 @@ public class MapView extends JComponent {
 	private JEditorPane listPlayer;
 	private JEditorPane actionGame;
 	private static int gameSelected;
-	private BufferedImage bufferImageMap;
+	private final BufferedImage bufferImageMap;
 
 	private final BufferedImage[] bufferTerritoryImage = new BufferedImage[42];
 
@@ -73,21 +73,17 @@ public class MapView extends JComponent {
 			-8388353, -65281, -8388544
 	}; //color agua -7228984
 
-	public MapView(TableModel dm, GameManager gm) {
+	public MapView(TableModel dm, GameManager gm) throws IOException {
 		super();
 		this.dm = dm;
 		this.gm = gm;
 		gameSelected = -1;
 		this.setPreferredSize(new Dimension(920, 471));
-		try {
-			bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
-			bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
-			for (int i = 0; i < 42; i++) {
-				bufferTerritoryImage[i] = ImageIO.read(ClassLoader.getSystemResource("image/half."
-						+ this.getImageTerrirtory(i)));
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
+		bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
+		bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
+		for (int i = 0; i < 42; i++) {
+			bufferTerritoryImage[i] = ImageIO.read(ClassLoader.getSystemResource("image/half."
+					+ this.getImageTerrirtory(i)));
 		}
 	}
 
@@ -192,8 +188,7 @@ public class MapView extends JComponent {
 					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
 					+ dm.getValueAt(idx, 7)
 					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 8)
-					+ "</TABLE>\n</P>";
+					+ dm.getValueAt(idx, 8) + "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {
@@ -214,10 +209,8 @@ public class MapView extends JComponent {
 	public void setListPlayer(JEditorPane listPlayer) {
 		listPlayer.setEditable(false);
 
-		String list = "<html>\n<P ALIGN=\"center\"><BIG>"
-				+ "Jugadores"
-				+ "</BIG><BR></P>\n<HR>"
-				+ "<TABLE BORDER=0>";
+		String list = "<html>\n<P ALIGN=\"center\"><BIG>" + "Jugadores"
+				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
 		final PlayerListModel plm = gm.getGameEngine().getPlayerListModel();
 
 		for (int i = 0; i < plm.getRowCount(); i++) {
@@ -252,8 +245,7 @@ public class MapView extends JComponent {
 
 		actionGame.setEditable(false);
 		String list = "<html>\n<P ALIGN=\"left\"><BIG>"
-				+ "Información de la Partida"
-				+ "</BIG><BR></P><HR>";
+				+ "Información de la Partida" + "</BIG><BR></P><HR>";
 		list += "iran las acciones que se generen en la partida\n";
 		list += "</P>";
 		this.actionGame = actionGame;

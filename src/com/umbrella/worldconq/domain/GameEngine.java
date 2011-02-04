@@ -3,6 +3,7 @@ package com.umbrella.worldconq.domain;
 import com.umbrella.worldconq.comm.ServerAdapter;
 
 import es.uclm.iso2.rmi.Game;
+import es.uclm.iso2.rmi.Player;
 
 public class GameEngine {
 	private MapModel mMapListModel;
@@ -16,7 +17,13 @@ public class GameEngine {
 		mSession = session;
 		mAdapter = adapter;
 
-		this.setMapListModel(new MapModel(mSession));
+		// esto se quitara (hasta las rayas)y se sustituria por ultima linea
+		//ademas tambien quitar la funcion getMyUser() de MapModel
+		final Player p = new Player();
+		p.setName(mSession.getUser());
+		this.setMapListModel(new MapModel(p));
+		//this.setMapListModel(new MapModel(getOwner())); algo asi (funcion de Laura)
+		//---------------------------------------------------------------
 		this.setPlayerListModel(new PlayerListModel());
 
 		mMapListModel.setData(mGame.getMap());

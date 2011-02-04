@@ -9,21 +9,21 @@ import com.umbrella.worldconq.domain.PlayerListModel;
 public class PlayerView extends JEditorPane implements TableModelListener {
 
 	private static final long serialVersionUID = 1L;
-	//private final JEditorPane listPlayer = new JEditorPane();
 	private final PlayerListModel plm;
 
 	public PlayerView(PlayerListModel plm) {
 		super();
 		this.setEditable(false);
 		this.plm = plm;
+		this.plm.addTableModelListener(this);
+		//llamamos a tableChanged para que pinte la primera vez
+		this.tableChanged(null);
 	}
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		System.out.println(e.toString());
 		String list = "<html>\n<P ALIGN=\"center\"><BIG>" + "Jugadores"
 				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
-		//final PlayerListModel plm = gm.getGameEngine().getPlayerListModel();
 
 		for (int i = 0; i < plm.getRowCount(); i++) {
 			list += "<TR><TD Align=\"left\">" + "<IMG SRC=\"";

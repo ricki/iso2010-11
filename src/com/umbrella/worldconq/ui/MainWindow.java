@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -22,7 +23,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
-import com.umbrella.worldconq.domain.PlayerListModel;
 
 public class MainWindow extends JFrame {
 
@@ -89,7 +89,7 @@ public class MainWindow extends JFrame {
 		this.getGameListPanel().setVisible(true);
 	}
 
-	public void setupGameGUI() {
+	public void setupGameGUI() throws IOException {
 		// hacemos invisible lo anterior
 		this.getGameListPanel().setVisible(false);
 		mGameListToolBar.setVisible(false);
@@ -115,8 +115,7 @@ public class MainWindow extends JFrame {
 			mCurrentList = new JTable(
 				app.getGameManager().getCurrentGameListModel());
 			final JScrollPane currentListPanel = new JScrollPane(mCurrentList);
-			mOpenList = new JTable(
-				app.getGameManager().getOpenGameListModel());
+			mOpenList = new JTable(app.getGameManager().getOpenGameListModel());
 			final JScrollPane openListPanel = new JScrollPane(mOpenList);
 			mCurrentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			mOpenList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -132,8 +131,7 @@ public class MainWindow extends JFrame {
 	private JPanel getGamePanel(MapView mv) {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
-			mGamePanel.setLayout(new BoxLayout(mGamePanel,
-				BoxLayout.Y_AXIS));
+			mGamePanel.setLayout(new BoxLayout(mGamePanel, BoxLayout.Y_AXIS));
 
 			mv.setFondo();
 			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
@@ -265,9 +263,6 @@ public class MainWindow extends JFrame {
 				try {
 					app.getGameManager().connectToGame(gameSelected);
 					MainWindow.this.setupGameGUI();
-					//new MapView(app.getGameManager().getGameEngine().getMapListModel());
-					//new PlayerView(app.getGameManager().getGameEngine().getPlayerListModel());
-
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}

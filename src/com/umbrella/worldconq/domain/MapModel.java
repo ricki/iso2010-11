@@ -19,21 +19,19 @@ public class MapModel extends AbstractTableModel {
 	};
 
 	private final ArrayList<Territory> mMapList;
-	private final Session mSession;
 	private Player mPlayer;
 
-	public MapModel(Session session) {
+	public MapModel(Player player) {
 		super();
 		mMapList = new ArrayList<Territory>();
-		mSession = session;
+		mPlayer = player;
 	}
 
 	private Player getMyUser() {
 		Player p = null;
 		for (final Territory t : mMapList) {
 			if (t.getOwner() != null
-					&& t.getOwner().getName().equals(mSession.getUser()))
-				p = t.getOwner();
+					&& t.getOwner().getName().equals(mPlayer.getName())) p = t.getOwner();
 		}
 		return p;
 	}
@@ -42,7 +40,7 @@ public class MapModel extends AbstractTableModel {
 		mMapList.clear();
 		mMapList.addAll(data);
 		this.fireTableDataChanged();
-		mPlayer = this.getMyUser();
+		mPlayer = this.getMyUser();//cuando se añada la funcion de LAura quitar esto y la funcion
 	}
 
 	@Override
@@ -74,13 +72,14 @@ public class MapModel extends AbstractTableModel {
 				}
 			}
 			if (mMapList.get(rowIndex).getOwner().getName().equals(
-					mSession.getUser()) || hasSpy) {
+				mPlayer.getName())
+					|| hasSpy) {
 
 				switch (columnIndex) {
 				case 0:
 					return TerritoryData.getIndex(
-							mMapList.get(rowIndex).getContinent(),
-							mMapList.get(rowIndex).getIdTerritory());
+						mMapList.get(rowIndex).getContinent(), mMapList.get(
+							rowIndex).getIdTerritory());
 
 				case 1:
 					return mMapList.get(rowIndex).getOwner().getName();
@@ -106,8 +105,8 @@ public class MapModel extends AbstractTableModel {
 				switch (columnIndex) {
 				case 0:
 					return TerritoryData.getIndex(
-						mMapList.get(rowIndex).getContinent(),
-						mMapList.get(rowIndex).getIdTerritory());
+						mMapList.get(rowIndex).getContinent(), mMapList.get(
+							rowIndex).getIdTerritory());
 				default:
 					return "¿?";
 				}
@@ -117,8 +116,8 @@ public class MapModel extends AbstractTableModel {
 			switch (columnIndex) {
 			case 0:
 				return TerritoryData.getIndex(
-					mMapList.get(rowIndex).getContinent(),
-					mMapList.get(rowIndex).getIdTerritory());
+					mMapList.get(rowIndex).getContinent(), mMapList.get(
+						rowIndex).getIdTerritory());
 			default:
 				return "¿?";
 			}
