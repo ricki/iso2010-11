@@ -10,15 +10,13 @@ import com.umbrella.worldconq.ui.StartupWindow;
 
 public class WorldConqApp {
 
-	public static WorldConqApp mInstace = null;
+	private UserManager usrMgr = null;
+	private GameManager gameMgr = null;
 
-	private UserManager mUserManager = null;
-	private GameManager mGameManager = null;
+	private StartupWindow startupWindow = null;
+	private MainWindow mainWindow = null;
 
-	private StartupWindow mStartupWindow = null;
-	private MainWindow mMainWindow = null;
-
-	private ServerAdapter mServerAdapter = null;
+	private ServerAdapter srvAdapter = null;
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -30,94 +28,76 @@ public class WorldConqApp {
 		System.setProperty("java.security.policy",
 			ClassLoader.getSystemResource("data/open.policy").toString());
 
-		final WorldConqApp app = WorldConqApp.getWorldConqApp();
-
-		app.getServerAdapter().setRemoteInfo(
-			"WorldConqStubServer",
-			InetAddress.getByName("localhost"),
-			3234);
-		app.getServerAdapter().connect();
-
+		final WorldConqApp app = new WorldConqApp();
 		app.setStartupMode();
 	}
 
-	private WorldConqApp() {
-		mUserManager = null;
-		mGameManager = null;
-		mStartupWindow = null;
-		mMainWindow = null;
-		mServerAdapter = null;
-	}
+	private WorldConqApp() throws Exception {
+		startupWindow = null;
+		mainWindow = null;
 
-	public static WorldConqApp getWorldConqApp() {
-		if (mInstace == null) mInstace = new WorldConqApp();
-		return mInstace;
-	}
+		srvAdapter = new ServerAdapter();
+		srvAdapter.setRemoteInfo(
+			"WorldConqStubServer",
+			InetAddress.getByName("localhost"),
+			3234);
+		srvAdapter.connect();
 
-	public UserManager getUserManager() {
-		if (mUserManager == null) mUserManager = new UserManager();
-		return mUserManager;
-	}
+		usrMgr = new UserManager(srvAdapter);
 
-	public GameManager getGameManager() {
-		if (mGameManager == null) mGameManager = new GameManager();
-		return mGameManager;
-	}
-
-	public ServerAdapter getServerAdapter() {
-		if (mServerAdapter == null) mServerAdapter = new ServerAdapter();
-		return mServerAdapter;
-	}
-
-	public StartupWindow getStartupWindow() {
-		if (mStartupWindow == null) mStartupWindow = new StartupWindow();
-		return mStartupWindow;
-	}
-
-	public MainWindow getMainWindow() {
-		if (mMainWindow == null) mMainWindow = new MainWindow();
-		return mMainWindow;
+		gameMgr = new GameManager(usrMgr, srvAdapter);
 	}
 
 	public void setStartupMode() {
-		if (mMainWindow != null) {
-			mMainWindow.setVisible(false);
-			mMainWindow.dispose();
-			mMainWindow = null;
+		if (mainWindow != null) {
+			mainWindow.setVisible(false);
+			mainWindow.dispose();
+			mainWindow = null;
 		}
-		this.getStartupWindow().setVisible(true);
+		if (startupWindow != null) {
+			startupWindow.setVisible(false);
+			startupWindow.dispose();
+		}
+		startupWindow = new StartupWindow(this, usrMgr);
+		startupWindow.setLocationRelativeTo(null);
+		startupWindow.setVisible(true);
 	}
 
 	public void setMainMode() {
-		if (mStartupWindow != null) {
-			mStartupWindow.setVisible(false);
-			mStartupWindow.dispose();
-			mStartupWindow = null;
+		if (startupWindow != null) {
+			startupWindow.setVisible(false);
+			startupWindow.dispose();
+			startupWindow = null;
 		}
-		this.getMainWindow().setupListGUI();
-		this.getMainWindow().setVisible(true);
+		if (mainWindow != null) {
+			mainWindow.setVisible(false);
+			mainWindow.dispose();
+		}
+		mainWindow = new MainWindow(gameMgr);
+		mainWindow.setLocationRelativeTo(null);
+		mainWindow.setVisible(true);
 	}
 
 	public void freeResources() {
-		if (mStartupWindow != null) {
-			mStartupWindow.setVisible(false);
-			mStartupWindow.dispose();
-			mStartupWindow = null;
+		if (startupWindow != null) {
+			startupWindow.setVisible(false);
+			startupWindow.dispose();
+			startupWindow = null;
 		}
 
-		if (mMainWindow != null) {
-			mMainWindow.setVisible(false);
-			mMainWindow.dispose();
-			mMainWindow = null;
+		if (mainWindow != null) {
+			mainWindow.setVisible(false);
+			mainWindow.dispose();
+			mainWindow = null;
 		}
 
-		if (mGameManager != null) mGameManager = null;
+		if (gameMgr != null) gameMgr = null;
 
-		if (mUserManager != null) mUserManager = null;
+		if (usrMgr != null) usrMgr = null;
 
-		if (mServerAdapter != null) {
-			mServerAdapter.disconnect();
-			mServerAdapter = null;
+		if (srvAdapter != null) {
+			srvAdapter.disconnect();
+			srvAdapter = null;
 		}
 	}
 

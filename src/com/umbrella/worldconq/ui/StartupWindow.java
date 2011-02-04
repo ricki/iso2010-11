@@ -11,18 +11,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
+import com.umbrella.worldconq.domain.UserManager;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 public class StartupWindow extends JFrame {
 
-	/**
-	 * 
-	 */
+	private final WorldConqApp app;
+	private final UserManager usrMgr;
+
 	private static final long serialVersionUID = -5107198177153703399L;
 	private JButton AcceptButton;
 	private JButton RegisterButton;
@@ -36,8 +39,10 @@ public class StartupWindow extends JFrame {
 	private JTextField UserTextField;
 	private JPasswordField PasswdField;
 
-	public StartupWindow() {
+	public StartupWindow(WorldConqApp app, UserManager usrMgr) {
 		super();
+		this.app = app;
+		this.usrMgr = usrMgr;
 		this.initGUI();
 	}
 
@@ -126,30 +131,43 @@ public class StartupWindow extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
+			boolean invalidArgument = false;
 
-			stw.setVisible(false);
-			final JFrame f = new JFrame();
-			final RegisterDialog dlg = new RegisterDialog(f,
-				"La Conquista del Mundo - Registro", true);
-			dlg.setLocationRelativeTo(null);
-			dlg.setVisible(true);
+			do {
+				stw.setVisible(false);
+				final JFrame f = new JFrame();
+				final RegisterDialog dlg = new RegisterDialog(f,
+					"La Conquista del Mundo - Registro", true);
+				dlg.setLocationRelativeTo(null);
+				dlg.setVisible(true);
 
-			if (dlg.getSelection() == true) {
-				try {
-					WorldConqApp.getWorldConqApp().getUserManager().registerUser(
-						dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
-					stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
-							+ " registrado");
-					NoticeLabel.setForeground(new Color(0, 200, 0));
-				} catch (final Exception e) {
-					stw.NoticeLabel.setText("Error en el registro");
-					NoticeLabel.setForeground(new Color(255, 0, 0));
+				if (dlg.getSelection() == true) {
+					try {
+						usrMgr.registerUser(
+							dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
+						stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
+								+ " registrado");
+						NoticeLabel.setForeground(new Color(0, 200, 0));
+						invalidArgument = false;
+						stw.setVisible(true);
+					} catch (final InvalidArgumentException e) {
+						JOptionPane.showMessageDialog(null,
+							"Algún argumento es erroneo", "Error",
+							JOptionPane.ERROR_MESSAGE);
+						invalidArgument = true;
+					} catch (final Exception e) {
+						stw.NoticeLabel.setText("El servidor idica: Error en el registro");
+						NoticeLabel.setForeground(new Color(255, 0, 0));
+						stw.setVisible(true);
+						invalidArgument = false;
+					}
+				} else {
+					stw.NoticeLabel.setText("");
+					invalidArgument = false;
+					stw.setVisible(true);
 				}
-			}
-
-			stw.setVisible(true);
-			f.dispose();
-
+				f.dispose();
+			} while (invalidArgument);
 		}
 	}
 
@@ -164,13 +182,8 @@ public class StartupWindow extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			try {
-				WorldConqApp.getWorldConqApp().getUserManager().createSession(
-					stw.getUser(), stw.getPasswd());
-				WorldConqApp.getWorldConqApp().getStartupWindow().setVisible(
-					false);
-				WorldConqApp.getWorldConqApp().getMainWindow().setLocationRelativeTo(
-					null);
-				WorldConqApp.getWorldConqApp().getMainWindow().setVisible(true);
+				usrMgr.createSession(stw.getUser(), stw.getPasswd());
+				app.setMainMode();
 			} catch (final Exception e) {
 				stw.NoticeLabel.setText("Contraseña o login Erroneos");
 				NoticeLabel.setForeground(new Color(255, 0, 0));
@@ -190,14 +203,8 @@ public class StartupWindow extends JFrame {
 		public void keyPressed(KeyEvent evt) {
 			if (evt.getKeyCode() == 10) {
 				try {
-					WorldConqApp.getWorldConqApp().getUserManager().createSession(
-						stw.getUser(), stw.getPasswd());
-					WorldConqApp.getWorldConqApp().getStartupWindow().setVisible(
-						false);
-					WorldConqApp.getWorldConqApp().getMainWindow().setLocationRelativeTo(
-						null);
-					WorldConqApp.getWorldConqApp().getMainWindow().setVisible(
-						true);
+					usrMgr.createSession(stw.getUser(), stw.getPasswd());
+					app.setMainMode();
 				} catch (final Exception e) {
 					stw.NoticeLabel.setText("Contraseña o login Erroneos");
 					NoticeLabel.setForeground(new Color(255, 0, 0));
