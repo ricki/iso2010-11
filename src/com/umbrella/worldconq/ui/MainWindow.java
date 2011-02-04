@@ -77,6 +77,7 @@ public class MainWindow extends JFrame {
 		mGameListToolBar.add(connectGameButton);
 
 		mGameListToolBar.add(joinGameButton);
+		this.setupListGUI();
 	}
 
 	public void setupListGUI() {
@@ -85,7 +86,7 @@ public class MainWindow extends JFrame {
 		// getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
-		mPlayToolBar.setVisible(false);
+		mPlayToolBar.setVisible(true);
 		this.getGameListPanel().setVisible(true);
 	}
 
@@ -95,8 +96,8 @@ public class MainWindow extends JFrame {
 		mGameListToolBar.setVisible(false);
 		// mostramos el mapa y lo demas
 		mMap = new JTable(
-			app.getGameManager().getGameEngine().getMapListModel());
-		final MapView mv = new MapView(mMap.getModel(), app.getGameManager());
+			gameMgr.getGameEngine().getMapListModel());
+		final MapView mv = new MapView(mMap.getModel(), gameMgr);
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
 		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
@@ -112,14 +113,15 @@ public class MainWindow extends JFrame {
 			mGameListPanel = new JPanel();
 			mGameListPanel.setLayout(new BoxLayout(mGameListPanel,
 				BoxLayout.Y_AXIS));
-			final JTable currentList = new JTable(
+			mCurrentList = new JTable(
 				gameMgr.getCurrentGameListModel());
-			final JScrollPane currentListPanel = new JScrollPane(currentList);
-			openList = new JTable(
+			final JScrollPane currentListPanel = new JScrollPane(mCurrentList);
+			mOpenList = new JTable(
 				gameMgr.getOpenGameListModel());
-			final JScrollPane openListPanel = new JScrollPane(openList);
-			currentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			openList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			final JScrollPane openListPanel = new JScrollPane(mOpenList);
+
+			mCurrentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			mOpenList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 			mGameListPanel.add(new JLabel("Mis partidas actuales"));
 			mGameListPanel.add(currentListPanel);
@@ -157,7 +159,7 @@ public class MainWindow extends JFrame {
 			//mv.setListPlayer(new JEditorPane());
 			//final JScrollPane listPlayerSroll = new JScrollPane(mv.getListPlayer());
 			final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
-				app.getGameManager().getGameEngine().getPlayerListModel()));
+				gameMgr.getGameEngine().getPlayerListModel()));
 			listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
 			final JScrollPane listInfoSroll = new JScrollPane(
@@ -204,10 +206,10 @@ public class MainWindow extends JFrame {
 	private class JoinGameMouseAdapter extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-			final int gameSelected = openList.getSelectedRow();
+			final int gameSelected = mOpenList.getSelectedRow();
 			System.out.println("Seleccionado: " + gameSelected);
-			System.out.println(openList.getRowCount());
-			if (openList.getSelectedRow() == -1) {
+			System.out.println(mOpenList.getRowCount());
+			if (mOpenList.getSelectedRow() == -1) {
 				JOptionPane.showMessageDialog(mGameListPanel,
 					"No ha seleccionado ninguna partida");
 			} else {
@@ -263,7 +265,7 @@ public class MainWindow extends JFrame {
 					"No ha seleccionado ninguna partida");
 			} else {
 				try {
-					app.getGameManager().connectToGame(gameSelected);
+					gameMgr.connectToGame(gameSelected);
 					MainWindow.this.setupGameGUI();
 				} catch (final Exception e) {
 					e.printStackTrace();

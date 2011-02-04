@@ -76,9 +76,9 @@ public class GameManager {
 
 	public void connectToGame(int gameIndex) throws Exception {
 		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
-		final Session session = app.getUserManager().getSession();
-		final ServerAdapter adapter = app.getServerAdapter();
-		final Game game = app.getServerAdapter().playGame(session, gameUuid);
+		final Session session = usrMgr.getSession();
+		final ServerAdapter adapter = srvAdapter;
+		final Game game = srvAdapter.playGame(session, gameUuid);
 		try {
 			mGameEngine = new GameEngine(game, session, adapter);
 		} catch (final Exception e) {

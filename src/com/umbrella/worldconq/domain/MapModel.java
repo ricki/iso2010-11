@@ -10,7 +10,7 @@ import es.uclm.iso2.rmi.Territory;
 
 public class MapModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5679583600970671969L;
 
 	private static final String[] colTitles = {
 			"Territorio", "Jugador", "Nº Soldados", "Nº Canones 1",

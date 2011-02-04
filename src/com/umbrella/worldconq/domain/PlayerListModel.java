@@ -8,7 +8,7 @@ import es.uclm.iso2.rmi.Player;
 
 public class PlayerListModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3953960579591306950L;
 
 	private static final String[] colTitles = {
 			"Jugador", "Turno", "Online"

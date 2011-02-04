@@ -8,7 +8,8 @@ import com.umbrella.worldconq.domain.PlayerListModel;
 
 public class PlayerView extends JEditorPane implements TableModelListener {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -3895756012036141349L;
+
 	private final PlayerListModel plm;
 
 	public PlayerView(PlayerListModel plm) {

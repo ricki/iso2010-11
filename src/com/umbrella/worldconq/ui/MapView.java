@@ -20,7 +20,7 @@ import com.umbrella.worldconq.domain.TerritoryData;
 
 public class MapView extends JComponent {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4997015334190156536L;
 
 	private java.awt.Image fondo;
 	private java.awt.Image pais;
