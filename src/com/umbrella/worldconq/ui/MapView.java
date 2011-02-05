@@ -12,13 +12,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.TableModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
-import com.umbrella.worldconq.domain.GameManager;
-import com.umbrella.worldconq.domain.PlayerListModel;
+import com.umbrella.worldconq.domain.MapModel;
 import com.umbrella.worldconq.domain.TerritoryData;
 
-public class MapView extends JComponent {
+public class MapView extends JComponent implements TableModelListener {
 
 	private static final long serialVersionUID = -4997015334190156536L;
 
@@ -26,14 +26,13 @@ public class MapView extends JComponent {
 	private java.awt.Image pais;
 	private int x;
 	private int y;
-	private final TableModel dm;
-	private final GameManager gm;
 	protected ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
 	private JEditorPane actionGame;
 	private static int gameSelected;
 	private final BufferedImage bufferImageMap;
+	private final MapModel mMapm;
 
 	private final BufferedImage[] bufferTerritoryImage = new BufferedImage[42];
 
@@ -73,10 +72,9 @@ public class MapView extends JComponent {
 			-8388353, -65281, -8388544
 	}; //color agua -7228984
 
-	public MapView(TableModel dm, GameManager gm) throws IOException {
+	public MapView(MapModel mm) throws IOException {
 		super();
-		this.dm = dm;
-		this.gm = gm;
+		mMapm = mm;
 		gameSelected = -1;
 		this.setPreferredSize(new Dimension(920, 471));
 		bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
@@ -85,6 +83,7 @@ public class MapView extends JComponent {
 			bufferTerritoryImage[i] = ImageIO.read(ClassLoader.getSystemResource("image/half."
 					+ this.getImageTerrirtory(i)));
 		}
+		mMapm.addTableModelListener(this);
 	}
 
 	public int getIndex(int color) {
@@ -149,7 +148,7 @@ public class MapView extends JComponent {
 	public void setPlayerName(Graphics g) {
 		BufferedImage aux = null;
 		for (int i = 0; i < 42; i++) {
-			if (!dm.getValueAt(i, 1).equals("¿?")) {
+			if (!mMapm.getValueAt(i, 1).equals("¿?")) {
 				aux = bufferTerritoryImage[i];
 				if (i <= 18 || (i > 24 && i <= 33)) {
 					g.setColor(Color.RED);
@@ -157,7 +156,7 @@ public class MapView extends JComponent {
 					g.setColor(Color.GREEN);
 				}
 
-				final Font f = new Font((String) dm.getValueAt(i, 1),
+				final Font f = new Font((String) mMapm.getValueAt(i, 1),
 					Font.BOLD, 8);
 				g.setFont(f);
 				final int mediaX = (aux.getWidth() / 2) + this.getX(i);
@@ -172,23 +171,23 @@ public class MapView extends JComponent {
 			final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
 					+ TerritoryData.getName(idx)
 					+ "</BIG><BR>\n<B> Controlado por: <EM>"
-					+ dm.getValueAt(idx, 1)
+					+ mMapm.getValueAt(idx, 1)
 					+ "</em></b></P>\n<HR>"
 					+ "<TABLE BORDER=0>"
 					+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 2)
+					+ mMapm.getValueAt(idx, 2)
 					+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 3)
+					+ mMapm.getValueAt(idx, 3)
 					+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 4)
+					+ mMapm.getValueAt(idx, 4)
 					+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 5)
+					+ mMapm.getValueAt(idx, 5)
 					+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 6)
+					+ mMapm.getValueAt(idx, 6)
 					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 7)
+					+ mMapm.getValueAt(idx, 7)
 					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
-					+ dm.getValueAt(idx, 8) + "</TABLE>\n</P>";
+					+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {
@@ -204,33 +203,6 @@ public class MapView extends JComponent {
 
 	public JEditorPane getInfoPlayer() {
 		return infoPlayer;
-	}
-
-	public void setListPlayer(JEditorPane listPlayer) {
-		listPlayer.setEditable(false);
-
-		String list = "<html>\n<P ALIGN=\"center\"><BIG>" + "Jugadores"
-				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
-		final PlayerListModel plm = gm.getGameEngine().getPlayerListModel();
-
-		for (int i = 0; i < plm.getRowCount(); i++) {
-			list += "<TR><TD Align=\"left\">" + "<IMG SRC=\"";
-			if ((Boolean) plm.getValueAt(i, 2)) {
-				if ((Boolean) plm.getValueAt(i, 1)) {
-					list += ClassLoader.getSystemResource("image/turn.png");
-				} else {
-					list += ClassLoader.getSystemResource("image/online.png");
-				}
-			} else {
-				list += ClassLoader.getSystemResource("image/offline.png");
-			}
-			list += "\"><TD Align=\"left\">" + plm.getValueAt(i, 0);
-		}
-
-		list += "</TABLE>\n</P>";
-		this.listPlayer = listPlayer;
-		this.getListPlayer().setContentType("text/html");
-		this.getListPlayer().setText(list);
 	}
 
 	public JEditorPane getListPlayer() {
@@ -257,5 +229,10 @@ public class MapView extends JComponent {
 		gameSelected = this.getIndex(bufferImageColorPixel.getRGB(evt.getX(),
 			evt.getY()));
 		return gameSelected;
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent arg0) {
+		this.repaint();
 	}
 }

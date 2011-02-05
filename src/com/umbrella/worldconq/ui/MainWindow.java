@@ -37,7 +37,6 @@ public class MainWindow extends JFrame {
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
-	private JTable mMap = null;
 
 	public MainWindow(GameManager gameMgr) {
 		super();
@@ -95,9 +94,8 @@ public class MainWindow extends JFrame {
 		this.getGameListPanel().setVisible(false);
 		mGameListToolBar.setVisible(false);
 		// mostramos el mapa y lo demas
-		mMap = new JTable(
+		final MapView mv = new MapView(
 			gameMgr.getGameEngine().getMapListModel());
-		final MapView mv = new MapView(mMap.getModel(), gameMgr);
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
 		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
