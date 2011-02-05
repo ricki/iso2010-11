@@ -2,6 +2,7 @@ package com.umbrella.worldconq;
 
 import java.net.InetAddress;
 
+import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.UserManager;
@@ -17,6 +18,7 @@ public class WorldConqApp {
 	private MainWindow mainWindow = null;
 
 	private ServerAdapter srvAdapter = null;
+	private ClientAdapter cltAdapter = null;
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -36,6 +38,8 @@ public class WorldConqApp {
 		startupWindow = null;
 		mainWindow = null;
 
+		cltAdapter = new ClientAdapter();
+
 		srvAdapter = new ServerAdapter();
 		srvAdapter.setRemoteInfo(
 			"WorldConqStubServer",
@@ -45,7 +49,7 @@ public class WorldConqApp {
 
 		usrMgr = new UserManager(srvAdapter);
 
-		gameMgr = new GameManager(usrMgr, srvAdapter);
+		gameMgr = new GameManager(usrMgr, srvAdapter, cltAdapter);
 	}
 
 	public void setStartupMode() {

@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
+import com.umbrella.worldconq.domain.TerritoryData;
 
 import es.uclm.iso2.rmi.Arsenal;
 import es.uclm.iso2.rmi.EventType;
@@ -18,7 +19,9 @@ import es.uclm.iso2.rmi.Game;
 import es.uclm.iso2.rmi.GameInfo;
 import es.uclm.iso2.rmi.IServer;
 import es.uclm.iso2.rmi.Player;
+import es.uclm.iso2.rmi.Spy;
 import es.uclm.iso2.rmi.Territory;
+import es.uclm.iso2.rmi.Territory.Continent;
 import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
 import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
 import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
@@ -65,20 +68,26 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	private final ArrayList<Session> sessionsList;
 
+	private final ArrayList<Game> testGameList;
+
 	public Server() throws Exception, RemoteException {
 		super();
-
 		System.setProperty("java.security.policy",
 			ClassLoader.getSystemResource("data/open.policy").toString());
 
 		gameList = new ArrayList<GameInfo>();
 		registerUsers = new ArrayList<String[]>();
 		sessionsList = new ArrayList<Session>();
+		testGameList = new ArrayList<Game>();
 
 		for (final String[] user : Users)
 			registerUsers.add(user);
 
 		{ // GameInfo 01
+			final int[] p = {
+					1, 2, 3
+			};
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("JorgeCA", 1000, true, true, new ArrayList<Spy>());
 			// new Player("Aduran", 1000, true, true, new ArrayList<Spy>());
@@ -88,8 +97,34 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game01",
 				"desc from game01", player, session, 3, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(0));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			final Territory t = new Territory(3, Territory.Continent.Europe,
+				null, 10, p, 2, 0, 1); // territorio Angel
+			playerList.add(new Player("Aduran", 250, true, false,
+				new ArrayList<Spy>()));
+			t.setOwner(playerList.get(0));
+			spyList.add(new Spy(2, t));
+			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
+
+			mapList.remove(TerritoryData.getIndex(Territory.Continent.Europe, 1));
+			mapList.add(TerritoryData.getIndex(Territory.Continent.Europe, 1),
+				new Territory(1, Territory.Continent.Europe,
+					playerList.get(1), 20, p, 1, 0, 1));
+			mapList.remove(TerritoryData.getIndex(t));
+			mapList.add(TerritoryData.getIndex(t), t);
+			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 		{ // GameInfo 02
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("ricki", 1000, true, true, new ArrayList<Spy>());
 			// new Player("DaniLR", 1000, true, false, new ArrayList<Spy>());
@@ -101,8 +136,34 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game02",
 				"desc from game02", player, session, 6, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(1));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("ricki", 200, true, true, null));
+			playerList.add(new Player("DaniLR", 250, true, false, null));
+			playerList.add(new Player("deejaytoni", 300, true, false, null));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
+			final int[] p = {
+					1, 2, 3
+			};
+			this.borrarCosasMapa(mapList, 1, Territory.Continent.Africa);
+			mapList.add(new Territory(1, Territory.Continent.Africa,
+				playerList.get(0), 20, p, 1, 0, 1));
+			this.borrarCosasMapa(mapList, 3, Territory.Continent.Africa);
+			mapList.add(new Territory(3, Territory.Continent.Africa,
+				playerList.get(1), 10, p, 2, 0, 1));
+			this.borrarCosasMapa(mapList, 4, Territory.Continent.Africa);
+			mapList.add(new Territory(4, Territory.Continent.Africa,
+				playerList.get(2), 15, p, 2, 0, 1));
+			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 		{ // GameInfo 03
+			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
 			// new Player("pobleteag", 1000, true, true, new ArrayList<Spy>());
 			// new Player("LauraN", 1000, true, false, new ArrayList<Spy>());
@@ -112,6 +173,27 @@ public class Server extends UnicastRemoteObject implements IServer {
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game03",
 				"desc from game03", player, session, 6, 0, 0, 0));
+			// añadimos los datos a la partida necesarios para la clase Game
+			testGame.setGameInfo(gameList.get(2));
+			// lista de jugadores
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("pobleteag", 200, true, true, null));
+			playerList.add(new Player("LauraN", 250, true, false, null));
+			testGame.setPlayers(playerList);
+			//añadimos los datos a la partida necesarios para la clase Territory
+			final ArrayList<Territory> mapList = new ArrayList<Territory>();
+			this.rellenarMapaInicial(mapList);
+			final int[] p = {
+					1, 2, 3
+			};
+			this.borrarCosasMapa(mapList, 1, Territory.Continent.Asia);
+			mapList.add(new Territory(1, Territory.Continent.Asia,
+				playerList.get(0), 20, p, 1, 0, 1));
+			this.borrarCosasMapa(mapList, 3, Territory.Continent.Asia);
+			mapList.add(new Territory(3, Territory.Continent.Asia,
+				playerList.get(1), 10, p, 2, 0, 1));
+			testGame.setMap(mapList);
+			testGameList.add(testGame);
 		}
 
 		miIP = (InetAddress.getLocalHost()).toString();
@@ -122,6 +204,62 @@ public class Server extends UnicastRemoteObject implements IServer {
 		reg.rebind("WorldConqStubServer", this);
 
 		System.out.println("Esperando peticiones...");
+	}
+
+	private void borrarCosasMapa(ArrayList<Territory> mapList, int id, Continent c) {
+		for (int i = 0; i < mapList.size(); i++) {
+			if (mapList.get(i).getIdTerritory() == id
+					&& mapList.get(i).getContinent() == c) {
+				mapList.remove(i);
+			}
+		}
+
+	}
+
+	public void rellenarMapaInicial(ArrayList<Territory> mapList) {
+		final int[] numTerritorios = {
+				9, 4, 7, 6, 12, 4
+		};
+		final int[] ca = {
+				-1, -1, -1
+		};
+		for (int i = 0; i < 6; i++) {
+			for (int j = 1; j <= numTerritorios[i]; j++) {
+				switch (i) {
+				case 2:
+					mapList.add(new Territory(j,
+						Territory.Continent.Europe,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 4:
+					mapList.add(new Territory(j,
+						Territory.Continent.Asia,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 3:
+					mapList.add(new Territory(j,
+						Territory.Continent.Africa,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 0:
+					mapList.add(new Territory(j,
+						Territory.Continent.NorthAmerica,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 1:
+					mapList.add(new Territory(j,
+						Territory.Continent.SouthAmerica,
+						null, -1, ca, -1, -1, -1));
+					break;
+				case 5:
+					mapList.add(new Territory(j,
+						Territory.Continent.Oceania,
+						null, -1, ca, -1, -1, -1));
+					break;
+
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -219,7 +357,13 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public Game playGame(UUID session, UUID game) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		System.out.println("IServer::playGame");
-		return null;
+		Game ret = new Game();
+		for (int i = 0; i < testGameList.size(); i++) {
+			if (game.equals(testGameList.get(i).getGameInfo().getId())) {
+				ret = testGameList.get(i);
+			}
+		}
+		return ret;
 	}
 
 	@Override

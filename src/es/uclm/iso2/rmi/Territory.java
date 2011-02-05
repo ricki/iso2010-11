@@ -6,8 +6,13 @@ public class Territory implements Serializable {
 
 	private static final long serialVersionUID = 4177888547129389571L;
 
-	private enum Continent {
-		Europe, Asia, Africa, NorthAmerica, SouthAmerica, Oceania
+	public enum Continent {
+		Europe,
+		Asia,
+		Africa,
+		NorthAmerica,
+		SouthAmerica,
+		Oceania
 	}
 
 	private int idTerritory;

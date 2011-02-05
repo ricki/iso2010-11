@@ -3,22 +3,27 @@ package com.umbrella.worldconq.domain;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
+import es.uclm.iso2.rmi.Game;
 import es.uclm.iso2.rmi.GameInfo;
 
 public class GameManager {
 
 	private final UserManager usrMgr;
 	private final ServerAdapter srvAdapter;
+	private final ClientAdapter cltAdapter;
 
 	private GameListModel mCurrentGameListModel;
 	private GameListModel mOpenGameListModel;
+	private GameEngine mGameEngine;
 
-	public GameManager(UserManager usrMgr, ServerAdapter srvAdapter) {
+	public GameManager(UserManager usrMgr, ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
 		this.usrMgr = usrMgr;
 		this.srvAdapter = srvAdapter;
+		this.cltAdapter = cltAdapter;
 		this.setCurrentGameListModel(new GameListModel());
 		this.setOpenGameListModel(new GameListModel());
 	}
@@ -70,5 +75,17 @@ public class GameManager {
 			final Session user = usrMgr.getSession();
 			srvAdapter.joinGame(user, gameUuid);
 		}
+	}
+
+	public void connectToGame(int gameIndex) throws Exception {
+		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
+		final Session session = usrMgr.getSession();
+		final Game game = srvAdapter.playGame(session, gameUuid);
+		mGameEngine = new GameEngine(game, session, srvAdapter);
+		cltAdapter.setGameEngine(mGameEngine);
+	}
+
+	public GameEngine getGameEngine() {
+		return mGameEngine;
 	}
 }
