@@ -156,7 +156,7 @@ public class StartupWindow extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 						invalidArgument = true;
 					} catch (final Exception e) {
-						stw.NoticeLabel.setText("El servidor idica: Error en el registro");
+						stw.NoticeLabel.setText("El servidor indica: Error en el registro");
 						NoticeLabel.setForeground(new Color(255, 0, 0));
 						stw.setVisible(true);
 						invalidArgument = false;
