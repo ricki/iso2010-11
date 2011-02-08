@@ -24,7 +24,7 @@ public class UserManager {
 
 	public void registerUser(String login, String passwd, String email) throws Exception {
 		if (login == null || passwd == null || email == null ||
-				login.equals("") || passwd.equals("") || email.equals("")) {
+				login.isEmpty() || passwd.isEmpty() || email.isEmpty()) {
 			throw new InvalidArgumentException();
 		} else {
 			final Pattern p = Pattern.compile(emailReEx);
@@ -37,8 +37,8 @@ public class UserManager {
 	}
 
 	public void createSession(String login, String passwd) throws Exception {
-		if (login == null || passwd == null || login.equals("")
-				|| passwd.equals(""))
+		if (login == null || passwd == null || login.isEmpty()
+				|| passwd.isEmpty())
 			throw new InvalidArgumentException();
 		else {
 			if (mSession != null) this.closeSession();
