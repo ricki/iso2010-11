@@ -62,9 +62,15 @@ public class GameManager {
 		mOpenGameListModel.setData(openList);
 	}
 
-	public void createGame(String name, String description, ArrayList<Calendar> gameSessions) throws Exception {
+	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
+
+		if (name == null || gameSessions == null || description == null ||
+				name.isEmpty() || turnTime < 0 || defTime < 0 || negTime < 0) throw new InvalidArgumentException();
+		for (final Calendar c : gameSessions) {
+			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
+		}
 		srvAdapter.createGame(new GameInfo(null, name,
-			description, null, gameSessions, 0, 0, 0, 0));
+			description, null, gameSessions, 0, turnTime, defTime, negTime));
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
