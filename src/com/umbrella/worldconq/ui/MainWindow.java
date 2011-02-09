@@ -181,7 +181,9 @@ public class MainWindow extends JFrame {
 			if (dlg.getSelection() == true) {
 				try {
 					gameMgr.createGame(dlg.getGameName(),
-						dlg.getDescription(), dlg.getCalendarList());
+						dlg.getDescription(), dlg.getCalendarList(),
+						dlg.getTurnTime(),
+						dlg.getDefTime(), dlg.getNegTime());
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}

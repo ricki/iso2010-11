@@ -62,9 +62,9 @@ public class GameManager {
 		mOpenGameListModel.setData(openList);
 	}
 
-	public void createGame(String name, String description, ArrayList<Calendar> gameSessions) throws Exception {
+	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
 		srvAdapter.createGame(new GameInfo(null, name,
-			description, null, gameSessions, 0, 0, 0, 0));
+			description, null, gameSessions, 0, turnTime, defTime, negTime));
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
