@@ -14,6 +14,8 @@ import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
+import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
 	BufferedReader in;
@@ -298,10 +300,10 @@ public class UserManagerTest extends TestCase {
 			new UserManager(srvAdapter).createSession(
 				"ADuran",
 				"angel");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba WrongLoginException");
+		} catch (final WrongLoginException e) {
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba WrongLoginException");
 		}
 	}
 
@@ -312,10 +314,10 @@ public class UserManagerTest extends TestCase {
 			new UserManager(srvAdapter).createSession(
 				"Aduran",
 				"Angel");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba WrongLoginException");
+		} catch (final WrongLoginException e) {
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba WrongLoginException");
 		}
 	}
 
