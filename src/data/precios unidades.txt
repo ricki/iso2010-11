@@ -1,0 +1,9 @@
+PRECIOS ASIGNADOS A LAS UNIDADES MILITARES:
+
+- Soldado: 100 gallifantes.
+- Cañón: 300 gallifantes.
+- Misil: 500 gallifantes.
+- Misil intercontinental: 800 gallifantes.
+- Antimisil: 400 gallifantes.
+- Espía: 600 gallifantes.
+

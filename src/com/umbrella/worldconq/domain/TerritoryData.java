@@ -1,7 +1,7 @@
 package com.umbrella.worldconq.domain;
 
-import es.uclm.iso2.rmi.Territory;
-import es.uclm.iso2.rmi.Territory.Continent;
+import domain.Territory;
+import domain.Territory.Continent;
 
 public class TerritoryData {
 	private final static String[] nameList = {

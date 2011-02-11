@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
+import communications.IServer;
 
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
-import es.uclm.iso2.rmi.IServer;
+import domain.Game;
+import domain.GameInfo;
 
 public class ServerAdapter {
 
@@ -72,14 +72,14 @@ public class ServerAdapter {
 		mProxy.registerUser(login, passwd, email);
 	}
 
-	public ArrayList<GameInfo> fetchGameList() throws Exception {
+	public ArrayList<GameInfo> fetchGameList(Session session) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
-		return mProxy.listGames();
+		return mProxy.listGames(session.getId());
 	}
 
-	public void createGame(GameInfo game) throws Exception {
+	public void createGame(Session session, GameInfo game) throws Exception {
 		if (!this.isConnected()) throw new RemoteException();
-		mProxy.createGame(game);
+		mProxy.createGame(session.getId(), game);
 	}
 
 	public void joinGame(Session session, GameInfo game) throws Exception {

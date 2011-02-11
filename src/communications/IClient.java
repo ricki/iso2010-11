@@ -1,15 +1,21 @@
-package es.uclm.iso2.rmi;
+package communications;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
-import es.uclm.iso2.rmi.exceptions.InvalidArsenalException;
-import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
-import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
+import domain.Arsenal;
+import domain.Player;
+import domain.Territory;
+import domain.EventType;
 
-public interface IClient extends java.rmi.Remote {
+import exceptions.GameNotFoundException;
+import exceptions.InvalidArsenalException;
+import exceptions.InvalidTerritoryException;
+import exceptions.NotCurrentPlayerGameException;
+
+public interface IClient extends Remote{
 
 	public enum TimeType {
 		TurnExpired, DefenseExpired, NegotiationExpired

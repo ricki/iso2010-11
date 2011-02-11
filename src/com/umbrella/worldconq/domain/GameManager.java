@@ -7,8 +7,8 @@ import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
+import domain.Game;
+import domain.GameInfo;
 
 public class GameManager {
 
@@ -46,7 +46,7 @@ public class GameManager {
 
 	public void updateGameList() throws Exception {
 		final String user = usrMgr.getSession().getUser();
-		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList();
+		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList(usrMgr.getSession());
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
 		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
 
@@ -69,7 +69,7 @@ public class GameManager {
 		for (final Calendar c : gameSessions) {
 			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
 		}
-		srvAdapter.createGame(new GameInfo(null, name,
+		srvAdapter.createGame(usrMgr.getSession(), new GameInfo(null, name,
 			description, null, gameSessions, 0, turnTime, defTime, negTime));
 	}
 

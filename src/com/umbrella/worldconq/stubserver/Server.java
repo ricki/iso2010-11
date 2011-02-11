@@ -12,24 +12,24 @@ import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.domain.TerritoryData;
+import communications.IServer;
 
-import es.uclm.iso2.rmi.Arsenal;
-import es.uclm.iso2.rmi.EventType;
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
-import es.uclm.iso2.rmi.IServer;
-import es.uclm.iso2.rmi.Player;
-import es.uclm.iso2.rmi.Spy;
-import es.uclm.iso2.rmi.Territory;
-import es.uclm.iso2.rmi.Territory.Continent;
-import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
-import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
-import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
-import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
-import es.uclm.iso2.rmi.exceptions.InvalidTimeException;
-import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
-import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
-import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+import domain.Arsenal;
+import domain.EventType;
+import domain.Game;
+import domain.GameInfo;
+import domain.Player;
+import domain.Spy;
+import domain.Territory;
+import domain.Territory.Continent;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTerritoryException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
+import exceptions.UserAlreadyExistsException;
+import exceptions.WrongLoginException;
 
 public class Server extends UnicastRemoteObject implements IServer {
 
@@ -106,8 +106,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 				null, 10, p, 2, 0, 1); // territorio Angel
 			playerList.add(new Player("Aduran", 250, true, false,
 				new ArrayList<Spy>()));
-			t.setOwner(playerList.get(0));
-			spyList.add(new Spy(2, t));
+			t.setOwner(playerList.get(0).getName());
+			spyList.add(new Spy(2, t.getIdTerritory()));
 			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
 			testGame.setPlayers(playerList);
 			//añadimos los datos a la partida necesarios para la clase Territory
@@ -117,7 +117,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			mapList.remove(TerritoryData.getIndex(Territory.Continent.Europe, 1));
 			mapList.add(TerritoryData.getIndex(Territory.Continent.Europe, 1),
 				new Territory(1, Territory.Continent.Europe,
-					playerList.get(1), 20, p, 1, 0, 1));
+				playerList.get(1).getName(), 20, p, 1, 0, 1));
 			mapList.remove(TerritoryData.getIndex(t));
 			mapList.add(TerritoryData.getIndex(t), t);
 			testGame.setMap(mapList);
@@ -152,13 +152,13 @@ public class Server extends UnicastRemoteObject implements IServer {
 			};
 			this.borrarCosasMapa(mapList, 1, Territory.Continent.Africa);
 			mapList.add(new Territory(1, Territory.Continent.Africa,
-				playerList.get(0), 20, p, 1, 0, 1));
+				playerList.get(0).getName(), 20, p, 1, 0, 1));
 			this.borrarCosasMapa(mapList, 3, Territory.Continent.Africa);
 			mapList.add(new Territory(3, Territory.Continent.Africa,
-				playerList.get(1), 10, p, 2, 0, 1));
+				playerList.get(1).getName(), 10, p, 2, 0, 1));
 			this.borrarCosasMapa(mapList, 4, Territory.Continent.Africa);
 			mapList.add(new Territory(4, Territory.Continent.Africa,
-				playerList.get(2), 15, p, 2, 0, 1));
+				playerList.get(2).getName(), 15, p, 2, 0, 1));
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
 		}
@@ -188,10 +188,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 			};
 			this.borrarCosasMapa(mapList, 1, Territory.Continent.Asia);
 			mapList.add(new Territory(1, Territory.Continent.Asia,
-				playerList.get(0), 20, p, 1, 0, 1));
+				playerList.get(0).getName(), 20, p, 1, 0, 1));
 			this.borrarCosasMapa(mapList, 3, Territory.Continent.Asia);
 			mapList.add(new Territory(3, Territory.Continent.Asia,
-				playerList.get(1), 10, p, 2, 0, 1));
+				playerList.get(1).getName(), 10, p, 2, 0, 1));
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
 		}
@@ -276,7 +276,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 		for (int i = 0; i < registerUsers.size(); i++) {
 			if (registerUsers.get(i)[0].compareTo(name) == 0)
-				throw new UserAlreadyExistsException();
+				throw new UserAlreadyExistsException("");
 		}
 		registerUsers.add(user);
 	}
@@ -295,7 +295,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 				sessionsList.add(session);
 			}
 		}
-		if (encontrado == false) throw new WrongLoginException();
+		if (encontrado == false) throw new WrongLoginException("");
 
 		return id;
 	}
@@ -306,13 +306,13 @@ public class Server extends UnicastRemoteObject implements IServer {
 	}
 
 	@Override
-	public ArrayList<GameInfo> listGames() throws RemoteException {
+	public ArrayList<GameInfo> listGames(UUID session) throws RemoteException {
 		System.out.println("IServer::listGames");
 		return gameList;
 	}
 
 	@Override
-	public UUID createGame(GameInfo info) throws RemoteException, InvalidGameInfoException {
+	public UUID createGame(UUID session, GameInfo info) throws RemoteException, InvalidGameInfoException {
 		System.out.println("IServer::createGame");
 		System.out.println("Nombre de la partida: " + info.getName());
 		System.out.println("Descripción de la partida: "
@@ -343,9 +343,9 @@ public class Server extends UnicastRemoteObject implements IServer {
 			}
 		}
 		if (foundSession == false) {
-			throw new InvalidSessionException();
+			throw new InvalidSessionException("");
 		} else if (foundGame == false) {
-			throw new GameNotFoundException();
+			throw new GameNotFoundException("");
 		}
 	}
 
@@ -392,7 +392,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	}
 
 	@Override
-	public void endTurn(UUID session, UUID game) throws Exception, RemoteException {
+	public void endTurn(UUID session, UUID game) throws RemoteException {
 		System.out.println("IServer::updateGame");
 	}
 
