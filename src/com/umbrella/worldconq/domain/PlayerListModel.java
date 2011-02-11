@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import es.uclm.iso2.rmi.Player;
+import domain.Player;
+
 
 public class PlayerListModel extends AbstractTableModel {
 

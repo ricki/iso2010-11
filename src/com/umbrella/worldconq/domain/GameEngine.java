@@ -2,8 +2,9 @@ package com.umbrella.worldconq.domain;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
 
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.Player;
+import domain.Game;
+import domain.Player;
+
 
 public class GameEngine {
 	private MapModel mMapListModel;

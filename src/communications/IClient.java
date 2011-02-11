@@ -1,13 +1,18 @@
-package es.uclm.iso2.rmi;
+package communications;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
-import es.uclm.iso2.rmi.exceptions.InvalidArsenalException;
-import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
-import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
+import domain.Arsenal;
+import domain.EventType;
+import domain.Player;
+import domain.Territory;
+
+import exceptions.GameNotFoundException;
+import exceptions.InvalidArsenalException;
+import exceptions.InvalidTerritoryException;
+import exceptions.NotCurrentPlayerGameException;
 
 public interface IClient extends java.rmi.Remote {
 

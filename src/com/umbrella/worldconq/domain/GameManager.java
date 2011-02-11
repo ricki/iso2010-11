@@ -7,8 +7,9 @@ import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
+import domain.Game;
+import domain.GameInfo;
+
 
 public class GameManager {
 

@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
+import communications.IServer;
+import domain.Game;
+import domain.GameInfo;
 
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
-import es.uclm.iso2.rmi.IServer;
 
 public class ServerAdapter {
 

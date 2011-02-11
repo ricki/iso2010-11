@@ -12,24 +12,24 @@ import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.domain.TerritoryData;
+import communications.IServer;
+import domain.Arsenal;
+import domain.EventType;
+import domain.Game;
+import domain.GameInfo;
+import domain.Player;
+import domain.Spy;
+import domain.Territory;
+import domain.Territory.Continent;
 
-import es.uclm.iso2.rmi.Arsenal;
-import es.uclm.iso2.rmi.EventType;
-import es.uclm.iso2.rmi.Game;
-import es.uclm.iso2.rmi.GameInfo;
-import es.uclm.iso2.rmi.IServer;
-import es.uclm.iso2.rmi.Player;
-import es.uclm.iso2.rmi.Spy;
-import es.uclm.iso2.rmi.Territory;
-import es.uclm.iso2.rmi.Territory.Continent;
-import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
-import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
-import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
-import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
-import es.uclm.iso2.rmi.exceptions.InvalidTimeException;
-import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
-import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
-import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTerritoryException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
+import exceptions.UserAlreadyExistsException;
+import exceptions.WrongLoginException;
 
 public class Server extends UnicastRemoteObject implements IServer {
 

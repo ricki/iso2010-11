@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import es.uclm.iso2.rmi.Player;
-import es.uclm.iso2.rmi.Spy;
-import es.uclm.iso2.rmi.Territory;
+import domain.Player;
+import domain.Spy;
+import domain.Territory;
+
 
 public class MapModel extends AbstractTableModel {
 

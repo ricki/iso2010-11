@@ -1,19 +1,26 @@
-package es.uclm.iso2.rmi;
+package communications;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import es.uclm.iso2.rmi.exceptions.FullGameException;
-import es.uclm.iso2.rmi.exceptions.GameNotFoundException;
-import es.uclm.iso2.rmi.exceptions.InvalidGameInfoException;
-import es.uclm.iso2.rmi.exceptions.InvalidSessionException;
-import es.uclm.iso2.rmi.exceptions.InvalidTerritoryException;
-import es.uclm.iso2.rmi.exceptions.InvalidTimeException;
-import es.uclm.iso2.rmi.exceptions.NotCurrentPlayerGameException;
-import es.uclm.iso2.rmi.exceptions.UserAlreadyExistsException;
-import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+import domain.Arsenal;
+import domain.EventType;
+import domain.Game;
+import domain.GameInfo;
+import domain.Player;
+import domain.Territory;
+
+import exceptions.FullGameException;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTerritoryException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
+import exceptions.UserAlreadyExistsException;
+import exceptions.WrongLoginException;
 
 public interface IServer extends java.rmi.Remote {
 

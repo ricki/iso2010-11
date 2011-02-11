@@ -1,4 +1,4 @@
-package es.uclm.iso2.rmi;
+package domain;
 
 public enum EventType {
 	UnknownEvent, AttackEvent, NegotiationEvent, BuyTerritoryEvent, BuyArsenalEvent

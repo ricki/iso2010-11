@@ -1,4 +1,4 @@
-package es.uclm.iso2.rmi;
+package domain;
 
 import java.io.Serializable;
 

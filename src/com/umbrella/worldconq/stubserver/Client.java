@@ -3,7 +3,8 @@ package com.umbrella.worldconq.stubserver;
 import java.rmi.Naming;
 import java.util.UUID;
 
-import es.uclm.iso2.rmi.IServer;
+import communications.IServer;
+
 
 public class Client {
 
