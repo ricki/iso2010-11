@@ -8,7 +8,6 @@ import domain.Player;
 import domain.Spy;
 import domain.Territory;
 
-
 public class MapModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 5679583600970671969L;
@@ -20,7 +19,7 @@ public class MapModel extends AbstractTableModel {
 	};
 
 	private final ArrayList<Territory> mMapList;
-	private Player mPlayer;
+	private final Player mPlayer;
 
 	public MapModel(Player player) {
 		super();
@@ -28,20 +27,10 @@ public class MapModel extends AbstractTableModel {
 		mPlayer = player;
 	}
 
-	private Player getMyUser() {
-		Player p = null;
-		for (final Territory t : mMapList) {
-			if (t.getOwner() != null
-					&& t.getOwner().getName().equals(mPlayer.getName())) p = t.getOwner();
-		}
-		return p;
-	}
-
 	public void setData(ArrayList<Territory> data) {
 		mMapList.clear();
 		mMapList.addAll(data);
 		this.fireTableDataChanged();
-		mPlayer = this.getMyUser();//cuando se añada la funcion de LAura quitar esto y la funcion
 	}
 
 	@Override
@@ -68,11 +57,11 @@ public class MapModel extends AbstractTableModel {
 		if (mMapList.get(rowIndex).getOwner() != null) {
 
 			for (final Spy s : mPlayer.getSpies()) {
-				if (TerritoryData.getIndex(s.getLocation()) == rowIndex) {
+				if (s.getLocation() == rowIndex) {
 					hasSpy = true;
 				}
 			}
-			if (mMapList.get(rowIndex).getOwner().getName().equals(
+			if (mMapList.get(rowIndex).getOwner().equals(
 				mPlayer.getName())
 					|| hasSpy) {
 
@@ -80,10 +69,10 @@ public class MapModel extends AbstractTableModel {
 				case 0:
 					return TerritoryData.getIndex(
 						mMapList.get(rowIndex).getContinent(), mMapList.get(
-							rowIndex).getIdTerritory());
+						rowIndex).getIdTerritory());
 
 				case 1:
-					return mMapList.get(rowIndex).getOwner().getName();
+					return mMapList.get(rowIndex).getOwner();
 				case 2:
 					return mMapList.get(rowIndex).getNumSoldiers();
 				case 3:
@@ -107,7 +96,7 @@ public class MapModel extends AbstractTableModel {
 				case 0:
 					return TerritoryData.getIndex(
 						mMapList.get(rowIndex).getContinent(), mMapList.get(
-							rowIndex).getIdTerritory());
+						rowIndex).getIdTerritory());
 				default:
 					return "¿?";
 				}
@@ -118,7 +107,7 @@ public class MapModel extends AbstractTableModel {
 			case 0:
 				return TerritoryData.getIndex(
 					mMapList.get(rowIndex).getContinent(), mMapList.get(
-						rowIndex).getIdTerritory());
+					rowIndex).getIdTerritory());
 			default:
 				return "¿?";
 			}
