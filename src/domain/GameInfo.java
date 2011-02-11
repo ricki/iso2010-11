@@ -19,7 +19,6 @@ public class GameInfo implements Serializable {
 	private int negotiationTime;
 
 	public GameInfo() {
-		super();
 		id = null;
 		name = null;
 		description = null;
@@ -31,8 +30,10 @@ public class GameInfo implements Serializable {
 		negotiationTime = 0;
 	}
 
-	public GameInfo(UUID id, String name, String description, ArrayList<String> players, ArrayList<Calendar> gameSessions, int nFreeTerritories, int turnTime, int defenseTime, int negotiationTime) {
-		super();
+	public GameInfo(UUID id, String name, String description,
+			ArrayList<String> players, ArrayList<Calendar> gameSessions,
+			int nFreeTerritories, int turnTime, int defenseTime,
+			int negotiationTime) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -115,5 +116,11 @@ public class GameInfo implements Serializable {
 	public void setNegotiationTime(int negotiationTime) {
 		this.negotiationTime = negotiationTime;
 	}
-
+    
+	public boolean equals(Object o) {
+		if (o==null) return false;
+		if (!(o instanceof GameInfo)) return false;
+		GameInfo p=(GameInfo) o;
+		return id.equals(p.getId());
+	}
 }

@@ -2,25 +2,25 @@ package domain;
 
 import java.io.Serializable;
 
-public class Spy implements Serializable {
+import persistence.PersistentObj;
+
+public class Spy implements Serializable, PersistentObj {
 
 	private static final long serialVersionUID = -8653528775818114475L;
 
 	private int uses;
-	private Territory location; // Association
-
-	public Spy() {
-		super();
-		uses = 0;
-		location = null;
+	private int location; // Association
+	
+	public Spy(int territory) {
+		this.setLocation(territory);
 	}
 
-	public Spy(int uses, Territory location) {
-		super();
-		this.uses = uses;
-		this.location = location;
+	public Spy(int territory, int uses) {
+		this.setLocation(territory);
+		this.setUses(uses);
 	}
-
+	
+	
 	public int getUses() {
 		return uses;
 	}
@@ -29,12 +29,22 @@ public class Spy implements Serializable {
 		this.uses = uses;
 	}
 
-	public Territory getLocation() {
+	public int getLocation() {
 		return location;
 	}
 
-	public void setLocation(Territory location) {
+	public void setLocation(int location) {
 		this.location = location;
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Spy))
+			return false;
+		Spy p = (Spy) o;
+		
+		return this.getLocation()==p.getLocation();
 	}
 
 }

@@ -1,5 +1,5 @@
 package domain;
 
 public enum EventType {
-	UnknownEvent, AttackEvent, NegotiationEvent, BuyTerritoryEvent, BuyArsenalEvent
+	UnknownEvent, AttackEvent, NegotiationEvent, BuyTerritoryEvent, BuyArsenalEvent, TurnChanged
 }

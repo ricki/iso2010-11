@@ -54,8 +54,25 @@ public class Arsenal implements Serializable {
 		return ICBMs;
 	}
 
-	public void setICBMs(int ICBMs) {
-		this.ICBMs = ICBMs;
+	public void setICBMs(int iCBMs) {
+		ICBMs = iCBMs;
+	}
+
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Arsenal))
+			return false;
+		Arsenal p = (Arsenal) o;
+		if (!(soldiers == p.getSoldiers()))
+			return false;
+		if (!(cannons == p.getCannons()))
+			return false;
+		if (!(missiles == p.getMissiles()))
+			return false;
+		if (!(ICBMs == p.getICBMs()))
+			return false;
+		return true;
 	}
 
 }

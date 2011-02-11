@@ -2,6 +2,7 @@ package domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Game implements Serializable {
 
@@ -12,14 +13,11 @@ public class Game implements Serializable {
 	private ArrayList<Player> players;
 
 	public Game() {
-		super();
-		gameInfo = null;
-		map = null;
-		players = null;
+
 	}
 
-	public Game(GameInfo gameInfo, ArrayList<Territory> map, ArrayList<Player> players) {
-		super();
+	public Game(GameInfo gameInfo, ArrayList<Territory> map,
+			ArrayList<Player> players) {
 		this.gameInfo = gameInfo;
 		this.map = map;
 		this.players = players;
@@ -49,4 +47,28 @@ public class Game implements Serializable {
 		this.players = players;
 	}
 
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Game))
+			return false;
+		Game p = (Game) o;
+		return gameInfo.equals(p.getGameInfo());
+	}
+
+	public Player strToPlayer(String name, Game g) {
+
+		ArrayList<Player> pl = g.getPlayers();
+		Player p;
+
+		for (Iterator<Player> iterator = pl.iterator(); iterator.hasNext();) {
+
+			p = iterator.next();
+			if (p.getName().equals(name))
+				return p;
+
+		}
+		return null;
+
+	}
 }

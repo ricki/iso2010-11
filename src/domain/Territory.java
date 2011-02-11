@@ -2,52 +2,35 @@ package domain;
 
 import java.io.Serializable;
 
-public class Territory implements Serializable {
+import persistence.PersistentObj;
+
+public class Territory implements Serializable, PersistentObj {
 
 	private static final long serialVersionUID = 4177888547129389571L;
 
 	public enum Continent {
-		Europe,
-		Asia,
-		Africa,
-		NorthAmerica,
-		SouthAmerica,
-		Oceania
+		Europe, Asia, Africa, NorthAmerica, SouthAmerica, Oceania
 	}
 
 	private int idTerritory;
 	private Continent continent;
-	private Player owner;
+	private String owner;
 	private int numSoldiers;
-	private int numCannons[] = new int[3]; // Cannons with one, two or three uses
+	private int numCannons[] = new int[3]; // Cannons with one, two or three
 	private int numMissiles;
 	private int numICBMs; // Intercontinental Ballistic Missiles
 	private int numAntiMissiles;
 
-	public Territory() {
-		super();
-		idTerritory = 0;
-		continent = null;
-		owner = null;
-		numSoldiers = 0;
-		numCannons[0] = 0;
-		numCannons[1] = 0;
-		numCannons[2] = 0;
-		numMissiles = 0;
-		numICBMs = 0;
-		numAntiMissiles = 0;
-	}
-
-	public Territory(int idTerritory, Continent continent, Player owner, int numSoldiers, int[] numCannons, int numMissiles, int numICBMs, int numAntiMissiles) {
-		super();
-		this.idTerritory = idTerritory;
-		this.continent = continent;
-		this.owner = owner;
-		this.numSoldiers = numSoldiers;
-		this.numCannons = numCannons;
-		this.numMissiles = numMissiles;
-		this.numICBMs = numICBMs;
-		this.numAntiMissiles = numAntiMissiles;
+	public Territory(int id, Continent cont, String owner, int sold,
+			int[] cannons, int missiles, int icbms, int antimissiles) {
+		this.setIdTerritory(id);
+		this.setContinent(cont);
+		this.setNumSoldiers(sold);
+		this.setOwner(owner);
+		this.setNumCannons(cannons);
+		this.setNumMissiles(missiles);
+		this.setNumICBMs(icbms);
+		this.setNumAntiMissiles(antimissiles);
 	}
 
 	public int getIdTerritory() {
@@ -64,14 +47,6 @@ public class Territory implements Serializable {
 
 	public void setContinent(Continent continent) {
 		this.continent = continent;
-	}
-
-	public Player getOwner() {
-		return owner;
-	}
-
-	public void setOwner(Player owner) {
-		this.owner = owner;
 	}
 
 	public int getNumSoldiers() {
@@ -112,6 +87,24 @@ public class Territory implements Serializable {
 
 	public void setNumAntiMissiles(int numAntiMissiles) {
 		this.numAntiMissiles = numAntiMissiles;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Territory))
+			return false;
+		Territory p = (Territory) o;
+		return idTerritory == p.getIdTerritory();
+
 	}
 
 }

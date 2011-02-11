@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+// ESTO ES PLAYER DE LOS CLIENTES
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = -282411403193425543L;
@@ -13,22 +14,30 @@ public class Player implements Serializable {
 	private boolean hasTurn;
 	private ArrayList<Spy> spies;
 
-	public Player() {
-		super();
-		name = null;
-		money = 0;
-		online = false;
-		hasTurn = false;
-		spies = null;
+	public Player(String name, int money) {
+		this.setSpies(spies);
+		this.setOnline(false);
+		this.setHasTurn(false);
+		this.setMoney(money);
+
+		this.setName(name);
+
 	}
 
-	public Player(String name, int money, boolean online, boolean hasTurn, ArrayList<Spy> spies) {
-		super();
-		this.name = name;
-		this.money = money;
-		this.online = online;
-		this.hasTurn = hasTurn;
-		this.spies = spies;
+	public Player(String name) {
+		this.setName(name);
+
+	}
+
+	public Player(String name, int money, boolean online, boolean hasTurn,
+			ArrayList<Spy> spies) {
+		this.setSpies(spies);
+		this.setOnline(online);
+		this.setHasTurn(hasTurn);
+		this.setMoney(money);
+
+		this.setName(name);
+
 	}
 
 	public String getName() {
@@ -69,6 +78,15 @@ public class Player implements Serializable {
 
 	public void setSpies(ArrayList<Spy> spies) {
 		this.spies = spies;
+	}
+
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof Player))
+			return false;
+		Player p = (Player) o;
+		return name.equals(p.getName());
 	}
 
 }
