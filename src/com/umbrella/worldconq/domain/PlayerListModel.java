@@ -6,7 +6,6 @@ import javax.swing.table.AbstractTableModel;
 
 import domain.Player;
 
-
 public class PlayerListModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 3953960579591306950L;
@@ -61,6 +60,14 @@ public class PlayerListModel extends AbstractTableModel {
 
 	public Player getPlayerAt(int index) {
 		return mPlayerList.get(index);
+	}
+
+	public Player getPlayerByName(String name) {
+		Player res = null;
+		for (final Player p : mPlayerList) {
+			if (p.getName().equals(name)) res = p;
+		}
+		return res;
 	}
 
 	// falta poner public void updatePlayer(Player player){}
