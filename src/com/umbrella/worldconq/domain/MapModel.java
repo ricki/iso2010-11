@@ -6,7 +6,6 @@ import javax.swing.table.AbstractTableModel;
 
 import domain.Player;
 import domain.Spy;
-import domain.Territory;
 
 public class MapModel extends AbstractTableModel {
 
@@ -18,19 +17,23 @@ public class MapModel extends AbstractTableModel {
 			"Nº AntiMisiles"
 	};
 
-	private final ArrayList<Territory> mMapList;
+	private final ArrayList<TerritoryDecorator> mMapList;
 	private final Player mPlayer;
 
 	public MapModel(Player player) {
 		super();
-		mMapList = new ArrayList<Territory>();
+		mMapList = new ArrayList<TerritoryDecorator>();
 		mPlayer = player;
 	}
 
-	public void setData(ArrayList<Territory> data) {
+	public void setData(ArrayList<TerritoryDecorator> data) {
 		mMapList.clear();
 		mMapList.addAll(data);
 		this.fireTableDataChanged();
+	}
+
+	TerritoryDecorator getTerritoryAt(int index) {
+		return mMapList.get(index);
 	}
 
 	@Override
@@ -53,63 +56,54 @@ public class MapModel extends AbstractTableModel {
 		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
 
 		boolean hasSpy = false;
+		final TerritoryDecorator t = mMapList.get(rowIndex);
 
-		if (mMapList.get(rowIndex).getOwner() != null) {
+		if (t.getPlayer() != null) {
 
 			for (final Spy s : mPlayer.getSpies()) {
 				if (s.getLocation() == rowIndex) {
 					hasSpy = true;
 				}
 			}
-			if (mMapList.get(rowIndex).getOwner().equals(
-				mPlayer.getName())
-					|| hasSpy) {
+			if (t.getPlayer().equals(mPlayer) || hasSpy) {
 
 				switch (columnIndex) {
 				case 0:
-					return TerritoryData.getIndex(
-						mMapList.get(rowIndex).getContinent(), mMapList.get(
-						rowIndex).getIdTerritory());
-
+					return rowIndex;
 				case 1:
-					return mMapList.get(rowIndex).getOwner();
+					return t.getPlayer().getName();
 				case 2:
-					return mMapList.get(rowIndex).getNumSoldiers();
+					return t.getNumSoldiers();
 				case 3:
-					return mMapList.get(rowIndex).getNumCannons()[0];
+					return t.getNumCannons()[0];
 				case 4:
-					return mMapList.get(rowIndex).getNumCannons()[1];
+					return t.getNumCannons()[1];
 				case 5:
-					return mMapList.get(rowIndex).getNumCannons()[2];
+					return t.getNumCannons()[2];
 				case 6:
-					return mMapList.get(rowIndex).getNumMissiles();
+					return t.getNumMissiles();
 				case 7:
-					return mMapList.get(rowIndex).getNumICBMs();
+					return t.getNumICBMs();
 				case 8:
-					return mMapList.get(rowIndex).getNumAntiMissiles();
+					return t.getNumAntiMissiles();
 				default:
-					//mirar esto que no sabemos bien que poner
 					return null;
 				}
 			} else {
 				switch (columnIndex) {
 				case 0:
-					return TerritoryData.getIndex(
-						mMapList.get(rowIndex).getContinent(), mMapList.get(
-						rowIndex).getIdTerritory());
+					return rowIndex;
 				default:
-					return "¿?";
+					return "?";
 				}
 			}
 
 		} else {
 			switch (columnIndex) {
 			case 0:
-				return TerritoryData.getIndex(
-					mMapList.get(rowIndex).getContinent(), mMapList.get(
-					rowIndex).getIdTerritory());
+				return rowIndex;
 			default:
-				return "¿?";
+				return "?";
 			}
 		}
 	}
