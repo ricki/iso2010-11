@@ -72,71 +72,71 @@ public class ServerAdapter {
 	}
 
 	public UUID createSession(String login, String passwd) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		return mProxy.loginUser(login, passwd, null);
 	}
 
 	public void closeSession(Session session) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.logoutUser(session.getId());
 	}
 
 	public void registerUser(String login, String passwd, String email) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.registerUser(login, passwd, email);
 	}
 
 	public ArrayList<GameInfo> fetchGameList(Session session) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		return mProxy.listGames(session.getId());
 	}
 
 	public void createGame(Session session, GameInfo game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.createGame(session.getId(), game);
 	}
 
 	public void joinGame(Session session, GameInfo game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.joinGame(session.getId(), game.getId());
 	}
 
 	public Game playGame(Session session, GameInfo game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		return mProxy.playGame(session.getId(), game.getId());
 
 	}
 
 	public void quitGame(Session session, Game game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.quitGame(session.getId(), game.getGameInfo().getId());
 	}
 
 	public void resignGame(Session session, Game game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.resignGame(session.getId(), game.getGameInfo().getId());
 	}
 
 	public void attackTerritory(Session session, Game game, Attack currentAttack) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.attackTerritory(session.getId(), game.getGameInfo().getId(),
 			currentAttack.getOrigin(), currentAttack.getDestination(),
 			currentAttack.getArsenal());
 	}
 
 	public void acceptAttack(Session session, Game game) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.acceptAttack(session.getId(), game.getGameInfo().getId());
 	}
 
 	public void requestNegotiation(Session session, Game game, int money, int soldiers) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.requestedNegotiation(session.getId(),
 			game.getGameInfo().getId(), money, soldiers);
 	}
 
 	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+		this.checkConnection();
 		mProxy.updateGame(session.getId(), game.getGameInfo().getId(),
 			playerUpdate, territoryUpdate, event);
 	}
