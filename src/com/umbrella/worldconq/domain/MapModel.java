@@ -17,23 +17,30 @@ public class MapModel extends AbstractTableModel {
 			"Nº AntiMisiles"
 	};
 
-	private final ArrayList<TerritoryDecorator> mMapList;
-	private final Player mPlayer;
+	private final ArrayList<TerritoryDecorator> data;
+	private final Player selfPlayer;
 
-	public MapModel(Player player) {
+	public MapModel(Player selfPlayer) {
 		super();
-		mMapList = new ArrayList<TerritoryDecorator>();
-		mPlayer = player;
+		data = new ArrayList<TerritoryDecorator>();
+		for (int i = 0; i < 42; i++) {
+			data.add(null);
+		}
+		this.selfPlayer = selfPlayer;
 	}
 
 	public void setData(ArrayList<TerritoryDecorator> data) {
-		mMapList.clear();
-		mMapList.addAll(data);
+		this.data.clear();
+		this.data.addAll(data);
 		this.fireTableDataChanged();
 	}
 
+	public void updateTerritory(TerritoryDecorator territory) {
+		data.set(territory.getId(), territory);
+	}
+
 	TerritoryDecorator getTerritoryAt(int index) {
-		return mMapList.get(index);
+		return data.get(index);
 	}
 
 	@Override
@@ -48,7 +55,7 @@ public class MapModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return mMapList.size();
+		return data.size();
 	}
 
 	@Override
@@ -56,16 +63,16 @@ public class MapModel extends AbstractTableModel {
 		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
 
 		boolean hasSpy = false;
-		final TerritoryDecorator t = mMapList.get(rowIndex);
+		final TerritoryDecorator t = data.get(rowIndex);
 
 		if (t.getPlayer() != null) {
 
-			for (final Spy s : mPlayer.getSpies()) {
+			for (final Spy s : selfPlayer.getSpies()) {
 				if (s.getLocation() == rowIndex) {
 					hasSpy = true;
 				}
 			}
-			if (t.getPlayer().equals(mPlayer) || hasSpy) {
+			if (t.getPlayer().equals(selfPlayer) || hasSpy) {
 
 				switch (columnIndex) {
 				case 0:
