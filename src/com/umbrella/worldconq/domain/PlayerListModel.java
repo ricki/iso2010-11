@@ -15,16 +15,34 @@ public class PlayerListModel extends AbstractTableModel {
 	};
 
 	private final ArrayList<Player> mPlayerList;
+	private Player selfPlayer;
 
-	public PlayerListModel() {
+	public PlayerListModel(Player selfPlayer) {
 		super();
+		this.selfPlayer = selfPlayer;
 		mPlayerList = new ArrayList<Player>();
+	}
+
+	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) {
+		super();
+		this.selfPlayer = selfPlayer;
+		mPlayerList = new ArrayList<Player>();
+		mPlayerList.addAll(data);
+		this.fireTableDataChanged();
 	}
 
 	public void setData(ArrayList<Player> data) {
 		mPlayerList.clear();
 		mPlayerList.addAll(data);
 		this.fireTableDataChanged();
+	}
+
+	public void updatePlayer(Player player) {
+		selfPlayer = player;
+	}
+
+	public Player getSelfPlayer() {
+		return selfPlayer;
 	}
 
 	@Override
@@ -58,6 +76,13 @@ public class PlayerListModel extends AbstractTableModel {
 		}
 	}
 
+	public Player getActivePlayer() {
+		for (final Player p : mPlayerList) {
+			if (p.isHasTurn()) return p;
+		}
+		return null;
+	}
+
 	public Player getPlayerAt(int index) {
 		return mPlayerList.get(index);
 	}
@@ -69,5 +94,4 @@ public class PlayerListModel extends AbstractTableModel {
 		return null;
 	}
 
-	// falta poner public void updatePlayer(Player player){}
 }
