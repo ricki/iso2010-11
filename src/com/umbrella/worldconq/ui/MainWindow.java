@@ -135,7 +135,7 @@ public class MainWindow extends JFrame {
 			mGamePanel.setLayout(new BoxLayout(mGamePanel, BoxLayout.Y_AXIS));
 
 			mv.setFondo();
-			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
+			//			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
 			mGamePanel.add(mv);
 			//añadimos el panel para la informacion de la partida
 			mv.setActionGame(new JEditorPane());
@@ -273,21 +273,15 @@ public class MainWindow extends JFrame {
 			}
 		}
 	}
-
-	private class MapMouseAdapter extends MouseAdapter {
-		private MapView mv = null;
-
-		public MapMouseAdapter(MapView mv) {
-			super();
-			this.mv = mv;
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent evt) {
-			mv.getSelectedRow(evt);
-			mv.repaint();
-		}
-
-	}
-
+	/*
+	 * private class MapMouseAdapter extends MouseAdapter { private MapView mv =
+	 * null;
+	 * 
+	 * public MapMouseAdapter(MapView mv) { super(); this.mv = mv; }
+	 * 
+	 * @Override public void mouseClicked(MouseEvent evt) {
+	 * mv.getSelectedRow(evt); mv.repaint(); }
+	 * 
+	 * }
+	 */
 }
