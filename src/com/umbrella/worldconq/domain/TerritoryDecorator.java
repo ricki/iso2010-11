@@ -1,5 +1,7 @@
 package com.umbrella.worldconq.domain;
 
+import java.util.ArrayList;
+
 import domain.Player;
 import domain.Territory;
 
@@ -163,8 +165,105 @@ public class TerritoryDecorator extends domain.Territory {
 		super(t.getIdTerritory(), t.getContinent(), t.getOwner(),
 			t.getNumSoldiers(), t.getNumCannons(), t.getNumMissiles(),
 			t.getNumICBMs(), t.getNumAntiMissiles());
+		decoratedTerritory = t;
 		this.map = map;
 		this.playerList = playerList;
+	}
+
+	public Territory getDecoratedTerritory() {
+		return decoratedTerritory;
+	}
+
+	public void setDecoratedTerritory(Territory decoratedTerritory) {
+		this.decoratedTerritory = decoratedTerritory;
+	}
+
+	@Override
+	public int getIdTerritory() {
+		return decoratedTerritory.getIdTerritory();
+	}
+
+	@Override
+	public void setIdTerritory(int id) {
+		decoratedTerritory.setIdTerritory(id);
+	}
+
+	@Override
+	public Continent getContinent() {
+		return decoratedTerritory.getContinent();
+	}
+
+	@Override
+	public void setContinent(Continent continent) {
+		decoratedTerritory.setContinent(continent);
+	}
+
+	@Override
+	public int getNumSoldiers() {
+		return decoratedTerritory.getNumSoldiers();
+	}
+
+	@Override
+	public void setNumSoldiers(int numSoldiers) {
+		decoratedTerritory.setNumSoldiers(numSoldiers);
+	}
+
+	@Override
+	public int[] getNumCannons() {
+		return decoratedTerritory.getNumCannons();
+	}
+
+	@Override
+	public void setNumCannons(int[] numCannons) {
+		decoratedTerritory.setNumCannons(numCannons);
+	}
+
+	@Override
+	public int getNumMissiles() {
+		return decoratedTerritory.getNumMissiles();
+	}
+
+	@Override
+	public void setNumMissiles(int numMissiles) {
+		decoratedTerritory.setNumMissiles(numMissiles);
+	}
+
+	@Override
+	public int getNumICBMs() {
+		return decoratedTerritory.getNumICBMs();
+	}
+
+	@Override
+	public void setNumICBMs(int numICBMs) {
+		decoratedTerritory.setNumICBMs(numICBMs);
+	}
+
+	@Override
+	public int getNumAntiMissiles() {
+		return decoratedTerritory.getNumAntiMissiles();
+	}
+
+	@Override
+	public void setNumAntiMissiles(int numAntiMissiles) {
+		decoratedTerritory.setNumAntiMissiles(numAntiMissiles);
+	}
+
+	@Override
+	public void setOwner(String owner) {
+		decoratedTerritory.setOwner(owner);
+	}
+
+	@Override
+	public String getOwner() {
+		return decoratedTerritory.getOwner();
+	}
+
+	public int getId() {
+		return decoratedTerritory.getIdTerritory();
+	}
+
+	public void setId(int id) {
+		decoratedTerritory.setIdTerritory(id);
 	}
 
 	public String getName() {
@@ -179,12 +278,12 @@ public class TerritoryDecorator extends domain.Territory {
 		return pricelist[decoratedTerritory.getIdTerritory()];
 	}
 
-	public Territory getDecoratedTerritory() {
-		return decoratedTerritory;
-	}
-
-	public void setDecoratedTerritory(Territory decoratedTerritory) {
-		this.decoratedTerritory = decoratedTerritory;
+	public ArrayList<TerritoryDecorator> getAdjacentTerritories() {
+		final ArrayList<TerritoryDecorator> adjlist = new ArrayList<TerritoryDecorator>();
+		for (final int i : adjgraph[this.getId()]) {
+			adjlist.add(map.getTerritoryAt(i));
+		}
+		return adjlist;
 	}
 
 }
