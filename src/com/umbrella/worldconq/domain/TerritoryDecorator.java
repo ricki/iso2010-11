@@ -271,7 +271,12 @@ public class TerritoryDecorator extends domain.Territory {
 	}
 
 	public Player getPlayer() {
-		return playerList.getPlayerByName(decoratedTerritory.getOwner());
+		Player p = null;
+		final String name = decoratedTerritory.getOwner();
+		if (name != null) {
+			p = playerList.getPlayerByName(name);
+		}
+		return p;
 	}
 
 	public void setPlayer(Player p) {
