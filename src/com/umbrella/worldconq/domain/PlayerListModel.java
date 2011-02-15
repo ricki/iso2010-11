@@ -63,11 +63,10 @@ public class PlayerListModel extends AbstractTableModel {
 	}
 
 	public Player getPlayerByName(String name) {
-		Player res = null;
 		for (final Player p : mPlayerList) {
-			if (p.getName().equals(name)) res = p;
+			if (p.getName().equals(name)) return p;
 		}
-		return res;
+		return null;
 	}
 
 	// falta poner public void updatePlayer(Player player){}
