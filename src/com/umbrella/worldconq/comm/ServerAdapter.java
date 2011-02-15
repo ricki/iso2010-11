@@ -8,7 +8,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.umbrella.worldconq.domain.Attack;
 import com.umbrella.worldconq.domain.Session;
 import communications.IServer;
 
@@ -41,6 +40,18 @@ public class ServerAdapter {
 		mRemoteName = remoteName;
 		mRemoteHost = remoteHost;
 		mRemotePort = remotePort;
+	}
+
+	public String getRemoteName() {
+		return mRemoteName;
+	}
+
+	public InetAddress getRemoteHost() {
+		return mRemoteHost;
+	}
+
+	public int getRemotePort() {
+		return mRemotePort;
 	}
 
 	public void connect() throws MalformedURLException, RemoteException, NotBoundException {
