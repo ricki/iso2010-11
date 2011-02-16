@@ -172,7 +172,7 @@ public class GameEngine implements ClientCallback {
 						final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>(); 
 						territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
 						territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
-						updateGame(session, mGame, new ArrayList<Player>(), territoriesUpdate, EventType);
+						updateGame(session, mGame, new ArrayList<Player>(), territoriesUpdate, EventType.UnknownEvent);
 					
 						mMapListModel.updateTerritory(srcTerritory);
 						mMapListModel.updateTerritory(dstTerritory);
