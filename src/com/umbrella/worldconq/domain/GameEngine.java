@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.PendingAttackException;
 import communications.IClient.TimeType;
 
 import domain.Arsenal;
@@ -81,7 +83,44 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws Exception {
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
+		else {
+			final TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
+				src);
+			final TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
+				dst);
 
+			if (srcTerritory.getOwner().equals(session.getUser())) {
+				if (dstTerritory.getPlayer() != null
+						&& !dstTerritory.getOwner().equals(session.getUser())) {
+
+					if (srcTerritory.getAdjacentTerritories().contains(
+						dstTerritory)) {
+						if (soldiers <= srcTerritory.getNumSoldiers()
+								&& cannons <= srcTerritory.getNumShots()
+								&& missiles <= srcTerritory.getNumMissiles()
+								&& icbm <= srcTerritory.getNumICBMs()) {
+
+							final Arsenal arsenal = new Arsenal(soldiers,
+								cannons, missiles, icbm);
+
+							adapter.attackTerritory(session, mGame,
+								srcTerritory.getDecoratedTerritory(),
+								dstTerritory.getDecoratedTerritory(), arsenal);
+
+							mCurrentAttack = new Attack(arsenal,
+								(TerritoryDecorator) srcTerritory.clone(),
+								(TerritoryDecorator) dstTerritory.clone());
+						} else
+							throw new InvalidArgumentException();
+					} else
+						throw new InvalidArgumentException();
+				} else
+					throw new InvalidArgumentException();
+			} else
+				throw new InvalidArgumentException();
+		}
 	}
 
 	public void acceptAttack() {
@@ -92,12 +131,66 @@ public class GameEngine implements ClientCallback {
 
 	}
 
-	public void buyUnits(int erritory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+	public void buyUnits(int Territory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
 
 	}
 
 	public void moveUnits(int src, int dst, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+		
+		final TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
+			src);
+		final TerritoryDecorator dstTerritory =  this.getMapListModel().getTerritoryAt(
+			dst);
 
+		if (srcTerritory.getOwner().equals(session.getUser())) {
+			if (dstTerritory.getPlayer() != null
+					&& dstTerritory.getOwner().equals(session.getUser())) {
+
+				if (srcTerritory.getAdjacentTerritories().contains(
+					dstTerritory)) {
+					if (soldiers <= srcTerritory.getNumSoldiers()
+							&& cannons <= srcTerritory.getNumCannons().length
+							&& missiles <= srcTerritory.getNumMissiles()
+							&& ICMB <= srcTerritory.getNumICBMs() 
+							&& antimissiles <= srcTerritory.getNumAntiMissiles()) {
+
+						srcTerritory = (TerritoryDecorator) srcTerritory.clone();
+						
+						srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()-soldiers);
+						//srcTerritory.setNumCannonss(srcTerritory.getNumCannons()-cannons);
+						srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()-missiles);
+						srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()-ICMB);
+						srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()-antimissiles);
+						
+						dstTerritory = (TerritoryDecorator) dstTerritory.clone();
+						dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()+soldiers);
+						//dstTerritory.setNumCannonss(dstTerritory.getNumCannons()+cannons);
+						dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()+missiles);
+						dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()+ICMB);
+						dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()+antimissiles);
+						
+						final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>(); 
+						territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
+						territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
+						updateGame(session, mGame, new ArrayList<Player>(), territoriesUpdate, EventType);
+					
+						mMapListModel.updateTerritory(srcTerritory);
+						mMapListModel.updateTerritory(dstTerritory);
+						
+					} else
+						throw new InvalidArgumentException();
+				} else
+					throw new InvalidArgumentException();
+			} else
+				throw new InvalidArgumentException();
+		} else
+			throw new InvalidArgumentException();
+	}
+}
+
+		
+		
+		
 	}
 
 	public void buyTerritory(int territory) {

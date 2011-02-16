@@ -213,6 +213,14 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		return decoratedTerritory.getNumCannons();
 	}
 
+	public int getNumShots() {
+		int shots = 0;
+		for (int i = 0; i < decoratedTerritory.getNumCannons().length; i++)
+			shots = shots + decoratedTerritory.getNumCannons()[i];
+
+		return shots;
+	}
+
 	@Override
 	public void setNumCannons(int[] numCannons) {
 		decoratedTerritory.setNumCannons(numCannons);
