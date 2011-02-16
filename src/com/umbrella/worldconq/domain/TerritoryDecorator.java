@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import domain.Player;
 import domain.Territory;
 
-public class TerritoryDecorator extends domain.Territory {
+public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	private static final long serialVersionUID = 1L;
 	private final String namelist[] = {
 			"Gran Bretaña", "Iceland", "Europa del Norte", "Escandinavia",
@@ -295,4 +295,19 @@ public class TerritoryDecorator extends domain.Territory {
 		return adjlist;
 	}
 
+	private Object cloneTerritory() {
+		return new Territory(decoratedTerritory.getIdTerritory(),
+			decoratedTerritory.getContinent(), decoratedTerritory.getOwner(),
+			decoratedTerritory.getNumSoldiers(),
+			decoratedTerritory.getNumCannons(),
+			decoratedTerritory.getNumMissiles(),
+			decoratedTerritory.getNumICBMs(),
+			decoratedTerritory.getNumAntiMissiles());
+	}
+
+	@Override
+	public Object clone() {
+		return new TerritoryDecorator((Territory) this.cloneTerritory(), map,
+			playerList);
+	}
 }
