@@ -18,8 +18,12 @@ public class GameEngine implements ClientCallback {
 	private final Game mGame;
 	private final Session session;
 	private final ServerAdapter adapter;
+	private final GameEventListener gameListener;
+	private final Attack mCurrentAttack;
 
-	public GameEngine(Game game, Session session, ServerAdapter adapter) {
+	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) {
+		mCurrentAttack = null;
+		this.gameListener = gameListener;
 		mGame = game;
 		this.session = session;
 		this.adapter = adapter;
@@ -54,6 +58,10 @@ public class GameEngine implements ClientCallback {
 	public PlayerListModel getPlayerListModel() {
 		return mPlayerListModel;
 
+	}
+
+	public Game getGame() {
+		return mGame;
 	}
 
 	public void setMapListModel(MapModel mMapListModel) {
