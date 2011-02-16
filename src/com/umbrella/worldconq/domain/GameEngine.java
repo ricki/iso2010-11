@@ -1,6 +1,7 @@
 package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
@@ -28,15 +29,22 @@ public class GameEngine implements ClientCallback {
 		this.session = session;
 		this.adapter = adapter;
 
-		this.setMapListModel(new MapModel(game.strToPlayer(
-			this.session.getUser(),
-			game)));
-		//this.setMapListModel(new MapModel(getOwner())); algo asi (funcion de Laura)
-		//---------------------------------------------------------------
-		this.setPlayerListModel(new PlayerListModel());
+		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
+			game));
 
-		mMapListModel.setData(mGame.getMap());
-		mPlayerListModel.setData(mGame.getPlayers());
+		mPlayerListModel = new PlayerListModel(game.strToPlayer(
+			this.session.getUser(),
+			game), game.getPlayers());
+
+		final ArrayList<TerritoryDecorator> mMapList = new ArrayList<TerritoryDecorator>();
+		final ArrayList<Territory> map = game.getMap();
+
+		for (final Iterator<Territory> iterator = map.iterator(); iterator.hasNext();)
+			mMapList.add(new TerritoryDecorator(iterator.next(), mMapListModel,
+				mPlayerListModel));
+
+		mMapListModel.setData(mMapList);
+
 	}
 
 	public UUID getId() {
