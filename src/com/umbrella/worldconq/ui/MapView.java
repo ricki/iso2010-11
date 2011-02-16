@@ -168,27 +168,27 @@ public class MapView extends JComponent implements TableModelListener {
 	}
 
 	public void getRowInfo(int idx) {
-		if (idx != -1) {
+		if ((idx != -1) && (mMapm.getTerritoryAt(idx) != null)) {
 			final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
-					+ mMapm.getTerritoryAt(idx).getId()
-					+ "</BIG><BR>\n<B> Controlado por: <EM>"
-					+ mMapm.getValueAt(idx, 1)
-					+ "</em></b></P>\n<HR>"
-					+ "<TABLE BORDER=0>"
-					+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 2)
-					+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 3)
-					+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 4)
-					+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 5)
-					+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 6)
-					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 7)
-					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
+						+ mMapm.getTerritoryAt(idx).getId()
+						+ "</BIG><BR>\n<B> Controlado por: <EM>"
+						+ mMapm.getValueAt(idx, 1)
+						+ "</em></b></P>\n<HR>"
+						+ "<TABLE BORDER=0>"
+						+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 2)
+						+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 3)
+						+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 4)
+						+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 5)
+						+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 6)
+						+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 7)
+						+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
+						+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {

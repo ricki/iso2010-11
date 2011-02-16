@@ -101,7 +101,7 @@ public class MapModel extends AbstractTableModel {
 				case 0:
 					return rowIndex;
 				default:
-					return "?";
+					return "¿?";
 				}
 			}
 
@@ -110,7 +110,7 @@ public class MapModel extends AbstractTableModel {
 			case 0:
 				return rowIndex;
 			default:
-				return "?";
+				return "¿?";
 			}
 		}
 	}
