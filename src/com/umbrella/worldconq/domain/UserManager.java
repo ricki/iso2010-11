@@ -10,11 +10,13 @@ import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 public class UserManager {
 
 	private final ServerAdapter srvAdapter;
+	private final GameManager gameMgr;
 	private Session mSession;
 	private final String emailReEx = "^[A-Za-z0-9][A-Za-z0-9_%-\\·]*@[A-Za-z0-9][A-Za-z0-9_%-\\.]*\\.[A-Za-z0-9_%-]{2,4}$";
 
-	public UserManager(ServerAdapter srvAdapter) {
+	public UserManager(ServerAdapter srvAdapter, GameManager gameMgr) {
 		this.srvAdapter = srvAdapter;
+		this.gameMgr = gameMgr;
 		mSession = null;
 	}
 
@@ -48,7 +50,9 @@ public class UserManager {
 	}
 
 	public void closeSession() throws Exception {
+		if (gameMgr.getGameEngine() != null) gameMgr.disconnectFromGame();
 		srvAdapter.closeSession(mSession);
 		mSession = null;
+
 	}
 }
