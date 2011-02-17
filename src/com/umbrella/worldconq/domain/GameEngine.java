@@ -93,32 +93,25 @@ public class GameEngine implements ClientCallback {
 			final TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
 				dst);
 
-			if (srcTerritory.getOwner().equals(session.getUser())) {
-				if (dstTerritory.getPlayer() != null
-						&& !dstTerritory.getOwner().equals(session.getUser())) {
+			if (srcTerritory.getOwner().equals(session.getUser())
+					&& dstTerritory.getPlayer() != null
+					&& !dstTerritory.getOwner().equals(session.getUser())
+					&& srcTerritory.getAdjacentTerritories().contains(
+						dstTerritory)
+					&& soldiers <= srcTerritory.getNumSoldiers()
+					&& cannons <= srcTerritory.getNumTotalCannons()
+					&& missiles <= srcTerritory.getNumMissiles()
+					&& icbm <= srcTerritory.getNumICBMs()) {
 
-					if (srcTerritory.getAdjacentTerritories().contains(
-						dstTerritory)) {
-						if (soldiers <= srcTerritory.getNumSoldiers()
-								&& cannons <= srcTerritory.getNumTotalCannons()
-								&& missiles <= srcTerritory.getNumMissiles()
-								&& icbm <= srcTerritory.getNumICBMs()) {
-
-							final Arsenal arsenal = new Arsenal(soldiers,
+				final Arsenal arsenal = new Arsenal(soldiers,
 								cannons, missiles, icbm);
 
-							final Attack att = new Attack(arsenal,
+				final Attack att = new Attack(arsenal,
 								(TerritoryDecorator) srcTerritory.clone(),
 								(TerritoryDecorator) dstTerritory.clone());
-							adapter.attackTerritory(session, mGame, att);
+				adapter.attackTerritory(session, mGame, att);
 
-							mCurrentAttack = att;
-						} else
-							throw new InvalidArgumentException();
-					} else
-						throw new InvalidArgumentException();
-				} else
-					throw new InvalidArgumentException();
+				mCurrentAttack = att;
 			} else
 				throw new InvalidArgumentException();
 		}
@@ -136,64 +129,67 @@ public class GameEngine implements ClientCallback {
 
 	}
 
-	public void moveUnits(int src, int dst, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int ICMB, int antimissiles) throws Exception {
 
 		TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
 			src);
 		TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
 			dst);
 
-		if (srcTerritory.getOwner().equals(session.getUser())) {
-			if (dstTerritory.getPlayer() != null
-					&& dstTerritory.getOwner().equals(session.getUser())) {
+		if (srcTerritory.getOwner().equals(session.getUser())
+				&& dstTerritory.getPlayer() != null
+				&& dstTerritory.getOwner().equals(session.getUser())
+				&& srcTerritory.getAdjacentTerritories().contains(dstTerritory)
+				&& soldiers <= srcTerritory.getNumSoldiers()
+				&& cannons[0] <= srcTerritory.getNumCannons()[0]
+				&& cannons[1] <= srcTerritory.getNumCannons()[1]
+				&& cannons[2] <= srcTerritory.getNumCannons()[2]
+				&& missiles <= srcTerritory.getNumMissiles()
+				&& ICMB <= srcTerritory.getNumICBMs()
+				&& antimissiles <= srcTerritory.getNumAntiMissiles()) {
 
-				if (srcTerritory.getAdjacentTerritories().contains(
-					dstTerritory)) {
-					if (soldiers <= srcTerritory.getNumSoldiers()
-							&& cannons <= srcTerritory.getNumCannons().length
-							&& missiles <= srcTerritory.getNumMissiles()
-							&& ICMB <= srcTerritory.getNumICBMs()
-							&& antimissiles <= srcTerritory.getNumAntiMissiles()) {
+			srcTerritory = (TerritoryDecorator) srcTerritory.clone();
 
-						srcTerritory = (TerritoryDecorator) srcTerritory.clone();
-
-						srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
+			srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
 								- soldiers);
-						//srcTerritory.setNumCannonss(srcTerritory.getNumCannons()-cannons);
-						srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()
+
+			final int numCannons[] = new int[3];
+			for (int i = 0; i < 3; i++)
+				numCannons[i] = srcTerritory.getNumCannons()[i] - cannons[i];
+			srcTerritory.setNumCannons(numCannons);
+
+			srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()
 								- missiles);
-						srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()
+			srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()
 								- ICMB);
-						srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()
+			srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()
 								- antimissiles);
 
-						dstTerritory = (TerritoryDecorator) dstTerritory.clone();
-						dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
+			dstTerritory = (TerritoryDecorator) dstTerritory.clone();
+			dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
 								+ soldiers);
-						//dstTerritory.setNumCannonss(dstTerritory.getNumCannons()+cannons);
-						dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
+
+			for (int i = 0; i < 3; i++)
+				numCannons[i] = srcTerritory.getNumCannons()[i] + cannons[i];
+			dstTerritory.setNumCannons(numCannons);
+
+			dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
 								+ missiles);
-						dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()
+			dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()
 								+ ICMB);
-						dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
+			dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
 								+ antimissiles);
 
-						final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-						territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
-						territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
-						adapter.updateGame(session, mGame,
+			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+			territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
+			territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
+			adapter.updateGame(session, mGame,
 							new ArrayList<Player>(), territoriesUpdate,
 							EventType.UnknownEvent);
 
-						mMapListModel.updateTerritory(srcTerritory);
-						mMapListModel.updateTerritory(dstTerritory);
+			mMapListModel.updateTerritory(srcTerritory);
+			mMapListModel.updateTerritory(dstTerritory);
 
-					} else
-						throw new InvalidArgumentException();
-				} else
-					throw new InvalidArgumentException();
-			} else
-				throw new InvalidArgumentException();
 		} else
 			throw new InvalidArgumentException();
 	}
