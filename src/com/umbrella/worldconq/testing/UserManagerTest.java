@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.rmi.RemoteException;
 
 import junit.framework.TestCase;
 
@@ -11,10 +12,11 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
+import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
-import es.uclm.iso2.rmi.exceptions.WrongLoginException;
+import exceptions.WrongLoginException;
 
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
@@ -203,6 +205,20 @@ public class UserManagerTest extends TestCase {
 		}
 	}
 
+	public void testRegisterUser13() {
+		System.out.println("TestCase::testRegisterUser13");
+		/*  */
+		try {
+			srvAdapter.disconnect();
+			new UserManager(srvAdapter).registerUser(
+				"Angel&Duran", "angel", "a@d.com");
+			fail("Esperaba RemoteException");
+		} catch (final RemoteException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba RemoteException");
+		}
+	}
+
 	public void testCreateSession1() {
 		System.out.println("TestCase::testCreateSession1");
 		/*  */
@@ -246,8 +262,10 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession4");
 		/*  */
 		try {
-			new UserManager(srvAdapter).createSession(
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.createSession(
 				"Aduran", "angel");
+			assertTrue(UserManager.getSession() != null);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -325,10 +343,12 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession10");
 		/*  */
 		try {
-			new UserManager(srvAdapter).registerUser(
-				"1111", "2222", "1111@1111.com");
-			new UserManager(srvAdapter).createSession(
-				"1111", "2222");
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.registerUser(
+				"1111", "22&22", "1111@1111.com");
+			UserManager.createSession(
+				"1111", "22&22");
+			assertTrue(UserManager.getSession() != null);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -338,10 +358,12 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession11");
 		/*  */
 		try {
-			new UserManager(srvAdapter).registerUser(
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.registerUser(
 				"-1", "2222", "2222@3333.com");
-			new UserManager(srvAdapter).createSession(
+			UserManager.createSession(
 				"-1", "2222");
+			assertTrue(UserManager.getSession() != null);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -351,10 +373,74 @@ public class UserManagerTest extends TestCase {
 		System.out.println("TestCase::testCreateSession12");
 		/*  */
 		try {
-			new UserManager(srvAdapter).registerUser(
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.registerUser(
 				"Angel&Duran", "angel", "a@d.com");
-			new UserManager(srvAdapter).createSession(
+			UserManager.createSession(
 				"Angel&Duran", "angel");
+			assertTrue(UserManager.getSession() != null);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession13() {
+		System.out.println("TestCase::testCreateSession13");
+		/*  */
+		try {
+			final UserManager UserManager = new UserManager(srvAdapter);
+
+			UserManager.createSession("Aduran", "angel");
+			final Session sesion1 = UserManager.getSession();
+			assertTrue(sesion1 != null);
+
+			UserManager.createSession("ricki", "ricki");
+			final Session sesion2 = UserManager.getSession();
+			assertTrue(sesion2 != null);
+
+			assertTrue(sesion2 != sesion1);
+
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession14() {
+		System.out.println("TestCase::testCreateSession14");
+		/*  */
+		try {
+			srvAdapter.disconnect();
+			new UserManager(srvAdapter).createSession(
+				"Aduran",
+				"Angel");
+			fail("Esperaba RemoteException");
+		} catch (final RemoteException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba RemoteException");
+		}
+	}
+
+	public void testCreateSession15() {
+		System.out.println("TestCase::testCreateSession15");
+		/*  */
+		try {
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.createSession("Aduran", "angel");
+			UserManager.closeSession();
+			assertTrue(UserManager.getSession() == null);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testCreateSession16() {
+		System.out.println("TestCase::testCreateSession16");
+		/*  */
+		try {
+			final UserManager UserManager = new UserManager(srvAdapter);
+			UserManager.createSession("Aduran", "angel");
+			final String userName = UserManager.getSession().getUser();
+			assertTrue(userName != null);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
