@@ -17,7 +17,7 @@ public class Attack {
 		return src;
 	}
 
-	public TerritoryDecorator getDination() {
+	public TerritoryDecorator getDestination() {
 		return dst;
 	}
 
