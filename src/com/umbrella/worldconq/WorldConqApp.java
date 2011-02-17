@@ -47,9 +47,12 @@ public class WorldConqApp {
 			3234);
 		srvAdapter.connect();
 
-		usrMgr = new UserManager(srvAdapter);
+		gameMgr = new GameManager(srvAdapter, cltAdapter);
 
-		gameMgr = new GameManager(usrMgr, srvAdapter, cltAdapter);
+		usrMgr = new UserManager(srvAdapter, gameMgr);
+
+		gameMgr.setUserManager(usrMgr);
+
 	}
 
 	public void setStartupMode() {

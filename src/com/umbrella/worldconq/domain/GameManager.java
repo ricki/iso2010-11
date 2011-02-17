@@ -6,13 +6,14 @@ import java.util.Calendar;
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Game;
 import domain.GameInfo;
 
 public class GameManager {
 
-	private final UserManager usrMgr;
+	private UserManager usrMgr;
 	private final ServerAdapter srvAdapter;
 	private final ClientAdapter cltAdapter;
 
@@ -20,12 +21,20 @@ public class GameManager {
 	private GameListModel mOpenGameListModel;
 	private GameEngine mGameEngine;
 
-	public GameManager(UserManager usrMgr, ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
-		this.usrMgr = usrMgr;
+	public GameManager(ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
+		usrMgr = null;
 		this.srvAdapter = srvAdapter;
 		this.cltAdapter = cltAdapter;
 		this.setCurrentGameListModel(new GameListModel());
 		this.setOpenGameListModel(new GameListModel());
+	}
+
+	public UserManager getUserManager() {
+		return usrMgr;
+	}
+
+	public void setUserManager(UserManager usrMgr) {
+		this.usrMgr = usrMgr;
 	}
 
 	public void setCurrentGameListModel(GameListModel mCurrentGameListModel) {
@@ -83,15 +92,20 @@ public class GameManager {
 		}
 	}
 
-	public void connectToGame(int gameIndex) throws Exception {
+	public void connectToGame(int gameIndex, GameEventListener gameListener) throws Exception {
 		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
 		final Session session = usrMgr.getSession();
 		final Game game = srvAdapter.playGame(session, gameUuid);
-		mGameEngine = new GameEngine(game, session, srvAdapter);
-		cltAdapter.setGameEngine(mGameEngine);
+		mGameEngine = new GameEngine(game, session, srvAdapter, gameListener);
+		cltAdapter.setCallback(mGameEngine);
 	}
 
 	public GameEngine getGameEngine() {
 		return mGameEngine;
+	}
+
+	public void disconnectFromGame() throws Exception {
+		srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
+		mGameEngine = null;
 	}
 }

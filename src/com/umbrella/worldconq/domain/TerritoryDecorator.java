@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import domain.Player;
 import domain.Territory;
 
-public class TerritoryDecorator extends domain.Territory {
+public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	private static final long serialVersionUID = 1L;
 	private final String namelist[] = {
 			"Gran Bretaña", "Iceland", "Europa del Norte", "Escandinavia",
@@ -30,129 +30,129 @@ public class TerritoryDecorator extends domain.Territory {
 			/* 1-Gran Bretaña */{
 					1, 2, 3, 6
 			},
-			/* 2-Iceland */{
+						/* 2-Iceland */{
 					0, 29, 3
 			},
-			/* 3-Europa del Norte */{
+						/* 3-Europa del Norte */{
 					0, 3, 6, 4, 5
 			},
-			/* 4-Escandinavia */{
+						/* 4-Escandinavia */{
 					0, 1, 2, 5
 			},
-			/* 5-Europa del Sur */{
+						/* 5-Europa del Sur */{
 					2, 5, 6, 21, 23
 			},
-			/* 6-Ucrania */{
+						/* 6-Ucrania */{
 					2, 3, 4, 7, 13, 17
 			},
-			/* 7-Europa Occidental */{
+						/* 7-Europa Occidental */{
 					0, 2, 4, 23
 			},
 
 			/* 8-Afghanistan */{
 					8, 9, 5, 13, 17
 			},
-			/* 9-China */{
+						/* 9-China */{
 					7, 9, 14, 15, 16, 17
 			},
-			/* 10-India */{
+						/* 10-India */{
 					7, 8, 13, 15
 			},
-			/* 11-Irkutsk */{
+						/* 11-Irkutsk */{
 					16, 14, 12, 18
 			},
-			/* 12-Japón */{
+						/* 12-Japón */{
 					14, 12
 			},
-			/* 13-Kamchatka */{
+						/* 13-Kamchatka */{
 					10, 11, 14, 18, 25
 			},
-			/* 14-Oriente Medio */{
+						/* 14-Oriente Medio */{
 					7, 9, 4, 5, 21
 			},
-			/* 15-Mongolia */{
+						/* 15-Mongolia */{
 					8, 10, 11, 12, 16
 			},
-			/* 16-Siam */{
+						/* 16-Siam */{
 					8, 9, 39
 			},
-			/* 17-Siberia */{
+						/* 17-Siberia */{
 					8, 10, 14, 17, 18
 			},
-			/* 18-Ural */{
+						/* 18-Ural */{
 					7, 8, 16, 5
 			},
-			/* 19-Yakutsk */{
+						/* 19-Yakutsk */{
 					12, 16, 10
 			},
-			/* 20-Congo */{
+						/* 20-Congo */{
 					20, 23, 24
 			},
-			/* 21-África Oriental */{
+						/* 21-África Oriental */{
 					19, 21, 22, 23, 24
 			},
-			/* 22-Egipto */{
+						/* 22-Egipto */{
 					20, 23, 13,
 					4
 			},
-			/* 23-Madagascar */{
+						/* 23-Madagascar */{
 					20, 24
 			},
-			/* 24-África del Norte */{
+						/* 24-África del Norte */{
 					19, 21, 20, 4, 6
 			},
-			/* 25-Sudáfrica */{
+						/* 25-Sudáfrica */{
 					19, 20, 22
 			},
-			/* 26-Alaska */{
+						/* 26-Alaska */{
 					12, 30, 31, 33
 			},
-			/* 27-Alberta */{
+						/* 27-Alberta */{
 					25, 30, 31, 33
 			},
-			/* 28-América Central */{
+						/* 28-América Central */{
 					28, 33, 37
 			},
-			/* 29-Estados Unidos del Este */{
+						/* 29-Estados Unidos del Este */{
 					31, 32, 33, 27
 			},
-			/* 30-Groenlandia */{
+						/* 30-Groenlandia */{
 					1, 30, 31, 32
 			},
-			/* 31-Territorios del Noroeste */{
+						/* 31-Territorios del Noroeste */{
 					25, 26, 31, 29
 			},
-			/* 32-Ontario */{
+						/* 32-Ontario */{
 					26, 29, 33, 30, 32, 28
 			},
-			/* 33-Quebec */{
+						/* 33-Quebec */{
 					31, 29, 28
 			},
-			/* 34-Estados Unidos del Oeste */{
+						/* 34-Estados Unidos del Oeste */{
 					26, 31, 28, 27
 			},
-			/* 35-Argentina */{
+						/* 35-Argentina */{
 					36, 35
 			},
-			/* 36-Brasil */{
+						/* 36-Brasil */{
 					34, 36, 37
 			},
-			/* 37-Perú */{
+						/* 37-Perú */{
 					34, 37, 35
 			},
-			/* 38-Venezuela */{
+						/* 38-Venezuela */{
 					27, 35, 36
 			},
-			/* 39-Australia Oriental */{
+						/* 39-Australia Oriental */{
 					40, 41
 			},
-			/* 40-Indonesia */{
+						/* 40-Indonesia */{
 					15, 40, 41
 			},
-			/* 41-Nueva Guinea */{
+						/* 41-Nueva Guinea */{
 					39, 41, 38
 			},
-			/* 42-Australia Occidental */{
+						/* 42-Australia Occidental */{
 					38, 39, 40
 			}
 	};
@@ -162,9 +162,7 @@ public class TerritoryDecorator extends domain.Territory {
 	private final MapModel map;
 
 	public TerritoryDecorator(Territory t, MapModel map, PlayerListModel playerList) {
-		super(t.getIdTerritory(), t.getContinent(), t.getOwner(),
-			t.getNumSoldiers(), t.getNumCannons(), t.getNumMissiles(),
-			t.getNumICBMs(), t.getNumAntiMissiles());
+		super(0, null, null, 0, null, 0, 0, 0);
 		decoratedTerritory = t;
 		this.map = map;
 		this.playerList = playerList;
@@ -185,7 +183,8 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setIdTerritory(int id) {
-		decoratedTerritory.setIdTerritory(id);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setIdTerritory(id);
 	}
 
 	@Override
@@ -195,7 +194,8 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setContinent(Continent continent) {
-		decoratedTerritory.setContinent(continent);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setContinent(continent);
 	}
 
 	@Override
@@ -205,7 +205,8 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setNumSoldiers(int numSoldiers) {
-		decoratedTerritory.setNumSoldiers(numSoldiers);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setNumSoldiers(numSoldiers);
 	}
 
 	@Override
@@ -213,9 +214,18 @@ public class TerritoryDecorator extends domain.Territory {
 		return decoratedTerritory.getNumCannons();
 	}
 
+	public int getNumTotalCannons() {
+		int shots = 0;
+		for (int i = 0; i < decoratedTerritory.getNumCannons().length; i++)
+			shots = shots + decoratedTerritory.getNumCannons()[i];
+
+		return shots;
+	}
+
 	@Override
 	public void setNumCannons(int[] numCannons) {
-		decoratedTerritory.setNumCannons(numCannons);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setNumCannons(numCannons);
 	}
 
 	@Override
@@ -225,7 +235,8 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setNumMissiles(int numMissiles) {
-		decoratedTerritory.setNumMissiles(numMissiles);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setNumMissiles(numMissiles);
 	}
 
 	@Override
@@ -235,7 +246,8 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setNumICBMs(int numICBMs) {
-		decoratedTerritory.setNumICBMs(numICBMs);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setNumICBMs(numICBMs);
 	}
 
 	@Override
@@ -245,12 +257,14 @@ public class TerritoryDecorator extends domain.Territory {
 
 	@Override
 	public void setNumAntiMissiles(int numAntiMissiles) {
-		decoratedTerritory.setNumAntiMissiles(numAntiMissiles);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setNumAntiMissiles(numAntiMissiles);
 	}
 
 	@Override
 	public void setOwner(String owner) {
-		decoratedTerritory.setOwner(owner);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setOwner(owner);
 	}
 
 	@Override
@@ -263,7 +277,8 @@ public class TerritoryDecorator extends domain.Territory {
 	}
 
 	public void setId(int id) {
-		decoratedTerritory.setIdTerritory(id);
+		if (decoratedTerritory != null)
+			decoratedTerritory.setIdTerritory(id);
 	}
 
 	public String getName() {
@@ -280,7 +295,8 @@ public class TerritoryDecorator extends domain.Territory {
 	}
 
 	public void setPlayer(Player p) {
-		decoratedTerritory.setOwner(p.getName());
+		if (decoratedTerritory != null)
+			decoratedTerritory.setOwner(p.getName());
 	}
 
 	public int getPrice() {
@@ -295,4 +311,19 @@ public class TerritoryDecorator extends domain.Territory {
 		return adjlist;
 	}
 
+	private Object cloneTerritory() {
+		return new Territory(decoratedTerritory.getIdTerritory(),
+			decoratedTerritory.getContinent(), decoratedTerritory.getOwner(),
+			decoratedTerritory.getNumSoldiers(),
+			decoratedTerritory.getNumCannons(),
+			decoratedTerritory.getNumMissiles(),
+			decoratedTerritory.getNumICBMs(),
+			decoratedTerritory.getNumAntiMissiles());
+	}
+
+	@Override
+	public Object clone() {
+		return new TerritoryDecorator((Territory) this.cloneTerritory(), map,
+			playerList);
+	}
 }

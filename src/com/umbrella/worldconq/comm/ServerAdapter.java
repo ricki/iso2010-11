@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.umbrella.worldconq.domain.Attack;
 import com.umbrella.worldconq.domain.Session;
 import communications.IServer;
 
