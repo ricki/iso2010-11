@@ -1,12 +1,12 @@
 package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
+import com.umbrella.worldconq.ui.GameEventListener;
 import communications.IClient.TimeType;
 
 import domain.Arsenal;
@@ -22,7 +22,7 @@ public class GameEngine implements ClientCallback {
 	private final Session session;
 	private final ServerAdapter adapter;
 	private final GameEventListener gameListener;
-	private final Attack mCurrentAttack;
+	private Attack mCurrentAttack;
 
 	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) {
 		mCurrentAttack = null;
@@ -41,9 +41,11 @@ public class GameEngine implements ClientCallback {
 		final ArrayList<TerritoryDecorator> mMapList = new ArrayList<TerritoryDecorator>();
 		final ArrayList<Territory> map = game.getMap();
 
-		for (final Iterator<Territory> iterator = map.iterator(); iterator.hasNext();)
-			mMapList.add(new TerritoryDecorator(iterator.next(), mMapListModel,
+		for (final Territory t : map) {
+			if (t == null) System.out.println("HOSTIA PUTA");
+			mMapList.add(new TerritoryDecorator(t, mMapListModel,
 				mPlayerListModel));
+		}
 
 		mMapListModel.setData(mMapList);
 
@@ -98,20 +100,19 @@ public class GameEngine implements ClientCallback {
 					if (srcTerritory.getAdjacentTerritories().contains(
 						dstTerritory)) {
 						if (soldiers <= srcTerritory.getNumSoldiers()
-								&& cannons <= srcTerritory.getNumShots()
+								&& cannons <= srcTerritory.getNumTotalCannons()
 								&& missiles <= srcTerritory.getNumMissiles()
 								&& icbm <= srcTerritory.getNumICBMs()) {
 
 							final Arsenal arsenal = new Arsenal(soldiers,
 								cannons, missiles, icbm);
 
-							adapter.attackTerritory(session, mGame,
-								srcTerritory.getDecoratedTerritory(),
-								dstTerritory.getDecoratedTerritory(), arsenal);
-
-							mCurrentAttack = new Attack(arsenal,
+							final Attack att = new Attack(arsenal,
 								(TerritoryDecorator) srcTerritory.clone(),
 								(TerritoryDecorator) dstTerritory.clone());
+							adapter.attackTerritory(session, mGame, att);
+
+							mCurrentAttack = att;
 						} else
 							throw new InvalidArgumentException();
 					} else
@@ -136,10 +137,10 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void moveUnits(int src, int dst, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
-		
-		final TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
+
+		TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
 			src);
-		final TerritoryDecorator dstTerritory =  this.getMapListModel().getTerritoryAt(
+		TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
 			dst);
 
 		if (srcTerritory.getOwner().equals(session.getUser())) {
@@ -151,32 +152,42 @@ public class GameEngine implements ClientCallback {
 					if (soldiers <= srcTerritory.getNumSoldiers()
 							&& cannons <= srcTerritory.getNumCannons().length
 							&& missiles <= srcTerritory.getNumMissiles()
-							&& ICMB <= srcTerritory.getNumICBMs() 
+							&& ICMB <= srcTerritory.getNumICBMs()
 							&& antimissiles <= srcTerritory.getNumAntiMissiles()) {
 
 						srcTerritory = (TerritoryDecorator) srcTerritory.clone();
-						
-						srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()-soldiers);
+
+						srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
+								- soldiers);
 						//srcTerritory.setNumCannonss(srcTerritory.getNumCannons()-cannons);
-						srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()-missiles);
-						srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()-ICMB);
-						srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()-antimissiles);
-						
+						srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()
+								- missiles);
+						srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()
+								- ICMB);
+						srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()
+								- antimissiles);
+
 						dstTerritory = (TerritoryDecorator) dstTerritory.clone();
-						dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()+soldiers);
+						dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
+								+ soldiers);
 						//dstTerritory.setNumCannonss(dstTerritory.getNumCannons()+cannons);
-						dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()+missiles);
-						dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()+ICMB);
-						dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()+antimissiles);
-						
-						final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>(); 
+						dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
+								+ missiles);
+						dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()
+								+ ICMB);
+						dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
+								+ antimissiles);
+
+						final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
 						territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
 						territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
-						updateGame(session, mGame, new ArrayList<Player>(), territoriesUpdate, EventType.UnknownEvent);
-					
+						adapter.updateGame(session, mGame,
+							new ArrayList<Player>(), territoriesUpdate,
+							EventType.UnknownEvent);
+
 						mMapListModel.updateTerritory(srcTerritory);
 						mMapListModel.updateTerritory(dstTerritory);
-						
+
 					} else
 						throw new InvalidArgumentException();
 				} else
@@ -185,12 +196,6 @@ public class GameEngine implements ClientCallback {
 				throw new InvalidArgumentException();
 		} else
 			throw new InvalidArgumentException();
-	}
-}
-
-		
-		
-		
 	}
 
 	public void buyTerritory(int territory) {
@@ -223,7 +228,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	@Override
-	public void timeExpired(TimeType whatTime) {
+	public void timeExpired(UUID game, TimeType whatTime) {
+		// TODO Auto-generated method stub
 
 	}
 }

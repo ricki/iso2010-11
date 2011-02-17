@@ -6,6 +6,7 @@ import java.util.Calendar;
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Game;
 import domain.GameInfo;
@@ -20,8 +21,8 @@ public class GameManager {
 	private GameListModel mOpenGameListModel;
 	private GameEngine mGameEngine;
 
-	public GameManager(UserManager usrMgr, ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
-		this.usrMgr = usrMgr;
+	public GameManager(ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
+		usrMgr = null;
 		this.srvAdapter = srvAdapter;
 		this.cltAdapter = cltAdapter;
 		this.setCurrentGameListModel(new GameListModel());
@@ -96,14 +97,14 @@ public class GameManager {
 		final Session session = usrMgr.getSession();
 		final Game game = srvAdapter.playGame(session, gameUuid);
 		mGameEngine = new GameEngine(game, session, srvAdapter, gameListener);
-		cltAdapter.setGameEngine(mGameEngine);
+		cltAdapter.setCallback(mGameEngine);
 	}
 
 	public GameEngine getGameEngine() {
 		return mGameEngine;
 	}
 
-	public void diconnectFromGame() throws Exception {
+	public void disconnectFromGame() throws Exception {
 		srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
 		mGameEngine = null;
 	}

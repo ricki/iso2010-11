@@ -1,6 +1,5 @@
 package com.umbrella.worldconq.stubserver;
 
-import java.net.InetAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -11,7 +10,6 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Session;
-import com.umbrella.worldconq.domain.TerritoryData;
 import communications.IServer;
 
 import domain.Arsenal;
@@ -114,12 +112,9 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
 
-			mapList.remove(TerritoryData.getIndex(Territory.Continent.Europe, 1));
-			mapList.add(TerritoryData.getIndex(Territory.Continent.Europe, 1),
-				new Territory(1, Territory.Continent.Europe,
+			mapList.set(0, new Territory(1, Territory.Continent.Europe,
 				playerList.get(1).getName(), 20, p, 1, 0, 1));
-			mapList.remove(TerritoryData.getIndex(t));
-			mapList.add(TerritoryData.getIndex(t), t);
+			mapList.set(3, t);
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
 		}
@@ -196,7 +191,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			testGameList.add(testGame);
 		}
 
-		miIP = (InetAddress.getLocalHost()).toString();
+		miIP = "localhost";//InetAddress.getLocalHost().getHostAddress();
 		System.out.println("Conexion establecida por:");
 		System.out.println("IP=" + miIP + ", y puerto=" + puerto);
 

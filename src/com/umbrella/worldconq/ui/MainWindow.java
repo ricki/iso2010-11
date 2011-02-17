@@ -24,7 +24,7 @@ import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.domain.GameManager;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements GameEventListener {
 
 	private static final long serialVersionUID = -5107198177153703399L;
 
@@ -72,7 +72,7 @@ public class MainWindow extends JFrame {
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 
 		final JButton connectGameButton = new JButton("Conectarse a partida");
-		connectGameButton.addMouseListener(new ConnectGameMouseAdapter());
+		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		mGameListToolBar.add(connectGameButton);
 
 		mGameListToolBar.add(joinGameButton);
@@ -256,6 +256,12 @@ public class MainWindow extends JFrame {
 	}
 
 	private class ConnectGameMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public ConnectGameMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			final int gameSelected = mCurrentList.getSelectedRow();
@@ -265,7 +271,7 @@ public class MainWindow extends JFrame {
 					"No ha seleccionado ninguna partida");
 			} else {
 				try {
-					gameMgr.connectToGame(gameSelected);
+					gameMgr.connectToGame(gameSelected, win);
 					MainWindow.this.setupGameGUI();
 				} catch (final Exception e) {
 					e.printStackTrace();
