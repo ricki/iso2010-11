@@ -217,28 +217,28 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 		icbmsCombo = new JComboBox();
 		antiMissilesCombo = new JComboBox();
 
-		//Creo el combo de soldados		
-		for (int i = 0; i <= money; i++) {
+		//Creo el combo de soldados
+		for (int i = 0; i <= (money / 100); i++) {
 			soldiersCombo.addItem(i);
 		}
 
 		//Creo el combo de cañones		
-		for (int i = 0; i <= money; i++) {
+		for (int i = 0; i <= (money / 300); i++) {
 			cannonsCombo.addItem(i);
 		}
 
 		//Creo el combo de misiles		
-		for (int i = 0; i <= money; i++) {
+		for (int i = 0; i <= (money / 500); i++) {
 			missilesCombo.addItem(i);
 		}
 
 		//Creo el combo de icbms		
-		for (int i = 0; i <= money; i++) {
+		for (int i = 0; i <= (money / 800); i++) {
 			icbmsCombo.addItem(i);
 		}
 
-		//Creo el combo de soldados		
-		for (int i = 0; i <= money; i++) {
+		//Creo el combo de antimisiles		
+		for (int i = 0; i <= (money / 400); i++) {
 			antiMissilesCombo.addItem(i);
 		}
 	}
