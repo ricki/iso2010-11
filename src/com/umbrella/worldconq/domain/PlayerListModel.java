@@ -14,17 +14,35 @@ public class PlayerListModel extends AbstractTableModel {
 			"Jugador", "Turno", "Online"
 	};
 
-	private final ArrayList<Player> mPlayerList;
+	private final ArrayList<Player> data;
+	private Player selfPlayer;
 
-	public PlayerListModel() {
+	public PlayerListModel(Player selfPlayer) {
 		super();
-		mPlayerList = new ArrayList<Player>();
+		this.selfPlayer = selfPlayer;
+		data = new ArrayList<Player>();
+	}
+
+	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) {
+		super();
+		this.selfPlayer = selfPlayer;
+		this.data = new ArrayList<Player>();
+		this.data.addAll(data);
+		this.fireTableDataChanged();
 	}
 
 	public void setData(ArrayList<Player> data) {
-		mPlayerList.clear();
-		mPlayerList.addAll(data);
+		this.data.clear();
+		this.data.addAll(data);
 		this.fireTableDataChanged();
+	}
+
+	public void updatePlayer(Player player) {
+		selfPlayer = player;
+	}
+
+	public Player getSelfPlayer() {
+		return selfPlayer;
 	}
 
 	@Override
@@ -39,7 +57,7 @@ public class PlayerListModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return mPlayerList.size();
+		return data.size();
 	}
 
 	@Override
@@ -48,26 +66,32 @@ public class PlayerListModel extends AbstractTableModel {
 
 		switch (columnIndex) {
 		case 0:
-			return mPlayerList.get(rowIndex).getName();
+			return data.get(rowIndex).getName();
 		case 1:
-			return mPlayerList.get(rowIndex).isHasTurn();
+			return data.get(rowIndex).isHasTurn();
 		case 2:
-			return mPlayerList.get(rowIndex).isOnline();
+			return data.get(rowIndex).isOnline();
 		default:
 			return null;
 		}
 	}
 
+	public Player getActivePlayer() {
+		for (final Player p : data) {
+			if (p.isHasTurn()) return p;
+		}
+		return null;
+	}
+
 	public Player getPlayerAt(int index) {
-		return mPlayerList.get(index);
+		return data.get(index);
 	}
 
 	public Player getPlayerByName(String name) {
-		for (final Player p : mPlayerList) {
+		for (final Player p : data) {
 			if (p.getName().equals(name)) return p;
 		}
 		return null;
 	}
 
-	// falta poner public void updatePlayer(Player player){}
 }
