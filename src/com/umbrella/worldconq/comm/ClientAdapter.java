@@ -34,10 +34,9 @@ public class ClientAdapter implements IClient {
 		return mClientCallback;
 	}
 
-	public void checkValidGame(UUID game) throws RemoteException {
-		if (game == null) {
+	private void checkValidGame(UUID game) throws RemoteException {
+		if (mClientCallback == null || !mClientCallback.getId().equals(game))
 			throw new RemoteException();
-		} else if (game != mClientCallback.getId()) throw new RemoteException();
 	}
 
 	@Override

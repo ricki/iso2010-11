@@ -71,6 +71,10 @@ public class ServerAdapter {
 		return mProxy != null;
 	}
 
+	private void checkConnection() throws Exception {
+		if (!this.isConnected()) throw new RemoteException();
+	}
+
 	public UUID createSession(String login, String passwd) throws Exception {
 		this.checkConnection();
 		return mProxy.loginUser(login, passwd, null);
@@ -141,7 +145,4 @@ public class ServerAdapter {
 			playerUpdate, territoryUpdate, event);
 	}
 
-	public void checkConnection() throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
-	}
 }
