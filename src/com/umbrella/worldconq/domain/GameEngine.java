@@ -117,12 +117,22 @@ public class GameEngine implements ClientCallback {
 		}
 	}
 
-	public void acceptAttack() {
-
+	public void acceptAttack() throws Exception {
+		if (mCurrentAttack == null)
+			throw new Exception();
+		adapter.acceptAttack(session, mGame);
+		mCurrentAttack = null;
 	}
 
 	public void requestNegotiation(int money, int soldiers) throws Exception {
-
+		if (mCurrentAttack == null)
+			throw new Exception();
+		if (mPlayerListModel.getSelfPlayer().getMoney() >= money
+				&& mCurrentAttack.getDestination().getNumSoldiers() >= soldiers) {
+			adapter.requestNegotiation(session, mGame, money, soldiers);
+			mCurrentAttack = null;
+		} else
+			throw new InvalidArgumentException();
 	}
 
 	public void buyUnits(int Territory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
