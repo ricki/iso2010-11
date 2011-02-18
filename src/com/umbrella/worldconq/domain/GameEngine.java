@@ -204,8 +204,36 @@ public class GameEngine implements ClientCallback {
 			throw new InvalidArgumentException();
 	}
 
-	public void buyTerritory(int territory) {
+	public void buyTerritory(int territory) throws Exception {
+		if (mPlayerListModel.getSelfPlayer().getMoney() >= mMapListModel.getTerritoryAt(
+			territory).getPrice()
+				&& mMapListModel.getTerritoryAt(territory).getPlayer() == null) {
 
+			final Player playerUpdate = new Player(
+				mPlayerListModel.getSelfPlayer().getName(),
+				mPlayerListModel.getSelfPlayer().getMoney()
+						- mMapListModel.getTerritoryAt(
+							territory).getPrice(),
+				mPlayerListModel.getSelfPlayer().isOnline(),
+				mPlayerListModel.getSelfPlayer().isHasTurn(),
+				mPlayerListModel.getSelfPlayer().getSpies());
+
+			final ArrayList<Player> playerUpdates = new ArrayList<Player>();
+			playerUpdates.add(playerUpdate);
+
+			final TerritoryDecorator territoryUpdate = (TerritoryDecorator) mMapListModel.getTerritoryAt(
+				territory).clone();
+
+			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+			territoriesUpdate.add(territoryUpdate.getDecoratedTerritory());
+
+			adapter.updateGame(session, mGame, playerUpdates,
+				territoriesUpdate, EventType.BuyTerritoryEvent);
+
+			mPlayerListModel.updatePlayer(playerUpdate);
+			mMapListModel.updateTerritory(territoryUpdate);
+		} else
+			throw new InvalidArgumentException();
 	}
 
 	@Override
