@@ -42,7 +42,6 @@ public class GameEngine implements ClientCallback {
 		final ArrayList<Territory> map = game.getMap();
 
 		for (final Territory t : map) {
-			if (t == null) System.out.println("HOSTIA PUTA");
 			mMapList.add(new TerritoryDecorator(t, mMapListModel,
 				mPlayerListModel));
 		}
@@ -206,6 +205,20 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void buyTerritory(int territory) throws Exception {
+
+		final ArrayList<TerritoryDecorator> AdjacentTerritories = mMapListModel.getTerritoryAt(
+			territory).getAdjacentTerritories();
+
+		TerritoryDecorator myTerritory = null;
+
+		for (int i = 0; i < AdjacentTerritories.size() && myTerritory != null; i++) {
+			if (AdjacentTerritories.get(i).getOwner().equals(
+				mPlayerListModel.getSelfPlayer().getName()))
+					myTerritory = AdjacentTerritories.get(i);
+		}
+		if (myTerritory == null)
+			throw new InvalidArgumentException();
+
 		if (mPlayerListModel.getSelfPlayer().getMoney() >= mMapListModel.getTerritoryAt(
 			territory).getPrice()
 				&& mMapListModel.getTerritoryAt(territory).getPlayer() == null) {
