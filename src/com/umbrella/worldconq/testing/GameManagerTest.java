@@ -359,6 +359,47 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
+	// los parametros de joinGame se consideran invalidos: 
+	// 		gameSelected: 
+	//	 		limite bajo: -1; 
+	// 			limite alto: tope+1;
+
+	public void testGameManagerConnectGame1() {
+		System.out.println("TestCase::testGameManagerConnectGame1");
+		try {
+			usrMgr.getGameManager().updateGameList();
+			usrMgr.getGameManager().connectToGame(-1, null);
+		} catch (final InvalidArgumentException e) {
+			System.out.println("InvalidArgumentException fuera de rango por debajo");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testGameManagerConnectGame2() {
+		System.out.println("TestCase::testGameManagerConnectGame2");
+		try {
+			usrMgr.getGameManager().updateGameList();
+			usrMgr.getGameManager().connectToGame(0, null);
+		} catch (final InvalidArgumentException e) {
+			fail("InvalidArgumentException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testGameManagerConnectGame3() {
+		System.out.println("TestCase::testGameManagerConnectGame3");
+		try {
+			usrMgr.getGameManager().updateGameList();
+			usrMgr.getGameManager().connectToGame(1, null);
+		} catch (final InvalidArgumentException e) {
+			System.out.println("InvalidArgumentException fuera de rango por arriba");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
 	@Override
 	@After
 	public void tearDown() throws Exception {
