@@ -211,7 +211,8 @@ public class GameEngine implements ClientCallback {
 				dst, mMapListModel, mPlayerListModel);
 			final Attack att = new Attack(arsenal, territoryOrigin,
 				territoryDestination);
-			adapter.attackTerritory(session, mGame, att);
+
+			gameListener.territoryUnderAttack(src, dst);
 
 			mCurrentAttack = att;
 		} else {
@@ -221,46 +222,27 @@ public class GameEngine implements ClientCallback {
 
 	@Override
 	public void negotiationRequested(int money, int soldiers) throws Exception {
-		adapter.requestNegotiation(session, mGame, money, soldiers);
+		gameListener.negotiationRequested(money, soldiers);
 	}
 
 	@Override
 	public void resolveAttack() throws Exception {
 		mCurrentAttack.resolve();
 
-		//Modificamos el usuario y territorio propio, creando un clon por si falla el update mantener los datos
-		final Player playerUpdateOrigin = new Player(
-			mCurrentAttack.getOrigin().getPlayer().getName(),
-			mCurrentAttack.getOrigin().getPlayer().getMoney(),
-			mCurrentAttack.getOrigin().getPlayer().isOnline(),
-			mCurrentAttack.getOrigin().getPlayer().isHasTurn(),
-			mCurrentAttack.getOrigin().getPlayer().getSpies());
-
+		//Modificamos el territorio propio, creando un clon por si falla el update mantener los datos
 		final TerritoryDecorator territoryUpdateOrigin = (TerritoryDecorator) mCurrentAttack.getOrigin().clone();
 
-		//Modificamos el usuario y territorio contrario, creando un clon por si falla el update mantener los datos
-		final Player playerUpdateDestination = new Player(
-			mCurrentAttack.getDestination().getPlayer().getName(),
-			mCurrentAttack.getDestination().getPlayer().getMoney(),
-			mCurrentAttack.getDestination().getPlayer().isOnline(),
-			mCurrentAttack.getDestination().getPlayer().isHasTurn(),
-			mCurrentAttack.getDestination().getPlayer().getSpies());
-
+		//Modificamos el territorio contrario, creando un clon por si falla el update mantener los datos
 		final TerritoryDecorator territoryUpdateDestination = (TerritoryDecorator) mCurrentAttack.getOrigin().clone();
-
-		final ArrayList<Player> playerUpdates = new ArrayList<Player>();
-		playerUpdates.add(playerUpdateOrigin);
-		playerUpdates.add(playerUpdateDestination);
 
 		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
 		territoriesUpdate.add(territoryUpdateOrigin.getDecoratedTerritory());
 		territoriesUpdate.add(territoryUpdateDestination.getDecoratedTerritory());
 
-		adapter.updateGame(session, mGame, playerUpdates, territoriesUpdate,
+		adapter.updateGame(session, mGame, mGame.getPlayers(),
+			territoriesUpdate,
 			EventType.AttackEvent);
 
-		mPlayerListModel.updatePlayer(playerUpdateOrigin);
-		mPlayerListModel.updatePlayer(playerUpdateDestination);
 		mMapListModel.updateTerritory(territoryUpdateOrigin);
 		mMapListModel.updateTerritory(territoryUpdateDestination);
 		mCurrentAttack = null;
