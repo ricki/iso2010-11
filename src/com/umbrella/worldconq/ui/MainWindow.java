@@ -110,6 +110,13 @@ public class MainWindow extends JFrame implements GameEventListener {
 		buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(this));
 		exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
 
+		//Deshabilito los botones
+		attackButton.setEnabled(false);
+		moveUnitsButton.setEnabled(false);
+		sendSpyButton.setEnabled(false);
+		buyUnitsButton.setEnabled(false);
+		buyTerritoryButton.setEnabled(false);
+
 		//Creo la toolbar
 		mPlayToolBar = new JToolBar();
 
@@ -343,9 +350,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Atacando...");
-			//Completar
-			//LaunchAttackDialog lad = new LaunchAttackDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-			//lad.setVisible(true);			
+			if (attackButton.isEnabled()) {
+				//Completar
+				//LaunchAttackDialog lad = new LaunchAttackDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+				//lad.setVisible(true);		
+			}
 		}
 	}
 
@@ -360,9 +369,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Moviendo unidades...");
-			//Completar
-			//MoveUnitsDialog mud = new MoveUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-			//mud.setVisible(true);			
+			if (moveUnitsButton.isEnabled()) {
+				//Completar
+				//MoveUnitsDialog mud = new MoveUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+				//mud.setVisible(true);	
+			}
 		}
 	}
 
@@ -377,9 +388,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Enviando un espía...");
-			//Completar
-			//SendSpyDialog sed = new SendSpyDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-			//sed.setVisible(true);			
+			if (sendSpyButton.isEnabled()) {
+				//Completar
+				//SendSpyDialog sed = new SendSpyDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+				//sed.setVisible(true);		
+			}
 		}
 	}
 
@@ -394,9 +407,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Comprando refuerzos...");
-			//Completar
-			//BuyUnitsDialog bud = new BuyUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-			//bud.setVisible(true);			
+			if (buyUnitsButton.isEnabled()) {
+				//Completar
+				//BuyUnitsDialog bud = new BuyUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+				//bud.setVisible(true);	
+			}
 		}
 	}
 
@@ -411,9 +426,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Comprando un territorio...");
-			//Completar
-			//BuyTerritoryDialog btd = new BuyTerritoryDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-			//btd.setVisible(true);			
+			if (buyTerritoryButton.isEnabled()) {
+				//Completar
+				//BuyTerritoryDialog btd = new BuyTerritoryDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+				//btd.setVisible(true);			
+			}
 		}
 	}
 
