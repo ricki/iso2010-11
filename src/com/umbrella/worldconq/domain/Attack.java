@@ -24,4 +24,7 @@ public class Attack {
 	public Arsenal getArsenal() {
 		return arsenal;
 	}
+
+	public void resolve() {
+	}
 }

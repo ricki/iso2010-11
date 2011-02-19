@@ -117,12 +117,22 @@ public class GameEngine implements ClientCallback {
 		}
 	}
 
-	public void acceptAttack() {
-
+	public void acceptAttack() throws Exception {
+		if (mCurrentAttack == null)
+			throw new Exception();
+		adapter.acceptAttack(session, mGame);
+		mCurrentAttack = null;
 	}
 
 	public void requestNegotiation(int money, int soldiers) throws Exception {
-
+		if (mCurrentAttack == null)
+			throw new Exception();
+		if (mPlayerListModel.getSelfPlayer().getMoney() >= money
+				&& mCurrentAttack.getDestination().getNumSoldiers() >= soldiers) {
+			adapter.requestNegotiation(session, mGame, money, soldiers);
+			mCurrentAttack = null;
+		} else
+			throw new InvalidArgumentException();
 	}
 
 	public void buyUnits(int Territory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
@@ -195,8 +205,36 @@ public class GameEngine implements ClientCallback {
 			throw new InvalidArgumentException();
 	}
 
-	public void buyTerritory(int territory) {
+	public void buyTerritory(int territory) throws Exception {
+		if (mPlayerListModel.getSelfPlayer().getMoney() >= mMapListModel.getTerritoryAt(
+			territory).getPrice()
+				&& mMapListModel.getTerritoryAt(territory).getPlayer() == null) {
 
+			final Player playerUpdate = new Player(
+				mPlayerListModel.getSelfPlayer().getName(),
+				mPlayerListModel.getSelfPlayer().getMoney()
+						- mMapListModel.getTerritoryAt(
+							territory).getPrice(),
+				mPlayerListModel.getSelfPlayer().isOnline(),
+				mPlayerListModel.getSelfPlayer().isHasTurn(),
+				mPlayerListModel.getSelfPlayer().getSpies());
+
+			final ArrayList<Player> playerUpdates = new ArrayList<Player>();
+			playerUpdates.add(playerUpdate);
+
+			final TerritoryDecorator territoryUpdate = (TerritoryDecorator) mMapListModel.getTerritoryAt(
+				territory).clone();
+
+			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+			territoriesUpdate.add(territoryUpdate.getDecoratedTerritory());
+
+			adapter.updateGame(session, mGame, playerUpdates,
+				territoriesUpdate, EventType.BuyTerritoryEvent);
+
+			mPlayerListModel.updatePlayer(playerUpdate);
+			mMapListModel.updateTerritory(territoryUpdate);
+		} else
+			throw new InvalidArgumentException();
 	}
 
 	@Override
