@@ -38,6 +38,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
 
+	//Botones de la barra mPlayToolbar
+	private JButton moveUnitsButton; //Botón para mover unidades de un territorio a otro
+	private JButton attackButton; //Botón para atacar un territorio
+	private JButton buyUnitsButton; //Botón para comprar refuerzos
+	private JButton sendSpyButton; //Botón para enviar un espía a un territorio
+	private JButton buyTerritoryButton; //Botón para comprar territorios
+	private JButton exitGameButton; //Botón para desconectarse de una partida
+	private JButton logoutButton; //Botón para quitar y salir del juego (cerrar sesión)
+
 	public MainWindow(GameManager gameMgr) {
 		super();
 		this.gameMgr = gameMgr;
@@ -58,7 +67,6 @@ public class MainWindow extends JFrame implements GameEventListener {
 		this.setSize(800, 500);
 
 		mGameListToolBar = new JToolBar();
-		mPlayToolBar = new JToolBar();
 
 		final JButton updateListButton = new JButton("Actualizar lista");
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
@@ -70,22 +78,53 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 		final JButton joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
+		mGameListToolBar.add(joinGameButton);
 
 		final JButton connectGameButton = new JButton("Conectarse a partida");
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		mGameListToolBar.add(connectGameButton);
 
-		mGameListToolBar.add(joinGameButton);
+		logoutButton = new JButton("Cerrar sesión");
+		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
+		mGameListToolBar.add(logoutButton);
+
 		this.setupListGUI();
+	}
+
+	//Método que genera los botones que llevará la barra 
+	//de herramientas mPlayToolbar cuando se está jugando
+	public void generateButtons() {
+		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
+		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
+		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
+		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
+		buyTerritoryButton = new JButton(
+			"Comprar territorio"); //Botón para comprar territorios
+		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
+
+		//Añado un capturador de eventos a cada botón
+		attackButton.addMouseListener(new AttackMouseAdapter(this));
+		moveUnitsButton.addMouseListener(new MoveUnitsMouseAdapter(this));
+		sendSpyButton.addMouseListener(new SendSpyMouseAdapter(this));
+		buyUnitsButton.addMouseListener(new BuyUnitsMouseAdapter(this));
+		buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(this));
+		exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
+
+		//Creo la toolbar
+		mPlayToolBar = new JToolBar();
+
+		mPlayToolBar.add(attackButton);
+		mPlayToolBar.add(moveUnitsButton);
+		mPlayToolBar.add(sendSpyButton);
+		mPlayToolBar.add(buyUnitsButton);
+		mPlayToolBar.add(buyTerritoryButton);
+		mPlayToolBar.add(exitGameButton);
 	}
 
 	public void setupListGUI() {
 		this.getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
-		// FIXME Esto no funciona.
-		// getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
-		mPlayToolBar.setVisible(true);
 		this.getGameListPanel().setVisible(true);
 	}
 
@@ -96,6 +135,8 @@ public class MainWindow extends JFrame implements GameEventListener {
 		// mostramos el mapa y lo demas
 		final MapView mv = new MapView(
 			gameMgr.getGameEngine().getMapListModel());
+
+		this.generateButtons();
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
 		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
@@ -133,9 +174,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel, BoxLayout.Y_AXIS));
-
 			mv.setFondo();
-			//			mGamePanel.addMouseListener(new MapMouseAdapter(mv));
 			mGamePanel.add(mv);
 			//añadimos el panel para la informacion de la partida
 			mv.setActionGame(new JEditorPane());
@@ -152,10 +191,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mGameInfoPanel = new JPanel();
 			mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
 				BoxLayout.Y_AXIS));
-
 			mv.setInfoPlayer(new JEditorPane());
-			//mv.setListPlayer(new JEditorPane());
-			//final JScrollPane listPlayerSroll = new JScrollPane(mv.getListPlayer());
 			final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
 				gameMgr.getGameEngine().getPlayerListModel()));
 			listPlayerSroll.setPreferredSize(new Dimension(150, 300));
@@ -279,15 +315,122 @@ public class MainWindow extends JFrame implements GameEventListener {
 			}
 		}
 	}
-	/*
-	 * private class MapMouseAdapter extends MouseAdapter { private MapView mv =
-	 * null;
-	 * 
-	 * public MapMouseAdapter(MapView mv) { super(); this.mv = mv; }
-	 * 
-	 * @Override public void mouseClicked(MouseEvent evt) {
-	 * mv.getSelectedRow(evt); mv.repaint(); }
-	 * 
-	 * }
-	 */
+
+	//Mini clase privada para dar funcionalidad al botón logoutButton
+	private class LogoutMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public LogoutMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Haciendo logout...");
+			//Aquí todo lo de guardar los datos, las partidas y demás
+			MainWindow.this.dispose();
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón attackButton
+	private class AttackMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public AttackMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Atacando...");
+			//Completar
+			//LaunchAttackDialog lad = new LaunchAttackDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//lad.setVisible(true);			
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón moveUnitsButton
+	private class MoveUnitsMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public MoveUnitsMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Moviendo unidades...");
+			//Completar
+			//MoveUnitsDialog mud = new MoveUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//mud.setVisible(true);			
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón sendSpyButton
+	private class SendSpyMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public SendSpyMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Enviando un espía...");
+			//Completar
+			//SendSpyDialog sed = new SendSpyDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//sed.setVisible(true);			
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón buyUnitsButton
+	private class BuyUnitsMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public BuyUnitsMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Comprando refuerzos...");
+			//Completar
+			//BuyUnitsDialog bud = new BuyUnitsDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//bud.setVisible(true);			
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón buyTerritoryButton
+	private class BuyTerritoryMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public BuyTerritoryMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Comprando un territorio...");
+			//Completar
+			//BuyTerritoryDialog btd = new BuyTerritoryDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//btd.setVisible(true);			
+		}
+	}
+
+	//Mini clase privada para dar funcionalidad al botón exitGameButton
+	private class ExitGameMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public ExitGameMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			System.out.println("Desconectándose de la partida...");
+			//Completar
+			//ExitGameDialog egd = new ExitGameDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
+			//egd.setVisible(true);			
+		}
+	}
 }
