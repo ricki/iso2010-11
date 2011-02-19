@@ -166,6 +166,7 @@ public class GameEngine implements ClientCallback {
 								- antimissiles);
 
 			dstTerritory = (TerritoryDecorator) dstTerritory.clone();
+
 			dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
 								+ soldiers);
 
