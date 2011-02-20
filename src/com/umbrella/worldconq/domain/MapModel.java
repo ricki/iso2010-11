@@ -36,7 +36,7 @@ public class MapModel extends AbstractTableModel {
 	}
 
 	public void updateTerritory(TerritoryDecorator territory) {
-		data.set(territory.getId(), territory);
+		data.set(territory.getIdTerritory(), territory);
 	}
 
 	public TerritoryDecorator getTerritoryAt(int index) {

@@ -31,129 +31,129 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 					1, 2, 3, 6
 			},
 						/* 2-Iceland */{
-					0, 29, 3
+								0, 29, 3
 			},
 						/* 3-Europa del Norte */{
-					0, 3, 6, 4, 5
+								0, 3, 6, 4, 5
 			},
 						/* 4-Escandinavia */{
-					0, 1, 2, 5
+								0, 1, 2, 5
 			},
 						/* 5-Europa del Sur */{
-					2, 5, 6, 21, 23
+								2, 5, 6, 21, 23
 			},
 						/* 6-Ucrania */{
-					2, 3, 4, 7, 13, 17
+								2, 3, 4, 7, 13, 17
 			},
 						/* 7-Europa Occidental */{
-					0, 2, 4, 23
+								0, 2, 4, 23
 			},
 
 			/* 8-Afghanistan */{
 					8, 9, 5, 13, 17
 			},
 						/* 9-China */{
-					7, 9, 14, 15, 16, 17
+								7, 9, 14, 15, 16, 17
 			},
 						/* 10-India */{
-					7, 8, 13, 15
+								7, 8, 13, 15
 			},
 						/* 11-Irkutsk */{
-					16, 14, 12, 18
+								16, 14, 12, 18
 			},
 						/* 12-Japón */{
-					14, 12
+								14, 12
 			},
 						/* 13-Kamchatka */{
-					10, 11, 14, 18, 25
+								10, 11, 14, 18, 25
 			},
 						/* 14-Oriente Medio */{
-					7, 9, 4, 5, 21
+								7, 9, 4, 5, 21
 			},
 						/* 15-Mongolia */{
-					8, 10, 11, 12, 16
+								8, 10, 11, 12, 16
 			},
 						/* 16-Siam */{
-					8, 9, 39
+								8, 9, 39
 			},
 						/* 17-Siberia */{
-					8, 10, 14, 17, 18
+								8, 10, 14, 17, 18
 			},
 						/* 18-Ural */{
-					7, 8, 16, 5
+								7, 8, 16, 5
 			},
 						/* 19-Yakutsk */{
-					12, 16, 10
+								12, 16, 10
 			},
 						/* 20-Congo */{
-					20, 23, 24
+								20, 23, 24
 			},
 						/* 21-África Oriental */{
-					19, 21, 22, 23, 24
+								19, 21, 22, 23, 24
 			},
 						/* 22-Egipto */{
-					20, 23, 13,
-					4
+								20, 23, 13,
+								4
 			},
 						/* 23-Madagascar */{
-					20, 24
+								20, 24
 			},
 						/* 24-África del Norte */{
-					19, 21, 20, 4, 6
+								19, 21, 20, 4, 6
 			},
 						/* 25-Sudáfrica */{
-					19, 20, 22
+								19, 20, 22
 			},
 						/* 26-Alaska */{
-					12, 30, 31, 33
+								12, 30, 31, 33
 			},
 						/* 27-Alberta */{
-					25, 30, 31, 33
+								25, 30, 31, 33
 			},
 						/* 28-América Central */{
-					28, 33, 37
+								28, 33, 37
 			},
 						/* 29-Estados Unidos del Este */{
-					31, 32, 33, 27
+								31, 32, 33, 27
 			},
 						/* 30-Groenlandia */{
-					1, 30, 31, 32
+								1, 30, 31, 32
 			},
 						/* 31-Territorios del Noroeste */{
-					25, 26, 31, 29
+								25, 26, 31, 29
 			},
 						/* 32-Ontario */{
-					26, 29, 33, 30, 32, 28
+								26, 29, 33, 30, 32, 28
 			},
 						/* 33-Quebec */{
-					31, 29, 28
+								31, 29, 28
 			},
 						/* 34-Estados Unidos del Oeste */{
-					26, 31, 28, 27
+								26, 31, 28, 27
 			},
 						/* 35-Argentina */{
-					36, 35
+								36, 35
 			},
 						/* 36-Brasil */{
-					34, 36, 37
+								34, 36, 37
 			},
 						/* 37-Perú */{
-					34, 37, 35
+								34, 37, 35
 			},
 						/* 38-Venezuela */{
-					27, 35, 36
+								27, 35, 36
 			},
 						/* 39-Australia Oriental */{
-					40, 41
+								40, 41
 			},
 						/* 40-Indonesia */{
-					15, 40, 41
+								15, 40, 41
 			},
 						/* 41-Nueva Guinea */{
-					39, 41, 38
+								39, 41, 38
 			},
 						/* 42-Australia Occidental */{
-					38, 39, 40
+								38, 39, 40
 			}
 	};
 
@@ -272,15 +272,6 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		return decoratedTerritory.getOwner();
 	}
 
-	public int getId() {
-		return decoratedTerritory.getIdTerritory();
-	}
-
-	public void setId(int id) {
-		if (decoratedTerritory != null)
-			decoratedTerritory.setIdTerritory(id);
-	}
-
 	public String getName() {
 		return namelist[decoratedTerritory.getIdTerritory()];
 	}
@@ -305,7 +296,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	public ArrayList<TerritoryDecorator> getAdjacentTerritories() {
 		final ArrayList<TerritoryDecorator> adjlist = new ArrayList<TerritoryDecorator>();
-		for (final int i : adjgraph[this.getId()]) {
+		for (final int i : adjgraph[this.getIdTerritory()]) {
 			adjlist.add(map.getTerritoryAt(i));
 		}
 		return adjlist;
