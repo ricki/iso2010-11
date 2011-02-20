@@ -8,24 +8,18 @@ public class Attack {
 	private final Arsenal arsenal;
 	private final TerritoryDecorator src;
 	private final TerritoryDecorator dst;
-	private final int aCannons[];
+	private boolean resolved;
 
 	public Attack(Arsenal arsenal, TerritoryDecorator src, TerritoryDecorator dst) {
 		this.src = src;
 		this.dst = dst;
 		this.arsenal = arsenal;
 
-		final int srcCannons[] = src.getNumCannons();
-		int arsenalCannons = arsenal.getCannons();
+		resolved = false;
+	}
 
-		aCannons = new int[3];
-		aCannons[2] = arsenalCannons > srcCannons[2] ? srcCannons[2] : arsenalCannons;
-		arsenalCannons = arsenalCannons - aCannons[2];
-
-		aCannons[1] = arsenalCannons > srcCannons[1] ? srcCannons[1] : arsenalCannons;
-		arsenalCannons = arsenalCannons - aCannons[1];
-
-		aCannons[0] = arsenalCannons;
+	public boolean isResolved() {
+		return resolved;
 	}
 
 	public TerritoryDecorator getOrigin() {
@@ -41,9 +35,21 @@ public class Attack {
 	}
 
 	public void resolve() {
-
+		resolved = true;
 		int soldiers = dst.getNumSoldiers();
 		int antiMissiles = dst.getNumAntiMissiles();
+
+		final int srcCannons[] = src.getNumCannons();
+		int arsenalCannons = arsenal.getCannons();
+
+		final int aCannons[] = new int[3];
+		aCannons[2] = arsenalCannons > srcCannons[2] ? srcCannons[2] : arsenalCannons;
+		arsenalCannons = arsenalCannons - aCannons[2];
+
+		aCannons[1] = arsenalCannons > srcCannons[1] ? srcCannons[1] : arsenalCannons;
+		arsenalCannons = arsenalCannons - aCannons[1];
+
+		aCannons[0] = arsenalCannons;
 
 		/* Modificamos el territorio origen */
 
@@ -51,10 +57,10 @@ public class Attack {
 		src.setNumMissiles(src.getNumMissiles() - arsenal.getMissiles());
 		src.setNumSoldiers(src.getNumSoldiers() - arsenal.getSoldiers());
 
-		final int srcCannons[] = src.getNumCannons();
+		final int newCannons[] = new int[3];
 		for (int i = 0; i < srcCannons.length; i++)
-			srcCannons[i] = srcCannons[i] - aCannons[i];
-		src.setNumCannons(srcCannons);
+			newCannons[i] = srcCannons[i] - aCannons[i];
+		src.setNumCannons(newCannons);
 
 		/* ICBM */
 
@@ -64,7 +70,7 @@ public class Attack {
 			soldiers = soldiers - 20 * (arsenal.getICBMs() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
-				this.conquerTerritory();
+				this.conquerTerritory(aCannons);
 				return;
 			}
 		}
@@ -77,7 +83,7 @@ public class Attack {
 			soldiers = soldiers - 15 * (arsenal.getMissiles() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
-				this.conquerTerritory();
+				this.conquerTerritory(aCannons);
 				return;
 			}
 		}
@@ -94,7 +100,7 @@ public class Attack {
 			if (t1 > t2) {
 				soldiers--;
 				if (soldiers <= 0) {
-					this.conquerTerritory();
+					this.conquerTerritory(aCannons);
 					return;
 				}
 			}
@@ -105,7 +111,7 @@ public class Attack {
 			if (t1 > t2) {
 				soldiers--;
 				if (soldiers <= 0) {
-					this.conquerTerritory();
+					this.conquerTerritory(aCannons);
 					return;
 				}
 			}
@@ -119,7 +125,7 @@ public class Attack {
 			if (t1 > t2) {
 				soldiers--;
 				if (soldiers <= 0) {
-					this.conquerTerritory();
+					this.conquerTerritory(aCannons);
 					return;
 				}
 			} else
@@ -130,7 +136,7 @@ public class Attack {
 		dst.setNumSoldiers(soldiers);
 	}
 
-	private void conquerTerritory() {
+	private void conquerTerritory(int aCannons[]) {
 		dst.setPlayer(src.getPlayer());
 		dst.setNumICBMs(0);
 		dst.setNumMissiles(0);
