@@ -9,7 +9,12 @@ public class Territory implements Serializable, PersistentObj {
 	private static final long serialVersionUID = 4177888547129389571L;
 
 	public enum Continent {
-		Europe, Asia, Africa, NorthAmerica, SouthAmerica, Oceania
+		Europe,
+		Asia,
+		Africa,
+		NorthAmerica,
+		SouthAmerica,
+		Oceania
 	}
 
 	private int idTerritory;
@@ -97,12 +102,13 @@ public class Territory implements Serializable, PersistentObj {
 		return owner;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == null)
 			return false;
 		if (!(o instanceof Territory))
 			return false;
-		Territory p = (Territory) o;
+		final Territory p = (Territory) o;
 		return idTerritory == p.getIdTerritory();
 
 	}

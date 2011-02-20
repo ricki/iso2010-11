@@ -123,7 +123,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 			mapList.set(0, new Territory(1, Territory.Continent.Europe,
 				playerList.get(1).getName(), 20, p, 1, 0, 1));//terrotorio jorge
-			mapList.set(3, t);
+			mapList.set(2, t);
 
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
@@ -226,7 +226,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	public void rellenarMapaInicial(ArrayList<Territory> mapList) {
 		final int[] numTerritorios = {
-				9, 4, 7, 6, 12, 4
+				7, 12, 6, 9, 4, 4
 		};
 		final int[] ca = {
 				-1, -1, -1
@@ -234,27 +234,27 @@ public class Server extends UnicastRemoteObject implements IServer {
 		for (int i = 0; i < 6; i++) {
 			for (int j = 1; j <= numTerritorios[i]; j++) {
 				switch (i) {
-				case 2:
+				case 0:
 					mapList.add(new Territory(j,
 						Territory.Continent.Europe,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 4:
+				case 1:
 					mapList.add(new Territory(j,
 						Territory.Continent.Asia,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 3:
+				case 2:
 					mapList.add(new Territory(j,
 						Territory.Continent.Africa,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 0:
+				case 3:
 					mapList.add(new Territory(j,
 						Territory.Continent.NorthAmerica,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 1:
+				case 4:
 					mapList.add(new Territory(j,
 						Territory.Continent.SouthAmerica,
 						null, -1, ca, -1, -1, -1));

@@ -42,7 +42,7 @@ public class GameEngine implements ClientCallback {
 		final ArrayList<Territory> map = game.getMap();
 
 		for (final Territory t : map) {
-			if (t == null) System.out.println("HOSTIA PUTA");
+			if (t == null) System.out.println("Territorio nulo");
 			mMapList.add(new TerritoryDecorator(t, mMapListModel,
 				mPlayerListModel));
 		}

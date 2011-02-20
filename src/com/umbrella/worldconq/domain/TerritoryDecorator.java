@@ -179,13 +179,39 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public int getIdTerritory() {
-		return decoratedTerritory.getIdTerritory();
+
+		final int[] numTerritorios = {
+				7, 12, 6, 9, 4, 4
+		};
+		final int IndexC = decoratedTerritory.getContinent().ordinal();
+		int ret = 0;
+		for (int i = 0; i < IndexC; i++) {
+			ret += numTerritorios[i];
+		}
+		ret += decoratedTerritory.getIdTerritory();
+		return ret - 1;
+
+		//return decoratedTerritory.getIdTerritory();
 	}
 
 	@Override
 	public void setIdTerritory(int id) {
-		if (decoratedTerritory != null)
-			decoratedTerritory.setIdTerritory(id);
+		//if (decoratedTerritory != null)
+		//	decoratedTerritory.setIdTerritory(id);
+
+		if (decoratedTerritory != null) {
+			final int[] numTerritorios = {
+					7,
+					12, 6, 9, 4, 4
+			};
+			final int IndexC = decoratedTerritory.getContinent().ordinal();
+			for (int i = 0; i < IndexC; i++) {
+				id -= numTerritorios[i];
+			}
+			id -= decoratedTerritory.getIdTerritory();
+			decoratedTerritory.setIdTerritory(id + 1);
+		}
+
 	}
 
 	@Override
@@ -274,7 +300,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	}
 
 	public String getName() {
-		return namelist[decoratedTerritory.getIdTerritory()];
+		return namelist[this.getIdTerritory()];
 	}
 
 	public Player getPlayer() {

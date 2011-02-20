@@ -40,6 +40,7 @@ public class MapModel extends AbstractTableModel {
 	}
 
 	public TerritoryDecorator getTerritoryAt(int index) {
+		//data.get(index).setIdTerritory(index);
 		return data.get(index);
 	}
 
