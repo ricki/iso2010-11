@@ -6,7 +6,8 @@ import domain.Player;
 import domain.Territory;
 
 public class TerritoryDecorator extends domain.Territory implements Cloneable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -7803001774754662724L;
 	private final String namelist[] = {
 			"Gran Bretaña", "Iceland", "Europa del Norte", "Escandinavia",
 			"Europa del Sur", "Ucrania", "Europa Occidental", "Afghanistan",
