@@ -170,7 +170,7 @@ public class MapView extends JComponent implements TableModelListener {
 	public void getRowInfo(int idx) {
 		if ((idx != -1) && (mMapm.getTerritoryAt(idx) != null)) {
 			final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
-						+ mMapm.getTerritoryAt(idx).getId()
+						+ mMapm.getTerritoryAt(idx).getName()
 						+ "</BIG><BR>\n<B> Controlado por: <EM>"
 						+ mMapm.getValueAt(idx, 1)
 						+ "</em></b></P>\n<HR>"

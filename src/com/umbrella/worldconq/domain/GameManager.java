@@ -58,13 +58,33 @@ public class GameManager {
 		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList(usrMgr.getSession());
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
 		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
-
+		boolean onLine = false;
+		final long date = Calendar.getInstance().getTimeInMillis();
 		for (final GameInfo info : fullList) {
 			if (info.getPlayers().contains(user)) {
-				currentList.add(info);
+
+				for (int i = 0; i < info.getGameSessions().size()
+						&& onLine == false; i++) {
+					if ((date - info.getGameSessions().get(i).getTimeInMillis() < 7200000)
+							&& (date
+									- info.getGameSessions().get(i).getTimeInMillis() > 0)) {
+						onLine = true;
+						currentList.add(info);
+					}
+				}
+				//currentList.add(info);
 			} else if (info.getnFreeTerritories() > 0) {
-				openList.add(info);
+				for (int i = 0; i < info.getGameSessions().size()
+						&& onLine == false; i++) {
+					if ((info.getGameSessions().get(i).after(Calendar.getInstance()))
+							|| (info.getGameSessions().get(i).DAY_OF_MONTH == Calendar.getInstance().DAY_OF_MONTH)) {
+						onLine = true;
+						openList.add(info);
+					}
+				}
+				//openList.add(info);
 			}
+			onLine = false;
 		}
 
 		mCurrentGameListModel.setData(currentList);
@@ -73,8 +93,9 @@ public class GameManager {
 
 	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
 
-		if (name == null || gameSessions == null || description == null ||
-				name.isEmpty() || turnTime < 0 || defTime < 0 || negTime < 0) throw new InvalidArgumentException();
+		if (name == null || name.equals("") || gameSessions == null
+				|| description == null || name.isEmpty() || turnTime < 0
+				|| defTime < 0 || negTime < 0) throw new InvalidArgumentException();
 		for (final Calendar c : gameSessions) {
 			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
 		}
@@ -83,7 +104,8 @@ public class GameManager {
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
-		if (gameSelected > mOpenGameListModel.getRowCount()) {
+		if (gameSelected >= mOpenGameListModel.getRowCount()
+				|| gameSelected < 0) {
 			throw new InvalidArgumentException();
 		} else {
 			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
@@ -93,11 +115,16 @@ public class GameManager {
 	}
 
 	public void connectToGame(int gameIndex, GameEventListener gameListener) throws Exception {
-		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
-		final Session session = usrMgr.getSession();
-		final Game game = srvAdapter.playGame(session, gameUuid);
-		mGameEngine = new GameEngine(game, session, srvAdapter, gameListener);
-		cltAdapter.setCallback(mGameEngine);
+		if (gameIndex >= mCurrentGameListModel.getRowCount() || gameIndex < 0) {
+			throw new InvalidArgumentException();
+		} else {
+			final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
+			final Session session = usrMgr.getSession();
+			final Game game = srvAdapter.playGame(session, gameUuid);
+			mGameEngine = new GameEngine(game, session, srvAdapter,
+				gameListener);
+			cltAdapter.setCallback(mGameEngine);
+		}
 	}
 
 	public GameEngine getGameEngine() {
