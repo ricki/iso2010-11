@@ -136,7 +136,9 @@ public class Server extends UnicastRemoteObject implements IServer {
 			player.add(Users[3][0]);
 			player.add(Users[6][0]);
 			final ArrayList<Calendar> session = new ArrayList<Calendar>();
-			session.add(Calendar.getInstance());
+			final Calendar c = Calendar.getInstance();
+			c.add(Calendar.MINUTE, -20);
+			session.add(c);
 			gameList.add(new GameInfo(UUID.randomUUID(), "game02",
 				"desc from game02", player, session, 6, 0, 0, 0));
 

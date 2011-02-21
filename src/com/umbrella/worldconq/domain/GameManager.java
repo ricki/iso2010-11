@@ -58,33 +58,26 @@ public class GameManager {
 		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList(usrMgr.getSession());
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
 		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
-		boolean onLine = false;
-		final long date = Calendar.getInstance().getTimeInMillis();
+		final Calendar now = Calendar.getInstance();
+		final Calendar now2h = Calendar.getInstance();
+		now2h.add(Calendar.HOUR, -2);
+
 		for (final GameInfo info : fullList) {
 			if (info.getPlayers().contains(user)) {
-
-				for (int i = 0; i < info.getGameSessions().size()
-						&& onLine == false; i++) {
-					if ((date - info.getGameSessions().get(i).getTimeInMillis() < 7200000)
-							&& (date
-									- info.getGameSessions().get(i).getTimeInMillis() > 0)) {
-						onLine = true;
+				for (final Calendar c : info.getGameSessions()) {
+					if (c.before(now) && c.after(now2h)) {
 						currentList.add(info);
+						break;
 					}
 				}
-				//currentList.add(info);
 			} else if (info.getnFreeTerritories() > 0) {
-				for (int i = 0; i < info.getGameSessions().size()
-						&& onLine == false; i++) {
-					if ((info.getGameSessions().get(i).after(Calendar.getInstance()))
-							|| (info.getGameSessions().get(i).DAY_OF_MONTH == Calendar.getInstance().DAY_OF_MONTH)) {
-						onLine = true;
+				for (final Calendar c : info.getGameSessions()) {
+					if (c.after(now2h)) {
 						openList.add(info);
+						break;
 					}
 				}
-				//openList.add(info);
 			}
-			onLine = false;
 		}
 
 		mCurrentGameListModel.setData(currentList);
