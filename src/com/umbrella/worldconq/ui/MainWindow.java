@@ -23,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.domain.GameManager;
+import com.umbrella.worldconq.domain.TerritoryDecorator;
 
 public class MainWindow extends JFrame implements GameEventListener {
 
@@ -449,5 +450,17 @@ public class MainWindow extends JFrame implements GameEventListener {
 			//ExitGameDialog egd = new ExitGameDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
 			//egd.setVisible(true);			
 		}
+	}
+
+	@Override
+	public void negotiationRequested(int money, int soldiers) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst) {
+		// TODO Auto-generated method stub
+
 	}
 }

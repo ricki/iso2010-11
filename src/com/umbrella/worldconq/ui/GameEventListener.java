@@ -1,9 +1,9 @@
 package com.umbrella.worldconq.ui;
 
-import domain.Territory;
+import com.umbrella.worldconq.domain.TerritoryDecorator;
 
 public interface GameEventListener {
-	public void territoryUnderAttack(Territory src, Territory dst);
+	public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst);
 
 	public void negotiationRequested(int money, int soldiers);
 }
