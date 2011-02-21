@@ -192,7 +192,7 @@ public class GameEngine implements ClientCallback {
 				territoryUpdate.setNumCannons(numCannons);
 
 				final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-				territoriesUpdate.add(territoryUpdate.getDecoratedTerritory());
+				territoriesUpdate.add(territoryUpdate);
 
 				adapter.updateGame(session, mGame, playerUpdates,
 					territoriesUpdate, EventType.BuyArsenalEvent);
@@ -268,8 +268,8 @@ public class GameEngine implements ClientCallback {
 					+ antimissiles);
 
 			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-			territoriesUpdate.add(srcTerritory.getDecoratedTerritory());
-			territoriesUpdate.add(dstTerritory.getDecoratedTerritory());
+			territoriesUpdate.add(srcTerritory);
+			territoriesUpdate.add(dstTerritory);
 			adapter.updateGame(session, mGame,
 				new ArrayList<Player>(), territoriesUpdate,
 				EventType.UnknownEvent);
@@ -321,7 +321,7 @@ public class GameEngine implements ClientCallback {
 			territoryUpdate.setPlayer(mPlayerListModel.getSelfPlayer());
 
 			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-			territoriesUpdate.add(territoryUpdate.getDecoratedTerritory());
+			territoriesUpdate.add(territoryUpdate);
 
 			adapter.updateGame(session, mGame, playerUpdates,
 				territoriesUpdate, EventType.BuyTerritoryEvent);
@@ -367,8 +367,8 @@ public class GameEngine implements ClientCallback {
 		final TerritoryDecorator territoryUpdateDestination = (TerritoryDecorator) mCurrentAttack.getOrigin().clone();
 
 		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-		territoriesUpdate.add(territoryUpdateOrigin.getDecoratedTerritory());
-		territoriesUpdate.add(territoryUpdateDestination.getDecoratedTerritory());
+		territoriesUpdate.add(territoryUpdateOrigin);
+		territoriesUpdate.add(territoryUpdateDestination);
 
 		final ArrayList<Player> playersUpdate = new ArrayList<Player>();
 
@@ -419,8 +419,8 @@ public class GameEngine implements ClientCallback {
 		playerUpdates.add(playerUpdateDestination);
 
 		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-		territoriesUpdate.add(territoryUpdateOrigin.getDecoratedTerritory());
-		territoriesUpdate.add(territoryUpdateDestination.getDecoratedTerritory());
+		territoriesUpdate.add(territoryUpdateOrigin);
+		territoriesUpdate.add(territoryUpdateDestination);
 
 		try {
 			adapter.updateGame(session, mGame, playerUpdates,
