@@ -104,7 +104,8 @@ public class GameManager {
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
-		if (gameSelected > mOpenGameListModel.getRowCount() || gameSelected < 0) {
+		if (gameSelected >= mOpenGameListModel.getRowCount()
+				|| gameSelected < 0) {
 			throw new InvalidArgumentException();
 		} else {
 			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
@@ -114,7 +115,7 @@ public class GameManager {
 	}
 
 	public void connectToGame(int gameIndex, GameEventListener gameListener) throws Exception {
-		if (gameIndex > mOpenGameListModel.getRowCount() || gameIndex < 0) {
+		if (gameIndex >= mCurrentGameListModel.getRowCount() || gameIndex < 0) {
 			throw new InvalidArgumentException();
 		} else {
 			final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
