@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.ListSelectionModel;
@@ -26,11 +27,10 @@ public class MapView extends JComponent implements TableModelListener {
 	private java.awt.Image pais;
 	private int x;
 	private int y;
-	protected ListSelectionModel lsm;
+	private ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
 	private JEditorPane actionGame;
-	private static int territorySelected;
 	private final BufferedImage bufferImageMap;
 	private final MapModel mMapm;
 
@@ -75,7 +75,8 @@ public class MapView extends JComponent implements TableModelListener {
 	public MapView(MapModel mm) throws IOException {
 		super();
 		mMapm = mm;
-		territorySelected = -1;
+		lsm = new DefaultListSelectionModel();
+		lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.setPreferredSize(new Dimension(920, 471));
 		bufferImageColorPixel = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk_buffer.png"));
 		bufferImageMap = ImageIO.read(ClassLoader.getSystemResource("image/half.Map_risk.png"));
@@ -85,6 +86,14 @@ public class MapView extends JComponent implements TableModelListener {
 		}
 		this.addMouseListener(new MapMouseAdapter());
 		mMapm.addTableModelListener(this);
+	}
+
+	public ListSelectionModel getListSelectionModel() {
+		return lsm;
+	}
+
+	public void setListSelectionModel(ListSelectionModel lsm) {
+		this.lsm = lsm;
 	}
 
 	public int getIndex(int color) {
@@ -127,6 +136,7 @@ public class MapView extends JComponent implements TableModelListener {
 
 	@Override
 	public void paint(Graphics g) {
+		final int territorySelected = lsm.getMinSelectionIndex();
 		if (territorySelected != -1) {
 			this.getRowInfo(territorySelected);
 			this.removeAll();
@@ -170,25 +180,25 @@ public class MapView extends JComponent implements TableModelListener {
 	public void getRowInfo(int idx) {
 		if ((idx != -1) && (mMapm.getTerritoryAt(idx) != null)) {
 			final String ret = "<html>\n<P ALIGN=\"center\"><BIG>"
-						+ mMapm.getTerritoryAt(idx).getName()
-						+ "</BIG><BR>\n<B> Controlado por: <EM>"
-						+ mMapm.getValueAt(idx, 1)
-						+ "</em></b></P>\n<HR>"
-						+ "<TABLE BORDER=0>"
-						+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 2)
-						+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 3)
-						+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 4)
-						+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 5)
-						+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 6)
-						+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 7)
-						+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
-						+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
+					+ mMapm.getTerritoryAt(idx).getName()
+					+ "</BIG><BR>\n<B> Controlado por: <EM>"
+					+ mMapm.getValueAt(idx, 1)
+					+ "</em></b></P>\n<HR>"
+					+ "<TABLE BORDER=0>"
+					+ "<TR><TD Align=\"right\">Soldados:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 2)
+					+ "<TR><TD Align=\"right\">Cañones Tipo 1:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 3)
+					+ "<TR><TD Align=\"right\">Cañones Tipo 2:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 4)
+					+ "<TR><TD Align=\"right\">Cañones Tipo 3:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 5)
+					+ "<TR><TD Align=\"right\">Misiles:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 6)
+					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 7)
+					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {
@@ -227,11 +237,12 @@ public class MapView extends JComponent implements TableModelListener {
 	}
 
 	public int getSelectedRow() {
-		return territorySelected;
+		return lsm.getMinSelectionIndex();
 	}
 
 	public void setSelectedRow(int x, int y) {
-		territorySelected = this.getIndex(bufferImageColorPixel.getRGB(x, y));
+		final int id = this.getIndex(bufferImageColorPixel.getRGB(x, y));
+		lsm.setSelectionInterval(id, id);
 	}
 
 	@Override
@@ -248,7 +259,6 @@ public class MapView extends JComponent implements TableModelListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			MapView.this.setSelectedRow(evt.getX(), evt.getY());
-			//int numberTerritory = getSelectedRow();
 			MapView.this.repaint();
 		}
 
