@@ -87,58 +87,71 @@ public class Server extends UnicastRemoteObject implements IServer {
 			};
 			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
-			// new Player("JorgeCA", 1000, true, true, new ArrayList<Spy>());
-			// new Player("Aduran", 1000, true, true, new ArrayList<Spy>());
-			player.add("JorgeCA");
-			player.add("Aduran");
+			player.add(Users[0][0]);
+			player.add(Users[4][0]);
+
 			final ArrayList<Calendar> session = new ArrayList<Calendar>();
 			session.add(Calendar.getInstance());
+			final Calendar c = Calendar.getInstance();
+			c.set(2011, Calendar.MARCH, 1, 14, 0);
+			session.add(c);
+
 			gameList.add(new GameInfo(UUID.randomUUID(), "game01",
 				"desc from game01", player, session, 3, 0, 0, 0));
 			// añadimos los datos a la partida necesarios para la clase Game
 			testGame.setGameInfo(gameList.get(0));
+
 			// lista de jugadores
 			final ArrayList<Player> playerList = new ArrayList<Player>();
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+
 			final Territory t = new Territory(3, Territory.Continent.Europe,
 				null, 10, p, 2, 0, 1); // territorio Angel
-			playerList.add(new Player("Aduran", 250, true, false,
+
+			playerList.add(new Player(Users[4][0], 250, true, false,
 				new ArrayList<Spy>()));
 			t.setOwner(playerList.get(0).getName());
+
 			spyList.add(new Spy(2, t.getIdTerritory()));
-			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+
+			playerList.add(new Player(Users[0][0], 200, true, true, spyList));
 			testGame.setPlayers(playerList);
+
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
 
 			mapList.set(0, new Territory(1, Territory.Continent.Europe,
-				playerList.get(1).getName(), 20, p, 1, 0, 1));
-			mapList.set(3, t);
+				playerList.get(1).getName(), 20, p, 1, 0, 1));//terrotorio jorge
+			mapList.set(2, t);
+
 			testGame.setMap(mapList);
 			testGameList.add(testGame);
 		}
 		{ // GameInfo 02
 			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
-			// new Player("ricki", 1000, true, true, new ArrayList<Spy>());
-			// new Player("DaniLR", 1000, true, false, new ArrayList<Spy>());
-			// new Player("deejaytoni", 1000, true, false, new ArrayList<Spy>());
-			player.add("ricki");
-			player.add("DaniLR");
-			player.add("deejaytoni");
+
+			player.add(Users[1][0]);
+			player.add(Users[3][0]);
+			player.add(Users[6][0]);
 			final ArrayList<Calendar> session = new ArrayList<Calendar>();
-			session.add(Calendar.getInstance());
+			final Calendar c = Calendar.getInstance();
+			c.add(Calendar.MINUTE, -20);
+			session.add(c);
 			gameList.add(new GameInfo(UUID.randomUUID(), "game02",
 				"desc from game02", player, session, 6, 0, 0, 0));
+
 			// añadimos los datos a la partida necesarios para la clase Game
 			testGame.setGameInfo(gameList.get(1));
+
 			// lista de jugadores
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("ricki", 200, true, true, null));
-			playerList.add(new Player("DaniLR", 250, true, false, null));
-			playerList.add(new Player("deejaytoni", 300, true, false, null));
+			playerList.add(new Player(Users[1][0], 200, true, true, null));
+			playerList.add(new Player(Users[3][0], 250, true, false, null));
+			playerList.add(new Player(Users[6][0], 300, true, false, null));
 			testGame.setPlayers(playerList);
+
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
@@ -160,21 +173,23 @@ public class Server extends UnicastRemoteObject implements IServer {
 		{ // GameInfo 03
 			final Game testGame = new Game();
 			final ArrayList<String> player = new ArrayList<String>();
-			// new Player("pobleteag", 1000, true, true, new ArrayList<Spy>());
-			// new Player("LauraN", 1000, true, false, new ArrayList<Spy>());
-			player.add("pobleteag");
-			player.add("LauraN");
+
+			player.add(Users[2][0]);
+			player.add(Users[5][0]);
 			final ArrayList<Calendar> session = new ArrayList<Calendar>();
 			session.add(Calendar.getInstance());
 			gameList.add(new GameInfo(UUID.randomUUID(), "game03",
 				"desc from game03", player, session, 6, 0, 0, 0));
+
 			// añadimos los datos a la partida necesarios para la clase Game
 			testGame.setGameInfo(gameList.get(2));
+
 			// lista de jugadores
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("pobleteag", 200, true, true, null));
-			playerList.add(new Player("LauraN", 250, true, false, null));
+			playerList.add(new Player(Users[2][0], 200, true, true, null));
+			playerList.add(new Player(Users[5][0], 250, true, false, null));
 			testGame.setPlayers(playerList);
+
 			//añadimos los datos a la partida necesarios para la clase Territory
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
@@ -213,7 +228,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	public void rellenarMapaInicial(ArrayList<Territory> mapList) {
 		final int[] numTerritorios = {
-				9, 4, 7, 6, 12, 4
+				7, 12, 6, 9, 4, 4
 		};
 		final int[] ca = {
 				-1, -1, -1
@@ -221,27 +236,27 @@ public class Server extends UnicastRemoteObject implements IServer {
 		for (int i = 0; i < 6; i++) {
 			for (int j = 1; j <= numTerritorios[i]; j++) {
 				switch (i) {
-				case 2:
+				case 0:
 					mapList.add(new Territory(j,
 						Territory.Continent.Europe,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 4:
+				case 1:
 					mapList.add(new Territory(j,
 						Territory.Continent.Asia,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 3:
+				case 2:
 					mapList.add(new Territory(j,
 						Territory.Continent.Africa,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 0:
+				case 3:
 					mapList.add(new Territory(j,
 						Territory.Continent.NorthAmerica,
 						null, -1, ca, -1, -1, -1));
 					break;
-				case 1:
+				case 4:
 					mapList.add(new Territory(j,
 						Territory.Continent.SouthAmerica,
 						null, -1, ca, -1, -1, -1));

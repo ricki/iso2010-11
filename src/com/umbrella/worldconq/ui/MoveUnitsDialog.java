@@ -39,6 +39,11 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 	private JComboBox antiMissilesCombo;
 	private JComboBox icbmsCombo;
 	private JLabel antiMissilesLabel;
+	private JComboBox cannonTthreeCombo;
+	private JLabel typethreeLabel;
+	private JLabel typeoneLabel;
+	private JComboBox cannonTtwoCombo;
+	private JLabel cannonTtwoLabel;
 	private JPanel centralPanel;
 	private JPanel territoriesPanel;
 	private JLabel territoryselectinfoLabel;
@@ -54,7 +59,8 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 	private JButton acceptButton;
 	private JLabel backgroundLabel;
 	private boolean selection;
-	private int destiny, soldiers, cannons, missiles, icbms, antimissiles;
+	private int destiny, soldiers, missiles, icbms, antimissiles;
+	private int[] cannons;
 	private final TerritoryDecorator srcterritory;
 	private final ArrayList<String> adjacentListNames;
 
@@ -112,52 +118,74 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					soldiersLabel = new JLabel();
 					centralPanel.add(soldiersLabel);
 					soldiersLabel.setText("Soldados: ");
-					soldiersLabel.setBounds(50, 30, 150, 20);
+					soldiersLabel.setBounds(25, 30, 100, 20);
 				}
 				{
 					cannonsLabel = new JLabel();
 					cannonsLabel.setLayout(null);
 					centralPanel.add(cannonsLabel);
 					cannonsLabel.setText("Cañones: ");
-					cannonsLabel.setBounds(50, 55, 150, 20);
+					cannonsLabel.setBounds(25, 55, 150, 20);
+				}
+				{
+					typeoneLabel = new JLabel();
+					centralPanel.add(typeoneLabel);
+					typeoneLabel.setText("Tipo1: ");
+					typeoneLabel.setBounds(50, 80, 100, 20);
+				}
+				{
+					cannonTtwoLabel = new JLabel();
+					centralPanel.add(cannonTtwoLabel);
+					cannonTtwoLabel.setText("Tipo 2: ");
+					cannonTtwoLabel.setBounds(50, 105, 39, 16);
 				}
 				{
 					missilesLabel = new JLabel();
 					centralPanel.add(missilesLabel);
 					missilesLabel.setText("Misiles: ");
-					missilesLabel.setBounds(50, 80, 150, 20);
+					missilesLabel.setBounds(200, 30, 100, 20);
 				}
 				{
 					icbmsLabel = new JLabel();
 					centralPanel.add(icbmsLabel);
 					icbmsLabel.setText("ICBMs: ");
-					icbmsLabel.setBounds(50, 105, 150, 20);
+					icbmsLabel.setBounds(200, 55, 100, 20);
 				}
 				{
 					antiMissilesLabel = new JLabel();
 					centralPanel.add(antiMissilesLabel);
 					antiMissilesLabel.setText("Anti-Misiles: ");
-					antiMissilesLabel.setBounds(50, 130, 150, 20);
+					antiMissilesLabel.setBounds(200, 80, 150, 20);
 				}
 				{
 					centralPanel.add(soldiersCombo);
-					soldiersCombo.setBounds(250, 30, 50, 20);
+					soldiersCombo.setBounds(125, 30, 50, 20);
 				}
 				{
 					centralPanel.add(cannonsCombo);
-					cannonsCombo.setBounds(250, 55, 50, 20);
+					cannonsCombo.setBounds(125, 80, 50, 20);
 				}
 				{
 					centralPanel.add(missilesCombo);
-					missilesCombo.setBounds(250, 80, 50, 20);
+					missilesCombo.setBounds(300, 30, 50, 20);
 				}
 				{
 					centralPanel.add(icbmsCombo);
-					icbmsCombo.setBounds(250, 105, 50, 20);
+					icbmsCombo.setBounds(300, 55, 50, 20);
 				}
 				{
 					centralPanel.add(antiMissilesCombo);
-					antiMissilesCombo.setBounds(250, 130, 50, 20);
+					centralPanel.add(cannonTtwoCombo);
+					cannonTtwoCombo.setBounds(125, 105, 50, 20);
+					{
+						typethreeLabel = new JLabel();
+						centralPanel.add(typethreeLabel);
+						typethreeLabel.setText("Tipo 3: ");
+						typethreeLabel.setBounds(50, 130, 100, 20);
+					}
+					centralPanel.add(cannonTthreeCombo);
+					cannonTthreeCombo.setBounds(125, 130, 50, 20);
+					antiMissilesCombo.setBounds(300, 80, 50, 20);
 				}
 				{
 					infoPanel = new JPanel();
@@ -251,7 +279,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 	}
 
 	//Método que devuelve el número de cañones comprados
-	public int getCannonCount() {
+	public int[] getCannonCount() {
 		return cannons;
 	}
 
@@ -277,6 +305,8 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 		cannonsCombo = new JComboBox();
 		icbmsCombo = new JComboBox();
 		antiMissilesCombo = new JComboBox();
+		cannonTtwoCombo = new JComboBox();
+		cannonTthreeCombo = new JComboBox();
 
 		//Genero el contenido del ComboBox de territorios a los que mover unidades
 		for (int i = 0; i < adjacentListNames.size(); i++) {
@@ -289,11 +319,17 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 		}
 
 		//Creo el combo de cañones		
-		final int numcannons = srcterritory.getNumCannons()[0]
-				+ srcterritory.getNumCannons()[1]
-				+ srcterritory.getNumCannons()[2];
+		int numcannons = srcterritory.getNumCannons()[0];
 		for (int i = 0; i <= numcannons; i++) {
 			cannonsCombo.addItem(i);
+		}
+		numcannons = srcterritory.getNumCannons()[1];
+		for (int i = 0; i <= numcannons; i++) {
+			cannonTtwoCombo.addItem(i);
+		}
+		numcannons = srcterritory.getNumCannons()[2];
+		for (int i = 0; i <= numcannons; i++) {
+			cannonTthreeCombo.addItem(i);
 		}
 
 		//Creo el combo de misiles		
@@ -334,7 +370,9 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					dlg.selection = doselection;
 					dlg.destiny = dlg.territoriesCombo.getSelectedIndex();
 					dlg.soldiers = dlg.soldiersCombo.getSelectedIndex();
-					dlg.cannons = dlg.cannonsCombo.getSelectedIndex();
+					dlg.cannons[0] = dlg.cannonsCombo.getSelectedIndex();
+					dlg.cannons[1] = dlg.cannonTtwoCombo.getSelectedIndex();
+					dlg.cannons[2] = dlg.cannonTthreeCombo.getSelectedIndex();
 					dlg.missiles = dlg.missilesCombo.getSelectedIndex();
 					dlg.icbms = dlg.icbmsCombo.getSelectedIndex();
 					dlg.antimissiles = dlg.antiMissilesCombo.getSelectedIndex();
@@ -364,7 +402,9 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					dlg.selection = true;
 					dlg.destiny = dlg.territoriesCombo.getSelectedIndex();
 					dlg.soldiers = dlg.soldiersCombo.getSelectedIndex();
-					dlg.cannons = dlg.cannonsCombo.getSelectedIndex();
+					dlg.cannons[0] = dlg.cannonsCombo.getSelectedIndex();
+					dlg.cannons[1] = dlg.cannonTtwoCombo.getSelectedIndex();
+					dlg.cannons[2] = dlg.cannonTthreeCombo.getSelectedIndex();
 					dlg.missiles = dlg.missilesCombo.getSelectedIndex();
 					dlg.icbms = dlg.icbmsCombo.getSelectedIndex();
 					dlg.antimissiles = dlg.antiMissilesCombo.getSelectedIndex();

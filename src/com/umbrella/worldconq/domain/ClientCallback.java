@@ -7,12 +7,13 @@ import domain.Arsenal;
 import domain.EventType;
 import domain.Player;
 import domain.Territory;
+import exceptions.InvalidTerritoryException;
 
 public interface ClientCallback {
 
 	public UUID getId();
 
-	public void territoryUnderAttack(Territory src, Territory dst, Arsenal arsenal);
+	public void territoryUnderAttack(Territory src, Territory dst, Arsenal arsenal) throws InvalidTerritoryException;
 
 	public void negotiationRequested(int money, int soldiers);
 

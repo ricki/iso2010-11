@@ -12,6 +12,7 @@ import domain.EventType;
 import domain.Player;
 import domain.Territory;
 import exceptions.GameNotFoundException;
+import exceptions.InvalidTerritoryException;
 
 public class ClientAdapter implements IClient {
 
@@ -34,9 +35,9 @@ public class ClientAdapter implements IClient {
 		return mClientCallback;
 	}
 
-	private void checkValidGame(UUID game) throws RemoteException {
+	private void checkValidGame(UUID game) throws GameNotFoundException {
 		if (mClientCallback == null || !mClientCallback.getId().equals(game))
-			throw new RemoteException();
+			throw new GameNotFoundException("");
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class ClientAdapter implements IClient {
 	}
 
 	@Override
-	public void territoryUnderAttack(UUID game, Territory src, Territory dst, Arsenal arsenal) throws RemoteException, GameNotFoundException {
+	public void territoryUnderAttack(UUID game, Territory src, Territory dst, Arsenal arsenal) throws RemoteException, GameNotFoundException, InvalidTerritoryException {
 		this.checkValidGame(game);
 		mClientCallback.territoryUnderAttack(src, dst, arsenal);
 

@@ -6,7 +6,8 @@ import domain.Player;
 import domain.Territory;
 
 public class TerritoryDecorator extends domain.Territory implements Cloneable {
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = -7803001774754662724L;
 	private final String namelist[] = {
 			"Gran Bretaña", "Iceland", "Europa del Norte", "Escandinavia",
 			"Europa del Sur", "Ucrania", "Europa Occidental", "Afghanistan",
@@ -158,7 +159,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	};
 
 	private final PlayerListModel playerList;
-	private Territory decoratedTerritory;
+	private final Territory decoratedTerritory;
 	private final MapModel map;
 
 	public TerritoryDecorator(Territory t, MapModel map, PlayerListModel playerList) {
@@ -168,23 +169,25 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		this.playerList = playerList;
 	}
 
-	public Territory getDecoratedTerritory() {
-		return decoratedTerritory;
-	}
-
-	public void setDecoratedTerritory(Territory decoratedTerritory) {
-		this.decoratedTerritory = decoratedTerritory;
-	}
-
+	@Deprecated
 	@Override
 	public int getIdTerritory() {
 		return decoratedTerritory.getIdTerritory();
 	}
 
+	@Deprecated
 	@Override
 	public void setIdTerritory(int id) {
 		if (decoratedTerritory != null)
 			decoratedTerritory.setIdTerritory(id);
+	}
+
+	public int getId() {
+		return this.getIdTerritory();
+	}
+
+	public void setId(int id) {
+		this.setIdTerritory(id);
 	}
 
 	@Override
@@ -272,17 +275,8 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		return decoratedTerritory.getOwner();
 	}
 
-	public int getId() {
-		return decoratedTerritory.getIdTerritory();
-	}
-
-	public void setId(int id) {
-		if (decoratedTerritory != null)
-			decoratedTerritory.setIdTerritory(id);
-	}
-
 	public String getName() {
-		return namelist[decoratedTerritory.getIdTerritory()];
+		return namelist[this.getIdTerritory()];
 	}
 
 	public Player getPlayer() {
@@ -305,7 +299,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	public ArrayList<TerritoryDecorator> getAdjacentTerritories() {
 		final ArrayList<TerritoryDecorator> adjlist = new ArrayList<TerritoryDecorator>();
-		for (final int i : adjgraph[this.getId()]) {
+		for (final int i : adjgraph[this.getIdTerritory()]) {
 			adjlist.add(map.getTerritoryAt(i));
 		}
 		return adjlist;

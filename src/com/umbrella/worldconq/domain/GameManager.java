@@ -58,12 +58,25 @@ public class GameManager {
 		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList(usrMgr.getSession());
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
 		final ArrayList<GameInfo> openList = new ArrayList<GameInfo>();
+		final Calendar now = Calendar.getInstance();
+		final Calendar now2h = Calendar.getInstance();
+		now2h.add(Calendar.HOUR, -2);
 
 		for (final GameInfo info : fullList) {
 			if (info.getPlayers().contains(user)) {
-				currentList.add(info);
+				for (final Calendar c : info.getGameSessions()) {
+					if (c.before(now) && c.after(now2h)) {
+						currentList.add(info);
+						break;
+					}
+				}
 			} else if (info.getnFreeTerritories() > 0) {
-				openList.add(info);
+				for (final Calendar c : info.getGameSessions()) {
+					if (c.after(now2h)) {
+						openList.add(info);
+						break;
+					}
+				}
 			}
 		}
 
@@ -73,8 +86,9 @@ public class GameManager {
 
 	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
 
-		if (name == null || gameSessions == null || description == null ||
-				name.isEmpty() || turnTime < 0 || defTime < 0 || negTime < 0) throw new InvalidArgumentException();
+		if (name == null || name.equals("") || gameSessions == null
+				|| description == null || name.isEmpty() || turnTime < 0
+				|| defTime < 0 || negTime < 0) throw new InvalidArgumentException();
 		for (final Calendar c : gameSessions) {
 			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
 		}
@@ -83,7 +97,8 @@ public class GameManager {
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
-		if (gameSelected > mOpenGameListModel.getRowCount()) {
+		if (gameSelected >= mOpenGameListModel.getRowCount()
+				|| gameSelected < 0) {
 			throw new InvalidArgumentException();
 		} else {
 			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
@@ -93,11 +108,16 @@ public class GameManager {
 	}
 
 	public void connectToGame(int gameIndex, GameEventListener gameListener) throws Exception {
-		final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
-		final Session session = usrMgr.getSession();
-		final Game game = srvAdapter.playGame(session, gameUuid);
-		mGameEngine = new GameEngine(game, session, srvAdapter, gameListener);
-		cltAdapter.setCallback(mGameEngine);
+		if (gameIndex >= mCurrentGameListModel.getRowCount() || gameIndex < 0) {
+			throw new InvalidArgumentException();
+		} else {
+			final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
+			final Session session = usrMgr.getSession();
+			final Game game = srvAdapter.playGame(session, gameUuid);
+			mGameEngine = new GameEngine(game, session, srvAdapter,
+				gameListener);
+			cltAdapter.setCallback(mGameEngine);
+		}
 	}
 
 	public GameEngine getGameEngine() {
