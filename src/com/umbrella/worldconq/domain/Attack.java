@@ -73,7 +73,7 @@ public class Attack {
 		if (arsenal.getICBMs() <= antiMissiles)
 			antiMissiles = antiMissiles - arsenal.getICBMs();
 		else {
-			soldiers = soldiers - 20 * (arsenal.getICBMs() - antiMissiles);
+			soldiers = soldiers - 12 * (arsenal.getICBMs() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
 				this.conquerTerritory(aCannons);
@@ -86,7 +86,7 @@ public class Attack {
 		if (arsenal.getMissiles() <= antiMissiles)
 			antiMissiles = antiMissiles - arsenal.getMissiles();
 		else {
-			soldiers = soldiers - 15 * (arsenal.getMissiles() - antiMissiles);
+			soldiers = soldiers - 5 * (arsenal.getMissiles() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
 				this.conquerTerritory(aCannons);
