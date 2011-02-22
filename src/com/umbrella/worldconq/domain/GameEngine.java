@@ -88,6 +88,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws Exception {
+		this.checkInTurn();
+
 		if (src < 0 || src > 41)
 			throw new InvalidArgumentException();
 		if (dst < 0 || dst > 41)
@@ -129,6 +131,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void acceptAttack() throws Exception {
+		if (mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer())) throw new OutOfTurnException();
 		if (mCurrentAttack == null)
 			throw new Exception();
 		adapter.acceptAttack(session, mGame);
@@ -136,6 +140,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void requestNegotiation(int money, int soldiers) throws Exception {
+		if (mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer())) throw new OutOfTurnException();
 		if (mCurrentAttack == null)
 			throw new Exception();
 		if (money >= 0 && soldiers >= 0
@@ -148,6 +154,7 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void buyUnits(int Territory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+		this.checkInTurn();
 
 		if (Territory < 0 || Territory > 41)
 			throw new InvalidArgumentException();
@@ -208,6 +215,7 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+		this.checkInTurn();
 
 		if (src < 0 || src > 41)
 			throw new InvalidArgumentException();
@@ -284,6 +292,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void buyTerritory(int territory) throws Exception {
+		this.checkInTurn();
+
 		if (territory < 0 || territory > 41)
 			throw new InvalidArgumentException();
 
