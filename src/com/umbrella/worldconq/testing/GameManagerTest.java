@@ -428,6 +428,28 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
+	public void testGameManagerDisconnectFromGame1() {
+		System.out.println("TestCase::testGameManagerDisconnectFromGame1");
+		try {
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() == 0);
+			assertTrue(gameMgr.getOpenGameListModel().getRowCount() == 0);
+			gameMgr.updateGameList();
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() > 0);
+			assertTrue(gameMgr.getOpenGameListModel() != null);
+
+			assertTrue(gameMgr.getGameEngine() == null);
+			gameMgr.connectToGame(0, null);
+			assertTrue(gameMgr.getGameEngine() != null);
+
+			gameMgr.disconnectFromGame();
+			assertTrue(gameMgr.getGameEngine() == null);
+		} catch (final InvalidArgumentException e) {
+			System.out.println("InvalidArgumentException fuera de rango por arriba");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
 	@Override
 	@After
 	public void tearDown() throws Exception {
