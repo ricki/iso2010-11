@@ -463,4 +463,28 @@ public class MainWindow extends JFrame implements GameEventListener {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void buyTerritoryEvent(TerritoryDecorator t) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void buyUnitsEvent(TerritoryDecorator t) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void negotiationEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+		// TODO Auto-generated method stub
+
+	}
 }

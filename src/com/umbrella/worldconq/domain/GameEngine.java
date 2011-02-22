@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
+import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
 import com.umbrella.worldconq.ui.GameEventListener;
 import communications.IClient.TimeType;
@@ -14,6 +15,7 @@ import domain.Arsenal;
 import domain.EventType;
 import domain.Game;
 import domain.Player;
+import domain.Spy;
 import domain.Territory;
 import exceptions.InvalidTerritoryException;
 
@@ -332,6 +334,32 @@ public class GameEngine implements ClientCallback {
 			throw new InvalidArgumentException();
 	}
 
+	public void deploySpy(int territory) throws Exception {
+		this.checkInTurn();
+
+		if (territory < 0 || territory >= mMapListModel.getRowCount())
+			throw new InvalidArgumentException();
+
+		final Player self = mPlayerListModel.getSelfPlayer();
+
+		if (self.getMoney() < UnitInfo.getPricSpy())
+			throw new NotEnoughMoneyException();
+
+		final ArrayList<Spy> spyList = new ArrayList<Spy>();
+		spyList.addAll(self.getSpies());
+		spyList.add(new Spy(territory, 2));
+
+		final Player p = new Player(self.getName(), self.getMoney()
+				- UnitInfo.getPricSpy(), self.isOnline(), self.isHasTurn(), spyList);
+
+		final ArrayList<Player> playerUpdate = new ArrayList<Player>();
+		playerUpdate.add(p);
+		adapter.updateGame(session, mGame, playerUpdate,
+			new ArrayList<Territory>(), EventType.BuyArsenalEvent);
+
+		mPlayerListModel.updatePlayer(p);
+	}
+
 	@Override
 	public void territoryUnderAttack(Territory src, Territory dst, Arsenal arsenal) throws InvalidTerritoryException {
 		if (src != null && dst != null && arsenal != null) {
@@ -443,12 +471,62 @@ public class GameEngine implements ClientCallback {
 
 	@Override
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) {
+		final Player curPlayer = mPlayerListModel.getActivePlayer();
 
+		if (event == EventType.AttackEvent) {
+			if (territoryUpdate.size() == 2) {
+				final TerritoryDecorator t1 = new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
+				final TerritoryDecorator t2 = new TerritoryDecorator(
+					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
+
+				if (t1.getPlayer().equals(curPlayer))
+					gameListener.attackEvent(t1, t2);
+				else
+					gameListener.attackEvent(t2, t1);
+			}
+		} else if (event == EventType.NegotiationEvent) {
+			if (territoryUpdate.size() == 2) {
+				final TerritoryDecorator t1 = new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
+				final TerritoryDecorator t2 = new TerritoryDecorator(
+					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
+
+				if (t1.getPlayer().equals(curPlayer))
+					gameListener.negotiationEvent(t1, t2);
+				else
+					gameListener.negotiationEvent(t2, t1);
+			}
+		} else if (event == EventType.BuyArsenalEvent) {
+			if (territoryUpdate.size() == 1) {
+				gameListener.buyUnitsEvent(new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+			}
+		} else if (event == EventType.BuyTerritoryEvent) {
+			if (territoryUpdate.size() == 1) {
+				gameListener.buyTerritoryEvent(new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+			}
+		}
+
+		for (final Player p : playerUpdate) {
+			mPlayerListModel.updatePlayer(p);
+		}
+		for (final Territory t : territoryUpdate) {
+			mMapListModel.updateTerritory(new TerritoryDecorator(t,
+				mMapListModel, mPlayerListModel));
+		}
 	}
 
 	@Override
 	public void timeExpired(UUID game, TimeType whatTime) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void checkInTurn() throws OutOfTurnException {
+		if (!mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer()))
+			throw new OutOfTurnException();
 	}
 }
