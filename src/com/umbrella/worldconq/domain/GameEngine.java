@@ -349,8 +349,9 @@ public class GameEngine implements ClientCallback {
 		spyList.addAll(self.getSpies());
 		spyList.add(new Spy(territory, 2));
 
-		final Player p = new Player(self.getName(), self.getMoney()
-				- UnitInfo.getPricSpy(), self.isOnline(), self.isHasTurn(), spyList);
+		final Player p = new Player(
+			self.getName(), self.getMoney() - UnitInfo.getPricSpy(),
+			self.isOnline(), self.isHasTurn(), spyList);
 
 		final ArrayList<Player> playerUpdate = new ArrayList<Player>();
 		playerUpdate.add(p);
@@ -516,6 +517,12 @@ public class GameEngine implements ClientCallback {
 			mMapListModel.updateTerritory(new TerritoryDecorator(t,
 				mMapListModel, mPlayerListModel));
 		}
+
+		if (event == EventType.TurnChanged) {
+			final Thread th = new TurnUpdateThread();
+			th.run();
+		}
+
 	}
 
 	@Override
@@ -529,4 +536,33 @@ public class GameEngine implements ClientCallback {
 			mPlayerListModel.getActivePlayer()))
 			throw new OutOfTurnException();
 	}
+
+	private class TurnUpdateThread extends Thread {
+		@Override
+		public void run() {
+			final Player self = mPlayerListModel.getSelfPlayer();
+
+			if (!self.equals(mPlayerListModel.getActivePlayer())) return;
+
+			final ArrayList<Spy> spyList = self.getSpies();
+			final ArrayList<Spy> newSpyList = new ArrayList<Spy>();
+			for (final Spy spy : spyList) {
+				spy.setUses(spy.getUses() - 1);
+				if (spy.getUses() >= 0) newSpyList.add(spy);
+			}
+			self.setSpies(newSpyList);
+
+			try {
+				final ArrayList<Player> playerList = new ArrayList<Player>();
+				playerList.add(self);
+				adapter.updateGame(session, GameEngine.this.getGame(),
+					playerList, new ArrayList<Territory>(),
+					EventType.UnknownEvent);
+				mPlayerListModel.updatePlayer(self);
+			} catch (final Exception e) {
+				self.setSpies(spyList);
+			}
+		}
+	}
+
 }
