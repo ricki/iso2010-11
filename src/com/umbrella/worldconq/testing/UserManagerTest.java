@@ -1,6 +1,5 @@
 package com.umbrella.worldconq.testing;
 
-import java.io.BufferedReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -20,7 +19,6 @@ import exceptions.WrongLoginException;
 
 public class UserManagerTest extends TestCase {
 	Process ServerProcess;
-	BufferedReader in;
 
 	private ServerAdapter srvAdapter;
 
