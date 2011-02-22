@@ -105,7 +105,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Player> playerList = new ArrayList<Player>();
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 
-			final Territory t = new Territory(3, Territory.Continent.Europe,
+			final Territory t = new Territory(2, Territory.Continent.Europe,
 				null, 10, p, 2, 0, 1); // territorio Angel
 
 			playerList.add(new Player(Users[4][0], 250, true, false,
@@ -121,7 +121,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
 
-			mapList.set(0, new Territory(1, Territory.Continent.Europe,
+			mapList.set(0, new Territory(0, Territory.Continent.Europe,
 				playerList.get(1).getName(), 20, p, 1, 0, 1));//terrotorio jorge
 			mapList.set(2, t);
 
@@ -233,41 +233,43 @@ public class Server extends UnicastRemoteObject implements IServer {
 		final int[] ca = {
 				-1, -1, -1
 		};
+		int k = 0;
 		for (int i = 0; i < 6; i++) {
 			for (int j = 1; j <= numTerritorios[i]; j++) {
 				switch (i) {
 				case 0:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Europe,
 						null, -1, ca, -1, -1, -1));
 					break;
 				case 1:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Asia,
 						null, -1, ca, -1, -1, -1));
 					break;
 				case 2:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Africa,
 						null, -1, ca, -1, -1, -1));
 					break;
 				case 3:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.NorthAmerica,
 						null, -1, ca, -1, -1, -1));
 					break;
 				case 4:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.SouthAmerica,
 						null, -1, ca, -1, -1, -1));
 					break;
 				case 5:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Oceania,
 						null, -1, ca, -1, -1, -1));
 					break;
 
 				}
+				k++;
 			}
 		}
 	}
