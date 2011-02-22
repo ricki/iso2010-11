@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+
 import domain.Player;
 
 public class PlayerListModel extends AbstractTableModel {
@@ -87,11 +89,12 @@ public class PlayerListModel extends AbstractTableModel {
 		return data.get(index);
 	}
 
-	public Player getPlayerByName(String name) {
+	public Player getPlayerByName(String name) throws InvalidArgumentException {
+		if (name == null) throw new InvalidArgumentException();
 		for (final Player p : data) {
 			if (p.getName().equals(name)) return p;
 		}
 		return null;
-	}
 
+	}
 }
