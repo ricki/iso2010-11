@@ -122,7 +122,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			this.rellenarMapaInicial(mapList);
 
 			mapList.set(0, new Territory(0, Territory.Continent.Europe,
-				playerList.get(1).getName(), 20, p, 1, 0, 1));//terrotorio jorge
+				playerList.get(1).getName(), 20, p, 1, 6, 1));//terrotorio jorge
 			mapList.set(2, t);
 
 			testGame.setMap(mapList);

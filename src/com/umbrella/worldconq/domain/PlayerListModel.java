@@ -15,7 +15,7 @@ public class PlayerListModel extends AbstractTableModel {
 	};
 
 	private final ArrayList<Player> data;
-	private Player selfPlayer;
+	private final Player selfPlayer;
 
 	public PlayerListModel(Player selfPlayer) {
 		super();
@@ -38,7 +38,7 @@ public class PlayerListModel extends AbstractTableModel {
 	}
 
 	public void updatePlayer(Player player) {
-		selfPlayer = player;
+		data.add(player);
 	}
 
 	public Player getSelfPlayer() {

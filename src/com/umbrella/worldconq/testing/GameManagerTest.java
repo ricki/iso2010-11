@@ -88,7 +88,7 @@ public class GameManagerTest extends TestCase {
 
 			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() == 0);
 			assertTrue(gameMgr.getOpenGameListModel().getRowCount() == 0);
-			usrMgr.getGameManager().updateGameList();
+			gameMgr.updateGameList();
 			assertTrue(gameMgr.getCurrentGameListModel() != null);
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 		} catch (final Exception e) {
