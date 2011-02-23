@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.umbrella.worldconq.domain.UnitInfo;
+
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
  * Builder, which is free for non-commercial use. If Jigloo is being used
@@ -218,27 +220,27 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 		antiMissilesCombo = new JComboBox();
 
 		//Creo el combo de soldados
-		for (int i = 0; i <= (money / 100); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceSoldier()); i++) {
 			soldiersCombo.addItem(i);
 		}
 
 		//Creo el combo de cañones		
-		for (int i = 0; i <= (money / 300); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceCannon()); i++) {
 			cannonsCombo.addItem(i);
 		}
 
 		//Creo el combo de misiles		
-		for (int i = 0; i <= (money / 500); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceMissil()); i++) {
 			missilesCombo.addItem(i);
 		}
 
 		//Creo el combo de icbms		
-		for (int i = 0; i <= (money / 800); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceICBM()); i++) {
 			icbmsCombo.addItem(i);
 		}
 
 		//Creo el combo de antimisiles		
-		for (int i = 0; i <= (money / 400); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceAntiMissile()); i++) {
 			antiMissilesCombo.addItem(i);
 		}
 	}
