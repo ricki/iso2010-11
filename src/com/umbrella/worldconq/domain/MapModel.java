@@ -63,6 +63,8 @@ public class MapModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
 
+		if (columnIndex < 0 || columnIndex >= this.getColumnCount()) return null;
+
 		boolean hasSpy = false;
 		final TerritoryDecorator t = data.get(rowIndex);
 

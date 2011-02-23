@@ -68,17 +68,34 @@ public class MapModelTest extends TestCase {
 	}
 
 	public void testgetColumnName() {
+		System.out.println("TestCase:: testgetColumnName");
 		for (int index = 0; index < map.getColumnCount(); index++) {
 			assertTrue(map.getColumnName(index).equals(colTitles[index]));
 		}
 	}
 
 	public void testgetValueAt1() {
+		System.out.println("TestCase:: testgetValueAt1");
 		assertTrue(map.getValueAt(-1, 0) == null);
 	}
 
 	public void testgetValueAt2() {
-		assertTrue(map.getValueAt(-1, map.getRowCount()) == null);
+		System.out.println("TestCase:: testgetValueAt2");
+		assertTrue(map.getValueAt(map.getRowCount(), 0) == null);
+	}
+
+	public void testgetValueAt3() {
+		System.out.println("TestCase:: testgetValueAt3");
+		assertTrue(map.getValueAt(0, -1) == null);
+	}
+
+	public void testgetValueAt4() {
+		System.out.println("TestCase:: testgetValueAt4");
+		assertTrue(map.getValueAt(0, map.getColumnCount()) == null);
+	}
+
+	public void testgetValueAt5() {
+		System.out.println("TestCase:: testgetValueAt5");
 	}
 
 	@Override
