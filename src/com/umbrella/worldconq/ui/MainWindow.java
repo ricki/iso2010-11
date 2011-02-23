@@ -25,6 +25,7 @@ import javax.swing.WindowConstants;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 
+import domain.Arsenal;
 import domain.Player;
 
 public class MainWindow extends JFrame implements GameEventListener {
@@ -619,17 +620,66 @@ public class MainWindow extends JFrame implements GameEventListener {
 			null,
 			options, options[0]);
 		if (questionDialog.toString().equals("Sí")) {
-			this.getGameManager().getGameEngine().negotiationRequested(money,
+			//Revisar
+			this.getGameManager().getGameEngine().resolveNegotiation(money,
 				soldiers);
 		} else {
-			//??
+			//Revisar
+			this.getGameManager().getGameEngine().resolveAttack();
 		}
 
 	}
 
 	@Override
-	public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst) {
-		// TODO Auto-generated method stub
+	public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst, Arsenal arsenal) {
+		final int numCannons = src.getNumCannons()[0] + src.getNumCannons()[1]
+				+ src.getNumCannons()[2];
 
+		final DialogThread radt = new DialogThread("territoryUnderAttack");
+		radt.setData(this, src, dst, arsenal);
+		radt.start();
+	}
+
+	//Mini clase que lanza hilos
+	public class DialogThread extends Thread {
+		private MainWindow win;
+		private TerritoryDecorator srcT;
+		private TerritoryDecorator dstT;
+		private Arsenal arsenal;
+
+		public DialogThread(String dialogName) {
+			super(dialogName);
+		}
+
+		public void setData(MainWindow win, TerritoryDecorator srcT, TerritoryDecorator dstT, Arsenal arsenal) {
+			this.win = win;
+			this.srcT = srcT;
+			this.dstT = dstT;
+			this.arsenal = arsenal;
+		}
+
+		@Override
+		public void run() {
+			System.out.println("territoryUnderAttack");
+			final ReplyAttackDialog rad = new ReplyAttackDialog(win, srcT,
+				dstT, arsenal);
+			rad.setVisible(true);
+			if (rad.isAttackAccepted()) {
+				try {
+					win.getGameManager().getGameEngine().acceptAttack();
+				} catch (final Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					win.getGameManager().getGameEngine().requestNegotiation(
+						rad.getMoney(), rad.getSoldierCount());
+				} catch (final Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
