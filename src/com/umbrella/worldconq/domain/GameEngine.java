@@ -104,7 +104,7 @@ public class GameEngine implements ClientCallback {
 					&& dstTerritory.getPlayer() != null
 					&& !dstTerritory.getOwner().equals(session.getUser())
 					&& srcTerritory.getAdjacentTerritories().contains(
-				dstTerritory)
+						dstTerritory)
 					&& soldiers >= 0 && cannons >= 0
 					&& missiles >= 0 && icbm >= 0
 					&& soldiers <= srcTerritory.getNumSoldiers()
@@ -307,7 +307,7 @@ public class GameEngine implements ClientCallback {
 			final Player playerUpdate = new Player(
 				mPlayerListModel.getSelfPlayer().getName(),
 				mPlayerListModel.getSelfPlayer().getMoney()
-					- mMapListModel.getTerritoryAt(territory).getPrice(),
+						- mMapListModel.getTerritoryAt(territory).getPrice(),
 				mPlayerListModel.getSelfPlayer().isOnline(),
 				mPlayerListModel.getSelfPlayer().isHasTurn(),
 				mPlayerListModel.getSelfPlayer().getSpies());

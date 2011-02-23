@@ -91,9 +91,9 @@ public class GameEngineTest extends TestCase {
 			//Territorio 2 no es de jorge
 			assertTrue(!gameEngine.getMapListModel().getTerritoryAt(2).getPlayer().getName().equals(
 				"JorgeCA"));
-			//El territorio 2 NOOOOOOOOOOOOOOOO es adyacente
-			//assertTrue(gameEngine.getMapListModel().getTerritoryAt(0).getAdjacentTerritories().contains(
-			//gameEngine.getMapListModel().getTerritoryAt(2)));
+			//El territorio 2 es adyacente al territorio 0
+			assertTrue(gameEngine.getMapListModel().getTerritoryAt(0).getAdjacentTerritories().contains(
+				gameEngine.getMapListModel().getTerritoryAt(2)));
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
 			System.out.println("TestCase::4");
