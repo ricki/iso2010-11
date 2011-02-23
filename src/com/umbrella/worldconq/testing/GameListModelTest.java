@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.domain.GameListModel;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.GameInfo;
 
@@ -105,7 +106,7 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testSetData() {
+	public void testSetData1() {
 		System.out.println("TestCase::testSetData1");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
@@ -113,6 +114,18 @@ public class GameListModelTest extends TestCase {
 			assertTrue(mGameListModel != null);
 		} catch (final Exception e) {
 			fail(e.toString());
+		}
+	}
+
+	public void testSetData2() {
+		System.out.println("TestCase::testSetData2");
+		try {
+			final GameListModel mGameListModel = new GameListModel();
+			mGameListModel.setData(null);
+			fail("Se esperaba excepcion");
+		} catch (final InvalidArgumentException e) {
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
 	}
 
@@ -154,8 +167,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt3() {
-		System.out.println("TestCase::testGetValueAt3 sobreescrito");
+	public void testGetValueAt1() {
+		System.out.println("TestCase::testGetValueAt1");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
@@ -166,8 +179,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt4() {
-		System.out.println("TestCase::testGetValueAt4 sobreescrito");
+	public void testGetValueAt2() {
+		System.out.println("TestCase::testGetValueAt2");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
@@ -178,8 +191,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt5() {
-		System.out.println("TestCase::testGetValueAt5 sobreescrito");
+	public void testGetValueAt3() {
+		System.out.println("TestCase::testGetValueAt3");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
@@ -190,8 +203,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt6() {
-		System.out.println("TestCase::testGetValueAt6 sobreescrito");
+	public void testGetValueAt4() {
+		System.out.println("TestCase::testGetValueAt4");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
@@ -202,8 +215,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt7() {
-		System.out.println("TestCase::testGetValueAt7 sobreescrito");
+	public void testGetValueAt5() {
+		System.out.println("TestCase::testGetValueAt5");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
@@ -214,8 +227,8 @@ public class GameListModelTest extends TestCase {
 		}
 	}
 
-	public void testGetValueAt8() {
-		System.out.println("TestCase::testGetValueAt8 sobreescrito");
+	public void testGetValueAt6() {
+		System.out.println("TestCase::testGetValueAt6");
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(mGameList);
