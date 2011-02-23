@@ -33,12 +33,12 @@ public class GameEngine implements ClientCallback {
 		this.session = session;
 		this.adapter = adapter;
 
-		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
-			game));
-
 		mPlayerListModel = new PlayerListModel(game.strToPlayer(
 			this.session.getUser(),
 			game), game.getPlayers());
+
+		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
+			game), mPlayerListModel);
 
 		final ArrayList<TerritoryDecorator> mMapList = new ArrayList<TerritoryDecorator>();
 		final ArrayList<Territory> map = game.getMap();
