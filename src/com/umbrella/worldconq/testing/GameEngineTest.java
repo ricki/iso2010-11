@@ -108,15 +108,21 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
+	//Terminado AcceptAttack
+
 	public void testAcceptAttack1() {
 		System.out.println("TestCase::testAcceptAttack1");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
-
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
+			assertNull(o);
+			//Hacer el ataque
+			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
+			o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
 			assertNotNull(o);
+			//Aceptar el ataque
 			gameEngine.acceptAttack();
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNull(o);
@@ -125,15 +131,73 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
+	public void testAcceptAttack2() {
+		System.out.println("TestCase::testAcceptAttack2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			//Aceptar el ataque
+			gameEngine.acceptAttack();
+			fail("Exception");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	// Faltan con los parámetos
+
 	public void testRequestNegotiation1() {
 		System.out.println("TestCase::requestNegotiation1");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
+			assertNull(o);
+			//Hacer el ataque
+			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
+			o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
 			assertNotNull(o);
+			//Pedir Negociacion
 			gameEngine.requestNegotiation(100, 4);
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNull(o);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testRequestNegotiation2() {
+		System.out.println("TestCase::testRequestNegotiation2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			//Pedir Negociacion
+			gameEngine.requestNegotiation(100, 4);
+			fail("Exception");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void testResolveAttack1() {
+		System.out.println("TestCase::testResolveAttack1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			//Hacer el ataque
+			gameEngine.attackTerritory(0, 2, 1, 1, 1, 1);
+			o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNotNull(o);
+			//Resolver el ataque
+			gameEngine.resolveAttack();
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNull(o);
 		} catch (final InvalidArgumentException e) {
