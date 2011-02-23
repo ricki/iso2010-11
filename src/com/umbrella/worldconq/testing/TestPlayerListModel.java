@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.domain.PlayerListModel;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 
@@ -89,8 +88,19 @@ public class TestPlayerListModel extends TestCase {
 		}
 	}
 
-	public void testSetData() {
-		System.out.println("TestCase::testSetData");
+	public void testConstructor2() {
+		System.out.println("TestCase::testConstructor2");
+
+		try {
+			new PlayerListModel(null, null);
+			fail("Se esperaba excepcion");
+		} catch (final Exception e) {
+
+		}
+	}
+
+	public void testSetData1() {
+		System.out.println("TestCase::testSetData1");
 
 		try {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
@@ -98,6 +108,18 @@ public class TestPlayerListModel extends TestCase {
 			assertTrue(mPlayerListModel != null);
 		} catch (final Exception e) {
 			fail(e.toString());
+		}
+	}
+
+	public void testSetData2() {
+		System.out.println("TestCase::testSetData2");
+
+		try {
+			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
+			mPlayerListModel.setData(null);
+			fail("Se esperaba excepcion");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
 	}
 
@@ -190,9 +212,8 @@ public class TestPlayerListModel extends TestCase {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
 			mPlayerListModel.getPlayerByName(null);
 			fail("Se esperaba excepcion");
-		} catch (final InvalidArgumentException e) {
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+
 		}
 	}
 
