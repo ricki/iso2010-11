@@ -136,7 +136,6 @@ public class MapView extends JComponent implements TableModelListener {
 	@Override
 	public void paint(Graphics g) {
 		final int territorySelected = lsm.getMinSelectionIndex();
-		System.out.println("hola" + territorySelected);
 		if (territorySelected != -1) {
 			this.getRowInfo(territorySelected);
 			this.removeAll();
