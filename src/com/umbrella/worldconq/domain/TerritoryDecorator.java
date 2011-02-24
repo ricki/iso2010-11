@@ -324,4 +324,14 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		return new TerritoryDecorator((Territory) this.cloneTerritory(), map,
 			playerList);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof TerritoryDecorator))
+			return false;
+		final TerritoryDecorator td = (TerritoryDecorator) o;
+		return decoratedTerritory.getIdTerritory() == td.getIdTerritory();
+	}
 }
