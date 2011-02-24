@@ -823,5 +823,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 	public void winnerEvent(Player p) {
 		final String list = "El jugador " + p.getName() + "ha ganado\n";
 		this.getActionGame().append(list);
+		JOptionPane.showMessageDialog(null, "Ganador", list,
+			JOptionPane.INFORMATION_MESSAGE);
 	}
 }
