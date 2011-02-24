@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
+import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
 import com.umbrella.worldconq.ui.GameEventListener;
 import communications.IClient.TimeType;
@@ -14,6 +15,7 @@ import domain.Arsenal;
 import domain.EventType;
 import domain.Game;
 import domain.Player;
+import domain.Spy;
 import domain.Territory;
 import exceptions.InvalidTerritoryException;
 
@@ -33,12 +35,12 @@ public class GameEngine implements ClientCallback {
 		this.session = session;
 		this.adapter = adapter;
 
-		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
-			game));
-
 		mPlayerListModel = new PlayerListModel(game.strToPlayer(
 			this.session.getUser(),
 			game), game.getPlayers());
+
+		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
+			game), mPlayerListModel);
 
 		final ArrayList<TerritoryDecorator> mMapList = new ArrayList<TerritoryDecorator>();
 		final ArrayList<Territory> map = game.getMap();
@@ -86,6 +88,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws Exception {
+		this.checkInTurn();
+
 		if (src < 0 || src > 41)
 			throw new InvalidArgumentException();
 		if (dst < 0 || dst > 41)
@@ -127,6 +131,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void acceptAttack() throws Exception {
+		if (mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer())) throw new OutOfTurnException();
 		if (mCurrentAttack == null)
 			throw new Exception();
 		adapter.acceptAttack(session, mGame);
@@ -134,6 +140,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void requestNegotiation(int money, int soldiers) throws Exception {
+		if (mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer())) throw new OutOfTurnException();
 		if (mCurrentAttack == null)
 			throw new Exception();
 		if (money >= 0 && soldiers >= 0
@@ -146,6 +154,7 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void buyUnits(int Territory, int soldiers, int cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+		this.checkInTurn();
 
 		if (Territory < 0 || Territory > 41)
 			throw new InvalidArgumentException();
@@ -206,6 +215,7 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int ICMB, int antimissiles) throws Exception {
+		this.checkInTurn();
 
 		if (src < 0 || src > 41)
 			throw new InvalidArgumentException();
@@ -282,6 +292,8 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void buyTerritory(int territory) throws Exception {
+		this.checkInTurn();
+
 		if (territory < 0 || territory > 41)
 			throw new InvalidArgumentException();
 
@@ -330,6 +342,33 @@ public class GameEngine implements ClientCallback {
 			mMapListModel.updateTerritory(territoryUpdate);
 		} else
 			throw new InvalidArgumentException();
+	}
+
+	public void deploySpy(int territory) throws Exception {
+		this.checkInTurn();
+
+		if (territory < 0 || territory >= mMapListModel.getRowCount())
+			throw new InvalidArgumentException();
+
+		final Player self = mPlayerListModel.getSelfPlayer();
+
+		if (self.getMoney() < UnitInfo.getPricSpy())
+			throw new NotEnoughMoneyException();
+
+		final ArrayList<Spy> spyList = new ArrayList<Spy>();
+		spyList.addAll(self.getSpies());
+		spyList.add(new Spy(territory, 2));
+
+		final Player p = new Player(
+			self.getName(), self.getMoney() - UnitInfo.getPricSpy(),
+			self.isOnline(), self.isHasTurn(), spyList);
+
+		final ArrayList<Player> playerUpdate = new ArrayList<Player>();
+		playerUpdate.add(p);
+		adapter.updateGame(session, mGame, playerUpdate,
+			new ArrayList<Territory>(), EventType.BuyArsenalEvent);
+
+		mPlayerListModel.updatePlayer(p);
 	}
 
 	@Override
@@ -443,6 +482,56 @@ public class GameEngine implements ClientCallback {
 
 	@Override
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) {
+		final Player curPlayer = mPlayerListModel.getActivePlayer();
+
+		if (event == EventType.AttackEvent) {
+			if (territoryUpdate.size() == 2) {
+				final TerritoryDecorator t1 = new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
+				final TerritoryDecorator t2 = new TerritoryDecorator(
+					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
+
+				if (t1.getPlayer().equals(curPlayer))
+					gameListener.attackEvent(t1, t2);
+				else
+					gameListener.attackEvent(t2, t1);
+			}
+		} else if (event == EventType.NegotiationEvent) {
+			if (territoryUpdate.size() == 2) {
+				final TerritoryDecorator t1 = new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
+				final TerritoryDecorator t2 = new TerritoryDecorator(
+					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
+
+				if (t1.getPlayer().equals(curPlayer))
+					gameListener.negotiationEvent(t1, t2);
+				else
+					gameListener.negotiationEvent(t2, t1);
+			}
+		} else if (event == EventType.BuyArsenalEvent) {
+			if (territoryUpdate.size() == 1) {
+				gameListener.buyUnitsEvent(new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+			}
+		} else if (event == EventType.BuyTerritoryEvent) {
+			if (territoryUpdate.size() == 1) {
+				gameListener.buyTerritoryEvent(new TerritoryDecorator(
+					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+			}
+		}
+
+		for (final Player p : playerUpdate) {
+			mPlayerListModel.updatePlayer(p);
+		}
+		for (final Territory t : territoryUpdate) {
+			mMapListModel.updateTerritory(new TerritoryDecorator(t,
+				mMapListModel, mPlayerListModel));
+		}
+
+		if (event == EventType.TurnChanged) {
+			final Thread th = new TurnUpdateThread();
+			th.run();
+		}
 
 	}
 
@@ -451,4 +540,39 @@ public class GameEngine implements ClientCallback {
 		// TODO Auto-generated method stub
 
 	}
+
+	private void checkInTurn() throws OutOfTurnException {
+		if (!mPlayerListModel.getSelfPlayer().equals(
+			mPlayerListModel.getActivePlayer()))
+			throw new OutOfTurnException();
+	}
+
+	private class TurnUpdateThread extends Thread {
+		@Override
+		public void run() {
+			final Player self = mPlayerListModel.getSelfPlayer();
+
+			if (!self.equals(mPlayerListModel.getActivePlayer())) return;
+
+			final ArrayList<Spy> spyList = self.getSpies();
+			final ArrayList<Spy> newSpyList = new ArrayList<Spy>();
+			for (final Spy spy : spyList) {
+				spy.setUses(spy.getUses() - 1);
+				if (spy.getUses() >= 0) newSpyList.add(spy);
+			}
+			self.setSpies(newSpyList);
+
+			try {
+				final ArrayList<Player> playerList = new ArrayList<Player>();
+				playerList.add(self);
+				adapter.updateGame(session, GameEngine.this.getGame(),
+					playerList, new ArrayList<Territory>(),
+					EventType.UnknownEvent);
+				mPlayerListModel.updatePlayer(self);
+			} catch (final Exception e) {
+				self.setSpies(spyList);
+			}
+		}
+	}
+
 }

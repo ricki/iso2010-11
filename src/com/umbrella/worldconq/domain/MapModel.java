@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import domain.Player;
 import domain.Spy;
+import domain.Territory;
 
 public class MapModel extends AbstractTableModel {
 
@@ -20,27 +21,40 @@ public class MapModel extends AbstractTableModel {
 	private final ArrayList<TerritoryDecorator> data;
 	private final Player selfPlayer;
 
-	public MapModel(Player selfPlayer) {
+	public MapModel(Player selfPlayer, PlayerListModel playerModel) {
 		super();
 		data = new ArrayList<TerritoryDecorator>();
 		for (int i = 0; i < 42; i++) {
-			data.add(null);
+			final Territory t = new Territory(i, null, null, 0, null, 0, 0, 0);
+			data.add(new TerritoryDecorator(t, this, playerModel));
 		}
 		this.selfPlayer = selfPlayer;
 	}
 
 	public void setData(ArrayList<TerritoryDecorator> data) {
-		this.data.clear();
-		this.data.addAll(data);
-		this.fireTableDataChanged();
+		if (data != null) {
+			for (final TerritoryDecorator t : data) {
+				this.updateTerritory(t);
+			}
+		}
 	}
 
 	public void updateTerritory(TerritoryDecorator territory) {
-		data.set(territory.getIdTerritory(), territory);
+		if (territory != null
+				&& territory.getId() >= 0
+				&& territory.getId() < 42) {
+			final TerritoryDecorator t = data.get(territory.getId());
+			t.setPlayer(territory.getPlayer());
+			t.setNumSoldiers(territory.getNumSoldiers());
+			t.setNumCannons(territory.getNumCannons());
+			t.setNumMissiles(territory.getNumMissiles());
+			t.setNumICBMs(territory.getNumICBMs());
+			t.setNumAntiMissiles(territory.getNumAntiMissiles());
+			this.fireTableDataChanged();
+		}
 	}
 
 	public TerritoryDecorator getTerritoryAt(int index) {
-		//data.get(index).setIdTerritory(index);
 		return data.get(index);
 	}
 
@@ -63,13 +77,15 @@ public class MapModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
 
+		if (columnIndex < 0 || columnIndex >= this.getColumnCount()) return null;
+
 		boolean hasSpy = false;
 		final TerritoryDecorator t = data.get(rowIndex);
 
 		if (t.getPlayer() != null) {
 
 			for (final Spy s : selfPlayer.getSpies()) {
-				if (s.getLocation() == rowIndex) {
+				if (s.getUses() < 2 && s.getLocation() == rowIndex) {
 					hasSpy = true;
 				}
 			}
@@ -115,4 +131,5 @@ public class MapModel extends AbstractTableModel {
 			}
 		}
 	}
+
 }
