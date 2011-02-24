@@ -58,11 +58,12 @@ public class MapModelTest extends TestCase {
 				playerList));
 		}
 		map.setData(data);
-		/*
-		 * for (int index = 0; index < 42; index++) {
-		 * assertTrue(map.getTerritoryAt(index) != null);
-		 * assertTrue(map.getTerritoryAt(index).getId() == index); }
-		 */
+
+		for (int index = 0; index < 42; index++) {
+			assertTrue(map.getTerritoryAt(index) != null);
+			assertTrue(map.getTerritoryAt(index).getId() == index);
+		}
+
 	}
 
 	public void testUpdateTerritory() {
@@ -133,10 +134,10 @@ public class MapModelTest extends TestCase {
 
 		map.updateTerritory(T3);
 
-		assertTrue(map.getValueAt(14, 1).equals("¿?"));
-		assertTrue(map.getValueAt(14, 0).equals(14));
-		assertTrue(map.getValueAt(6, 0).equals(6));
-		assertTrue(map.getValueAt(6, 2).equals("¿?"));
+		assertEquals(map.getValueAt(14, 1), "¿?");
+		assertEquals(map.getValueAt(14, 0), 14);
+		assertEquals(map.getValueAt(6, 0), 6);
+		assertEquals(map.getValueAt(6, 2), "¿?");
 
 		/* Se depliega un espia */
 
@@ -144,6 +145,7 @@ public class MapModelTest extends TestCase {
 		spys.add(new Spy(14, 1));
 		selfPlayer.setSpies(spys);
 		playerList.updatePlayer(selfPlayer);
+
 		assertTrue(map.getValueAt(14, 0).equals(14));
 		assertTrue(map.getValueAt(14, 1).equals("Ambrosio"));
 		assertTrue(map.getValueAt(14, 2).equals(8));
