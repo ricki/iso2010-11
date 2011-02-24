@@ -3,6 +3,7 @@ package com.umbrella.worldconq.ui;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 
 import domain.Arsenal;
+import domain.Player;
 
 public interface GameEventListener {
 	public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst, Arsenal arsenal);
@@ -16,4 +17,6 @@ public interface GameEventListener {
 	public void buyTerritoryEvent(TerritoryDecorator t);
 
 	public void buyUnitsEvent(TerritoryDecorator t);
+
+	public void winnerEvent(Player p);
 }

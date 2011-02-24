@@ -802,4 +802,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void winnerEvent(Player p) {
+		// TODO Auto-generated method stub
+
+	}
 }
