@@ -21,6 +21,8 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
@@ -50,6 +52,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JButton buyTerritoryButton; //Botón para comprar territorios
 	private JButton exitGameButton; //Botón para desconectarse de una partida
 	private JButton logoutButton; //Botón para quitar y salir del juego (cerrar sesión)
+	private JButton connectGameButton; //Botón para conectarse a una partida
+	private JButton joinGameButton; //Botón para unirse a una partida
+	private JButton updateListButton;
+	private JButton createGameButton;
 	private MapView mv; //MapView
 
 	public MainWindow(GameManager gameMgr) {
@@ -73,20 +79,22 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 		mGameListToolBar = new JToolBar();
 
-		final JButton updateListButton = new JButton("Actualizar lista");
+		updateListButton = new JButton("Actualizar lista");
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
-		final JButton createGameButton = new JButton("Crear partida");
+		createGameButton = new JButton("Crear partida");
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
-		final JButton joinGameButton = new JButton("Unirse a la partida");
+		joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
+		joinGameButton.setEnabled(false);
 		mGameListToolBar.add(joinGameButton);
 
-		final JButton connectGameButton = new JButton("Conectarse a partida");
+		connectGameButton = new JButton("Conectarse a partida");
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
+		connectGameButton.setEnabled(false);
 		mGameListToolBar.add(connectGameButton);
 
 		logoutButton = new JButton("Cerrar sesión");
@@ -157,7 +165,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 		// mostramos el mapa y lo demas
 		mv = new MapView(
 			gameMgr.getGameEngine().getMapListModel());
-
+		//Añado un observador al modelo de lista de selección del mapView
+		mv.getListSelectionModel().addListSelectionListener(
+			new MapViewObserver(this, mv));
 		this.generateButtons();
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
@@ -183,6 +193,12 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 			mCurrentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			mOpenList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+			//añadido para adherirle un observador
+			mCurrentList.getSelectionModel().addListSelectionListener(
+				new GameListObserver(this, "mCurrentList"));
+			mOpenList.getSelectionModel().addListSelectionListener(
+				new GameListObserver(this, "mOpenList"));
 
 			mGameListPanel.add(new JLabel("Mis partidas actuales"));
 			mGameListPanel.add(currentListPanel);
@@ -467,10 +483,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Enviando un espía...");
+			final int selT = win.getMapView().getSelectedRow();
 			if (sendSpyButton.isEnabled()) {
-				//Completar
-				//SendSpyDialog sed = new SendSpyDialog(this, TerritoryDecorator src,	ArrayList < String > adjacentList);			
-				//sed.setVisible(true);		
+				win.getGameManager().getGameEngine().deploySpy(selT);
 			}
 		}
 	}
@@ -605,29 +620,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 	@Override
 	public void negotiationRequested(int money, int soldiers) {
-		final Object[] options = {
-				"Sí", "No"
-		};
-		final String question = "Quieren nogociar con usted\nofreciéndole "
-				+ soldiers + "soldados y " + money + " gallifantes.\n"
-				+ "¿Acepta la negociación?";
-		final String confirm = "";
-		final Object questionDialog = JOptionPane.showInputDialog(
-			this,
-			(question),
-			"Abandonar la partida",
-			JOptionPane.QUESTION_MESSAGE,
-			null,
-			options, options[0]);
-		if (questionDialog.toString().equals("Sí")) {
-			//Revisar
-			this.getGameManager().getGameEngine().resolveNegotiation(money,
-				soldiers);
-		} else {
-			//Revisar
-			this.getGameManager().getGameEngine().resolveAttack();
-		}
-
+		final NegotiationDialogThread nrdt = new NegotiationDialogThread(
+			"negotiationRequested");
+		nrdt.setData(this, money, soldiers);
+		nrdt.start();
 	}
 
 	@Override
@@ -640,8 +636,51 @@ public class MainWindow extends JFrame implements GameEventListener {
 		radt.start();
 	}
 
+	//mini clase privada que lanza como un hilo el dialogo de petición de negociación
+	private class NegotiationDialogThread extends Thread {
+		private MainWindow win;
+		private int money, soldiers;
+
+		public NegotiationDialogThread(String dialogName) {
+			super(dialogName);
+		}
+
+		public void setData(MainWindow win, int money, int soldiers) {
+			this.win = win;
+			this.money = money;
+			this.soldiers = soldiers;
+		}
+
+		@Override
+		public void run() {
+			System.out.println("negotiationRequested");
+			final Object[] options = {
+					"Sí", "No"
+			};
+			final String question = "Quieren nogociar con usted\nofreciéndole "
+					+ soldiers + "soldados y " + money + " gallifantes.\n"
+					+ "¿Acepta la negociación?";
+			final String confirm = "";
+			final Object questionDialog = JOptionPane.showInputDialog(
+				win,
+				(question),
+				"Abandonar la partida",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options, options[0]);
+			if (questionDialog.toString().equals("Sí")) {
+				//Revisar
+				win.getGameManager().getGameEngine().resolveNegotiation(money,
+					soldiers);
+			} else {
+				//Revisar
+				win.getGameManager().getGameEngine().resolveAttack();
+			}
+		}
+	}
+
 	//Mini clase que lanza hilos
-	public class DialogThread extends Thread {
+	private class DialogThread extends Thread {
 		private MainWindow win;
 		private TerritoryDecorator srcT;
 		private TerritoryDecorator dstT;
@@ -682,4 +721,57 @@ public class MainWindow extends JFrame implements GameEventListener {
 			}
 		}
 	}
+
+	//Miniclase que captura los cambios en el MapView
+	private class MapViewObserver implements ListSelectionListener {
+		private final MainWindow win;
+		private final MapView mv;
+
+		public MapViewObserver(MainWindow win, MapView mv) {
+			this.win = win;
+			this.mv = mv;
+		}
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			final int Tsel = mv.getSelectedRow();
+			final Player p = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
+				Tsel).getPlayer();
+			if (Tsel != -1) {
+				if (p != null) {
+					if (p.getName().equals(
+						win.getGameManager().getGameEngine().getPlayerListModel().getSelfPlayer().getName())) {
+						win.attackButton.setEnabled(true);
+						win.buyUnitsButton.setEnabled(true);
+						win.moveUnitsButton.setEnabled(true);
+					} else {
+						win.sendSpyButton.setEnabled(true);
+					}
+				} else {
+					win.buyTerritoryButton.setEnabled(true);
+				}
+			}
+		}
+	}
+
+	//Miniclase que captura los cambios en las listas de partidas
+	private class GameListObserver implements ListSelectionListener {
+		private final MainWindow win;
+		private final String gl;
+
+		public GameListObserver(MainWindow win, String gl) {
+			this.win = win;
+			this.gl = gl;
+		}
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			if (gl.equals("mCurrentList")) {
+				win.connectGameButton.setEnabled(true);
+			} else {
+				win.joinGameButton.setEnabled(true);
+			}
+		}
+	}
+
 }
