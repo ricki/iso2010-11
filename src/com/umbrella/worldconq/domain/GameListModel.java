@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import domain.GameInfo;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
+import domain.GameInfo;
 
 public class GameListModel extends AbstractTableModel {
 
@@ -25,7 +26,8 @@ public class GameListModel extends AbstractTableModel {
 		mGameList = new ArrayList<GameInfo>();
 	}
 
-	public void setData(ArrayList<GameInfo> data) {
+	public void setData(ArrayList<GameInfo> data) throws InvalidArgumentException {
+		if (data == null) throw new InvalidArgumentException();
 		mGameList.clear();
 		mGameList.addAll(data);
 		this.fireTableDataChanged();

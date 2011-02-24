@@ -118,6 +118,6 @@ public class PlayerListModel extends AbstractTableModel {
 			}
 		}
 		return null;
-	}
 
+	}
 }
