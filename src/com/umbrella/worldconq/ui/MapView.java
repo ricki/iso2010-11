@@ -30,7 +30,6 @@ public class MapView extends JComponent implements TableModelListener {
 	private ListSelectionModel lsm;
 	private JEditorPane infoPlayer;
 	private JEditorPane listPlayer;
-	private JEditorPane actionGame;
 	private final BufferedImage bufferImageMap;
 	private final MapModel mMapm;
 
@@ -137,6 +136,7 @@ public class MapView extends JComponent implements TableModelListener {
 	@Override
 	public void paint(Graphics g) {
 		final int territorySelected = lsm.getMinSelectionIndex();
+		System.out.println("hola" + territorySelected);
 		if (territorySelected != -1) {
 			this.getRowInfo(territorySelected);
 			this.removeAll();
@@ -220,29 +220,18 @@ public class MapView extends JComponent implements TableModelListener {
 		return listPlayer;
 	}
 
-	public JEditorPane getActionGame() {
-		return actionGame;
-	}
-
-	public void setActionGame(JEditorPane actionGame) {
-
-		actionGame.setEditable(false);
-		String list = "<html>\n<P ALIGN=\"left\"><BIG>"
-				+ "Información de la Partida" + "</BIG><BR></P><HR>";
-		list += "iran las acciones que se generen en la partida\n";
-		list += "</P>";
-		this.actionGame = actionGame;
-		this.getActionGame().setContentType("text/html");
-		this.getActionGame().setText(list);
-	}
-
 	public int getSelectedRow() {
 		return lsm.getMinSelectionIndex();
 	}
 
 	public void setSelectedRow(int x, int y) {
 		final int id = this.getIndex(bufferImageColorPixel.getRGB(x, y));
-		lsm.setSelectionInterval(id, id);
+		if (id != -1) {
+			lsm.setSelectionInterval(id, id);
+		} else {
+			lsm.clearSelection();
+		}
+
 	}
 
 	@Override

@@ -43,6 +43,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
+	private JEditorPane actionGame = null;
 
 	//Botones de la barra mPlayToolbar
 	private JButton moveUnitsButton; //Botón para mover unidades de un territorio a otro
@@ -215,9 +216,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mv.setFondo();
 			mGamePanel.add(mv);
 			//añadimos el panel para la informacion de la partida
-			mv.setActionGame(new JEditorPane());
+			this.setActionGame(new JEditorPane());
 			final JScrollPane ActionGameScroll = new JScrollPane(
-				mv.getActionGame());
+				this.getActionGame());
 			ActionGameScroll.setPreferredSize(new Dimension(300, 125));
 			mGamePanel.add(ActionGameScroll);
 		}
@@ -740,9 +741,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
 			final int Tsel = mv.getSelectedRow();
-			final Player p = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
-				Tsel).getPlayer();
 			if (Tsel != -1) {
+				final Player p = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
+					Tsel).getPlayer();
 				if (p != null) {
 					if (p.getName().equals(
 						win.getGameManager().getGameEngine().getPlayerListModel().getSelfPlayer().getName())) {
@@ -779,10 +780,29 @@ public class MainWindow extends JFrame implements GameEventListener {
 		}
 	}
 
+	public JEditorPane getActionGame() {
+		return actionGame;
+	}
+
+	public void setActionGame(JEditorPane actionGame) {
+
+		actionGame.setEditable(false);
+		String list = "<html>\n<P ALIGN=\"left\"><BIG>"
+				+ "Información de la Partida" + "</BIG><BR></P><HR>";
+		list += "iran las acciones que se generen en la partida\n";
+		list += "</P>";
+		this.actionGame = actionGame;
+		this.getActionGame().setContentType("text/html");
+		this.getActionGame().setText(list);
+	}
+
 	@Override
 	public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
-		// TODO Auto-generated method stub
-
+		String list = "<html>\n<P ALIGN=\"left\"><BIG>"
+				+ "Información de la Partida" + "</BIG><BR></P><HR>";
+		list += "iran las acciones que se generen en la partida\n";
+		list += "</P>";
+		this.getActionGame().setText(list);
 	}
 
 	@Override
