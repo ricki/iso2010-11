@@ -485,7 +485,12 @@ public class MainWindow extends JFrame implements GameEventListener {
 			System.out.println("Enviando un espía...");
 			final int selT = win.getMapView().getSelectedRow();
 			if (sendSpyButton.isEnabled()) {
-				win.getGameManager().getGameEngine().deploySpy(selT);
+				try {
+					win.getGameManager().getGameEngine().deploySpy(selT);
+				} catch (final Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
