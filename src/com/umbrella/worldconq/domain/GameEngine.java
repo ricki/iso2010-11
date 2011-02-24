@@ -399,15 +399,9 @@ public class GameEngine implements ClientCallback {
 	public void resolveAttack() {
 		mCurrentAttack.resolve();
 
-		//Modificamos el territorio propio, creando un clon por si falla el update mantener los datos
-		final TerritoryDecorator territoryUpdateOrigin = (TerritoryDecorator) mCurrentAttack.getOrigin().clone();
-
-		//Modificamos el territorio contrario, creando un clon por si falla el update mantener los datos
-		final TerritoryDecorator territoryUpdateDestination = (TerritoryDecorator) mCurrentAttack.getOrigin().clone();
-
 		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
-		territoriesUpdate.add(territoryUpdateOrigin);
-		territoriesUpdate.add(territoryUpdateDestination);
+		territoriesUpdate.add(mCurrentAttack.getOrigin());
+		territoriesUpdate.add(mCurrentAttack.getDestination());
 
 		final ArrayList<Player> playersUpdate = new ArrayList<Player>();
 
@@ -420,8 +414,8 @@ public class GameEngine implements ClientCallback {
 			e.printStackTrace();
 		}
 
-		mMapListModel.updateTerritory(territoryUpdateOrigin);
-		mMapListModel.updateTerritory(territoryUpdateDestination);
+		mMapListModel.updateTerritory(mCurrentAttack.getOrigin());
+		mMapListModel.updateTerritory(mCurrentAttack.getDestination());
 		mCurrentAttack = null;
 
 	}
