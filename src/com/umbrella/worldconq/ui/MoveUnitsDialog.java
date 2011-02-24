@@ -273,6 +273,11 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 		return selection;
 	}
 
+	//Método que devuelve el índice del territorio destino
+	public int getDestiny() {
+		return destiny;
+	}
+
 	//Método que devuelve el número de soldados comprados
 	public int getSoldierCount() {
 		return soldiers;

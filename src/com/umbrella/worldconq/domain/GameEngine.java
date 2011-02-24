@@ -382,7 +382,7 @@ public class GameEngine implements ClientCallback {
 				territoryDestination);
 
 			gameListener.territoryUnderAttack(territoryOrigin,
-				territoryDestination);
+				territoryDestination, arsenal);
 
 			mCurrentAttack = att;
 		} else {
@@ -426,7 +426,6 @@ public class GameEngine implements ClientCallback {
 
 	}
 
-	@Override
 	public void resolveNegotiation(int money, int soldiers) {
 
 		//Modificamos el usuario y territorio propio, creando un clon por si falla el update mantener los datos

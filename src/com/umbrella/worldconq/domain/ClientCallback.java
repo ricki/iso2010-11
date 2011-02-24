@@ -19,7 +19,7 @@ public interface ClientCallback {
 
 	public void resolveAttack();
 
-	public void resolveNegotiation(int money, int soldiers);
+	//public void resolveNegotiation(int money, int soldiers);
 
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event);
 

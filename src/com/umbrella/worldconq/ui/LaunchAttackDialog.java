@@ -56,11 +56,13 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 	private genericSpinnerListModel cannonTthreeSpinnerModel;
 	private genericSpinnerListModel missileSpinnerModel;
 	private genericSpinnerListModel icbmSpinnerModel;
+	private final JFrame mWin;
 
 	private static final long serialVersionUID = 3384340224276468944L;
 
 	public LaunchAttackDialog(JFrame frame, TerritoryDecorator src, ArrayList<String> adjacentList) {
 		super(frame);
+		mWin = frame;
 		this.src = src;
 		this.adjacentList = adjacentList;
 		this.initGUI();
@@ -279,8 +281,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 		//Creo el spinner de territorios
 		final String[] adjacentListNames = new String[adjacentList.size()];
 
-		//Genero el contenido del ComboBox de territorios a atacar
-		//final String[] adjacentListNames = new String[adjacentList.size()];
+		//Genero el contenido del ComboBox de territorios a atacar		
 		territoryCombo = new JComboBox();
 		for (int i = 0; i < adjacentList.size(); i++) {
 			adjacentListNames[i] = adjacentList.get(i);
@@ -357,12 +358,6 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 		if ((src.getNumCannons()[0] + src.getNumCannons()[1] + src.getNumCannons()[3]) < Integer.parseInt((String) (cannonToneSpinner.getValue()))) {
 			return false;
 		}
-		//if (src.getNumCannons()[1] < Integer.parseInt((String) (cannonTtwoSpinner.getValue()))) {
-		//return false;
-		//}
-		//if (src.getNumCannons()[3] < Integer.parseInt((String) (cannonTthreeSpinner.getValue()))) {
-		//return false;
-		//}
 		if (src.getNumMissiles() < Integer.parseInt((String) (missileCountSpinner.getValue()))) {
 			return false;
 		}
@@ -392,19 +387,21 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-
-			if (dlg.correctArsenal()) {
-				dlg.selection = doselection;
-				dlg.territoryIndex = dlg.territoryCombo.getSelectedIndex();
-				dlg.soldierCount = Integer.parseInt((String) (dlg.soldierCountSpinner.getValue()));
-				dlg.cannonCount = Integer.parseInt(((String) (dlg.cannonToneSpinner.getValue())));
-				dlg.missileCount = Integer.parseInt(((String) (dlg.missileCountSpinner.getValue())));
-				dlg.icbmCount = Integer.parseInt(((String) (dlg.icbmCountSpinner.getValue())));
-				dlg.setVisible(false);
+			if (doselection == true) {
+				if (dlg.correctArsenal()) {
+					dlg.selection = doselection;
+					dlg.territoryIndex = dlg.territoryCombo.getSelectedIndex();
+					dlg.soldierCount = Integer.parseInt((String) (dlg.soldierCountSpinner.getValue()));
+					dlg.cannonCount = Integer.parseInt(((String) (dlg.cannonToneSpinner.getValue())));
+					dlg.missileCount = Integer.parseInt(((String) (dlg.missileCountSpinner.getValue())));
+					dlg.icbmCount = Integer.parseInt(((String) (dlg.icbmCountSpinner.getValue())));
+					dlg.setVisible(false);
+				} else {
+					dlg.infoLabel.setText("Arsenal no disponible");
+					dlg.infoLabel.setVisible(true);
+				}
 			} else {
 				dlg.selection = false;
-				dlg.infoLabel.setText("No ataque con un arsenal no disponible");
-				dlg.infoLabel.setVisible(true);
 			}
 		}
 	}
