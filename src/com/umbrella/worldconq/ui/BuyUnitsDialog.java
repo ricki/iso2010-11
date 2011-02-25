@@ -26,6 +26,7 @@ import com.umbrella.worldconq.domain.UnitInfo;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class BuyUnitsDialog extends javax.swing.JDialog {
+	private static final long serialVersionUID = 7085927869047108380L;
 	private JPanel mainPanel;
 	private JButton cancelButton;
 	private JLabel infotextLabel;
@@ -46,11 +47,9 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 	private boolean selection;
 	private int soldiers, cannons, missiles, icbms, antimissiles;
 	private final int money;
-	private final String territoryName;
 
 	public BuyUnitsDialog(JFrame frame, String territory, int maxMoney) {
 		super(frame);
-		territoryName = territory;
 		money = maxMoney;
 		this.initGUI();
 	}

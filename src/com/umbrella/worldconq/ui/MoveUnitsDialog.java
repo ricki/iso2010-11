@@ -30,6 +30,7 @@ import com.umbrella.worldconq.domain.TerritoryDecorator;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class MoveUnitsDialog extends javax.swing.JDialog {
+	private static final long serialVersionUID = 3776252326350589936L;
 	private JPanel mainPanel;
 	private JButton cancelButton;
 	private JLabel infotextLabel;

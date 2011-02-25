@@ -34,6 +34,7 @@ import com.umbrella.worldconq.domain.TerritoryDecorator;
  */
 public class LaunchAttackDialog extends javax.swing.JDialog {
 
+	private static final long serialVersionUID = 3384340224276468944L;
 	private boolean selection; //almacena la selección
 	private int territoryIndex; //almacena el índice del territorio a atacar
 	private int soldierCount; //almacena el número de soldados con los que se ataca
@@ -68,18 +69,15 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 	private genericSpinnerListModel cannonTthreeSpinnerModel;
 	private genericSpinnerListModel missileSpinnerModel;
 	private genericSpinnerListModel icbmSpinnerModel;
-	private final JFrame mWin;
-
-	private static final long serialVersionUID = 3384340224276468944L;
 
 	public LaunchAttackDialog(JFrame frame, TerritoryDecorator src, ArrayList<String> adjacentList) {
 		super(frame);
-		mWin = frame;
 		this.src = src;
 		this.adjacentList = adjacentList;
 		this.initGUI();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		this.createSpinners();
 		try {
@@ -139,7 +137,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 							AnchorConstraint.ANCHOR_REL));
 						soldiersIconLabel.setIcon(new ImageIcon(
 							this.getClass().getClassLoader().getResource(
-								"image/soldados.png")));
+							"image/soldados.png")));
 						soldiersIconLabel.setPreferredSize(new java.awt.Dimension(
 							100, 100));
 					}
@@ -210,7 +208,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 					acceptButton.setToolTipText("Atacar");
 					acceptButton.setIcon(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-							"image/ok.png")));
+						"image/ok.png")));
 					acceptButton.addKeyListener(new AcceptDialogKeyAdapter(this));
 					acceptButton.addMouseListener(new AcceptDialogMouseAdapter(
 						this, true));
@@ -228,7 +226,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 					cancelButton.setToolTipText("Cancelar el ataque");
 					cancelButton.setIcon(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-							"image/cancel.png")));
+						"image/cancel.png")));
 					cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
 						this, false));
 				}
@@ -416,6 +414,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 
 	//Esta es una clase privada, usada para crear los spinnerList
 	private class genericSpinnerListModel extends SpinnerListModel {
+		private static final long serialVersionUID = -2331150917776748019L;
 
 		public genericSpinnerListModel(String[] adjacentList) {
 			super(adjacentList);

@@ -25,12 +25,12 @@ import com.umbrella.worldconq.domain.TerritoryDecorator;
 import domain.Arsenal;
 
 public class ReplyAttackDialog extends javax.swing.JDialog {
+	private static final long serialVersionUID = -485789698446933968L;
 	private JPanel jPanel1;
 	private JComboBox soldiersCombo;
 	private JLabel missileinfoLabel;
 	private JLabel tainfoLabel;
 	private JPanel tattackedinfoPanel;
-	private JLabel taLabel;
 	private JLabel tattackedinfoLabel;
 	private JLabel icbminfoLabel;
 	private JLabel cannoninfoLabel;
@@ -336,6 +336,7 @@ public class ReplyAttackDialog extends javax.swing.JDialog {
 			doselection = selectioni;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			if (doselection == false) {
