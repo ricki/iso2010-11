@@ -208,7 +208,10 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 						acceptButton = new JButton();
 						actionPanel.add(acceptButton);
 						acceptButton.setText("Aceptar");
-						acceptButton.setBounds(15, 10, 150, 30);
+						acceptButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/ok.png")));
+						acceptButton.setBounds(15, 7, 150, 35);
 						acceptButton.setToolTipText("Mover las unidades seleccionadas");
 						acceptButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
 						acceptButton.addKeyListener(new AcceptDialogKeyAdapter(
@@ -219,7 +222,10 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 							cancelButton = new JButton();
 							actionPanel.add(cancelButton);
 							cancelButton.setText("Cancelar");
-							cancelButton.setBounds(205, 10, 150, 30);
+							cancelButton.setIcon(new ImageIcon(
+								this.getClass().getClassLoader().getResource(
+								"image/cancel.png")));
+							cancelButton.setBounds(205, 7, 150, 35);
 							cancelButton.setToolTipText("No mover ninguna unidad");
 							cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
 								this, false));

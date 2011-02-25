@@ -24,7 +24,6 @@ public class RegisterDialog extends JDialog {
 	private JPanel registerPanel;
 	private JButton CancelButton, AcceptButton;
 
-
 	private JLabel mapLabel;
 
 	private JLabel UserLabel;
@@ -33,14 +32,13 @@ public class RegisterDialog extends JDialog {
 
 	private JTextField UserTextField;
 	private JTextField EmailTextField;
-	private  JPasswordField PasswdField;
+	private JPasswordField PasswdField;
 
 	private boolean selection;
 
-
 	public RegisterDialog(JFrame f, String string, boolean b) {
 		super(f, string, b);
-		initGUI();
+		this.initGUI();
 	}
 
 	private void initGUI() {
@@ -48,15 +46,15 @@ public class RegisterDialog extends JDialog {
 		this.setSize(500, 250);
 
 		registerPanel = new JPanel();
-		getContentPane().add(registerPanel, BorderLayout.CENTER);
+		this.getContentPane().add(registerPanel, BorderLayout.CENTER);
 		registerPanel.setLayout(null);
 
 		try {
-			this.setIconImage(new ImageIcon(getClass().getClassLoader().getResource("image/logo.png")).getImage());
-		} catch (Exception e) {
+			this.setIconImage(new ImageIcon(
+				this.getClass().getClassLoader().getResource("image/logo.png")).getImage());
+		} catch (final Exception e) {
 			System.out.println("Imagen no encontrada");
 		}
-
 
 		UserLabel = new JLabel();
 		UserLabel.setText("Nombre de usuario :");
@@ -86,16 +84,22 @@ public class RegisterDialog extends JDialog {
 		PasswdField.addKeyListener(new AcceptDialogKeyAdapter(this));
 
 		AcceptButton = new JButton("Aceptar");
-		AcceptButton.setBounds(140, 160, 100, 30);
+		AcceptButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/ok.png")));
+		AcceptButton.setBounds(100, 160, 150, 35);
 		AcceptButton.addMouseListener(new AcceptDialogMouseAdapter(this, true));
 
 		CancelButton = new JButton("Cancelar");
-		CancelButton.setBounds(260, 160, 100, 30);
+		CancelButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/cancel.png")));
+		CancelButton.setBounds(265, 160, 150, 35);
 		CancelButton.addMouseListener(new AcceptDialogMouseAdapter(this, false));
 
-
 		mapLabel = new JLabel();
-		mapLabel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("image/mapa.png")));
+		mapLabel.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource("image/mapa.png")));
 		mapLabel.setBounds(50, 0, 357, 215);
 
 		registerPanel.add(UserLabel);
@@ -125,38 +129,39 @@ public class RegisterDialog extends JDialog {
 
 	@SuppressWarnings("deprecation")
 	public String getPasswd() {
-		return PasswdField.getText();		
+		return PasswdField.getText();
 	}
 
 	private class AcceptDialogMouseAdapter extends MouseAdapter {
 
-		private RegisterDialog dlg;
-		private boolean selection;	
+		private final RegisterDialog dlg;
+		private final boolean selection;
 
 		public AcceptDialogMouseAdapter(RegisterDialog dlg, boolean selection) {
 			this.dlg = dlg;
 			this.selection = selection;
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
-			dlg.selection = this.selection;
+			dlg.selection = selection;
 			dlg.setVisible(false);
 		}
 	}
 
 	private class AcceptDialogKeyAdapter extends KeyAdapter {
-		private RegisterDialog dlg;
+		private final RegisterDialog dlg;
 
-		public  AcceptDialogKeyAdapter (RegisterDialog dlg) {
+		public AcceptDialogKeyAdapter(RegisterDialog dlg) {
 			this.dlg = dlg;
 		}
 
+		@Override
 		public void keyPressed(KeyEvent evt) {
-			if(evt.getKeyCode() == 10){
+			if (evt.getKeyCode() == 10) {
 				dlg.selection = true;
 				dlg.setVisible(false);
-			}
-			else if(evt.getKeyCode() == 27){
+			} else if (evt.getKeyCode() == 27) {
 				dlg.selection = false;
 				dlg.setVisible(false);
 			}
