@@ -80,24 +80,39 @@ public class MainWindow extends JFrame implements GameEventListener {
 		mGameListToolBar = new JToolBar();
 
 		updateListButton = new JButton("Actualizar lista");
+		updateListButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/refresh.png")));
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
 		createGameButton = new JButton("Crear partida");
+		createGameButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/addgame.png")));
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
 		joinGameButton = new JButton("Unirse a la partida");
+		joinGameButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/join.png")));
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 		joinGameButton.setEnabled(false);
 		mGameListToolBar.add(joinGameButton);
 
 		connectGameButton = new JButton("Conectarse a partida");
+		connectGameButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/connect.png")));
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		connectGameButton.setEnabled(false);
 		mGameListToolBar.add(connectGameButton);
 
 		logoutButton = new JButton("Cerrar sesión");
+		logoutButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/logout.png")));
 		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
 		mGameListToolBar.add(logoutButton);
 
@@ -118,12 +133,30 @@ public class MainWindow extends JFrame implements GameEventListener {
 	//de herramientas mPlayToolbar cuando se está jugando
 	public void generateButtons() {
 		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
+		moveUnitsButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/moveunits.png")));
 		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
+		attackButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/attack.png")));
 		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
+		buyUnitsButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/buy.png")));
 		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
+		sendSpyButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/spy.png")));
 		buyTerritoryButton = new JButton(
 			"Comprar territorio"); //Botón para comprar territorios
+		buyTerritoryButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/buy.png")));
 		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
+		exitGameButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/exitb.png")));
 
 		//Añado un capturador de eventos a cada botón
 		attackButton.addMouseListener(new AttackMouseAdapter(this));
@@ -367,8 +400,16 @@ public class MainWindow extends JFrame implements GameEventListener {
 			System.out.println("Haciendo logout...");
 			//Aquí todo lo de guardar los datos, las partidas y demás
 			try {
-				win.dispose();
-				win.getGameManager().getUserManager().closeSession();
+				final int confirm = JOptionPane.showConfirmDialog(
+					mGameListPanel,
+					"¿Está seguro de que desea salir?",
+					"confirmación", JOptionPane.YES_NO_OPTION);
+				if (confirm == 0) {
+					win.getGameManager().getUserManager().closeSession();
+					win.dispose();
+				} else {
+					//No pasa nada
+				}
 			} catch (final Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -391,7 +432,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			final ArrayList<String> adjListNames = new ArrayList<String>();
 			final TerritoryDecorator srcT;
 			System.out.println("Atacando...");
-			if (attackButton.isEnabled()) {
+			if (win.attackButton.isEnabled()) {
 				final int selectedT = win.mv.getSelectedRow();
 				srcT = win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
 					selectedT);
@@ -406,6 +447,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					win,
 					win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
 						selectedT), adjListNames);
+				lad.setModal(true);
 				lad.setVisible(true);
 				if (lad.getSelection() == true) {
 					try {
@@ -441,7 +483,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			final ArrayList<String> adjListNames = new ArrayList<String>();
 			int selectedT;
 			System.out.println("Moviendo unidades...");
-			if (moveUnitsButton.isEnabled()) {
+			if (win.moveUnitsButton.isEnabled()) {
 				selectedT = win.getMapView().getSelectedRow();
 				srcT = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
 					selectedT);
@@ -453,6 +495,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					}
 				}
 				mud = new MoveUnitsDialog(win, srcT, adjListNames);
+				mud.setModal(true);
 				mud.setVisible(true);
 				if (mud.getSelection() == true) {
 					try {
@@ -484,7 +527,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Enviando un espía...");
 			final int selT = win.getMapView().getSelectedRow();
-			if (sendSpyButton.isEnabled()) {
+			if (win.sendSpyButton.isEnabled()) {
 				try {
 					win.getGameManager().getGameEngine().deploySpy(selT);
 				} catch (final Exception e) {
@@ -511,7 +554,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			final ArrayList<String> adjListNames = new ArrayList<String>();
 			int selectedT;
 			System.out.println("Comprando refuerzos...");
-			if (buyUnitsButton.isEnabled()) {
+			if (win.buyUnitsButton.isEnabled()) {
 				selectedT = win.getMapView().getSelectedRow();
 				srcT = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
 					selectedT);
@@ -524,6 +567,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				}
 				bud = new BuyUnitsDialog(win, srcT.getName(),
 					srcT.getPlayer().getMoney());
+				bud.setModal(true);
 				bud.setVisible(true);
 				if (bud.getSelection() == true) {
 					try {
@@ -558,7 +602,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			final ArrayList<String> adjListNames = new ArrayList<String>();
 			int selectedT;
 			System.out.println("Comprando un territorio...");
-			if (buyTerritoryButton.isEnabled()) {
+			if (win.buyTerritoryButton.isEnabled()) {
 				selectedT = win.getMapView().getSelectedRow();
 				srcT = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
 					selectedT);
@@ -599,19 +643,12 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			System.out.println("Desconectándose de la partida...");
-			final Object[] options = {
-					"Sí", "No"
-			};
 			final String question = "¿Está seguro de que desea abandonar la partida?";
-			final String confirm = "";
-			final Object questionDialog = JOptionPane.showInputDialog(
-				win,
-				(question),
-				"Abandonar la partida",
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options, options[0]);
-			if (questionDialog.toString().equals("Sí")) {
+			final int confirm = JOptionPane.showConfirmDialog(
+				mGameListPanel,
+				question,
+				"confirmación", JOptionPane.YES_NO_OPTION);
+			if (confirm == 0) {
 				win.mPlayToolBar.setVisible(false);
 				win.mGamePanel.setVisible(false);
 				win.mGameInfoPanel.setVisible(false);
@@ -749,11 +786,21 @@ public class MainWindow extends JFrame implements GameEventListener {
 						win.attackButton.setEnabled(true);
 						win.buyUnitsButton.setEnabled(true);
 						win.moveUnitsButton.setEnabled(true);
+						win.sendSpyButton.setEnabled(false);
+						win.buyTerritoryButton.setEnabled(false);
 					} else {
 						win.sendSpyButton.setEnabled(true);
+						win.buyTerritoryButton.setEnabled(false);
+						win.attackButton.setEnabled(false);
+						win.buyUnitsButton.setEnabled(false);
+						win.moveUnitsButton.setEnabled(false);
 					}
 				} else {
 					win.buyTerritoryButton.setEnabled(true);
+					win.sendSpyButton.setEnabled(false);
+					win.attackButton.setEnabled(false);
+					win.buyUnitsButton.setEnabled(false);
+					win.moveUnitsButton.setEnabled(false);
 				}
 			}
 		}
@@ -773,8 +820,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 		public void valueChanged(ListSelectionEvent arg0) {
 			if (gl.equals("mCurrentList")) {
 				win.connectGameButton.setEnabled(true);
+				win.joinGameButton.setEnabled(false);
 			} else {
 				win.joinGameButton.setEnabled(true);
+				win.connectGameButton.setEnabled(false);
 			}
 		}
 	}

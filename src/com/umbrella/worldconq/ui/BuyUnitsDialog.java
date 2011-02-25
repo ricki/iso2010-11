@@ -76,7 +76,10 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 						cancelButton = new JButton();
 						mainPanel.add(cancelButton);
 						cancelButton.setText("Cancelar");
-						cancelButton.setBounds(275, 225, 100, 30);
+						cancelButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/cancel.png")));
+						cancelButton.setBounds(210, 220, 150, 35);
 						cancelButton.setToolTipText("No realizar la compra de ninguna unidad");
 						cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
 							this, false));
@@ -85,7 +88,10 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 						acceptButton = new JButton();
 						mainPanel.add(acceptButton);
 						acceptButton.setText("Aceptar");
-						acceptButton.setBounds(150, 225, 100, 30);
+						acceptButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/ok.png")));
+						acceptButton.setBounds(50, 220, 150, 35);
 						acceptButton.setToolTipText("Comprar las unidades seleccionadas");
 						acceptButton.addKeyListener(new AcceptDialogKeyAdapter(
 							this));
