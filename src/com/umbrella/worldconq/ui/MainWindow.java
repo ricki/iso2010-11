@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -322,39 +321,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			} else {
 				try {
 					gameMgr.joinGame(gameSelected);
-					final ArrayList<Calendar> session = gameMgr.getOpenGameListModel().getGameAt(
-						gameSelected).getGameSessions();
-
-					boolean onLine = false;
-
-					//Creo un long que contine la fecha actual en milisegundos
-					final long date = Calendar.getInstance().getTimeInMillis();
-
-					//Recorro las sessiones de la partida seleccionada, si la resta es menos a dos horas se puede jugar
-					for (int i = 0; i < session.size() && onLine == false; i++) {
-						if ((date - session.get(i).getTimeInMillis() < 7200000)
-								&& (date - session.get(i).getTimeInMillis() > 0)) {
-							onLine = true;
-						}
-					}
-
-					if (onLine) {
-						//Existe una sesion activa, se pregunta si se desea jugar
-						final int confirm = JOptionPane.showConfirmDialog(
-							mGameListPanel,
-							"La partida esta en juego, ¿desea jugar ahora?",
-							"confirmación", JOptionPane.YES_NO_OPTION);
-						if (confirm == 0) {
-							//Se ha seleccionado que se desea jugar, se llama a connectToGame.
-							//app.getGameManager().connectToGame();
-						} else {
-							//No se desea jugar, se actualiza la lista de partidas.
-							gameMgr.updateGameList();
-						}
-					} else {
-						//No hay ninguna sesión activa, se actuliza la lista de partidas.
-						gameMgr.updateGameList();
-					}
+					gameMgr.updateGameList();
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
