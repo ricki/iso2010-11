@@ -66,7 +66,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			gameMgr.updateGameList();
 		} catch (final Exception e) {
 			JOptionPane.showMessageDialog(this, "Error inesperado",
-				"Error inesperado", ERROR);
+				"Error inesperado", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -89,21 +89,21 @@ public class MainWindow extends JFrame implements GameEventListener {
 		updateListButton = new JButton("Actualizar lista");
 		updateListButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/refresh.png")));
+				"image/refresh.png")));
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
 		createGameButton = new JButton("Crear partida");
 		createGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/addgame.png")));
+				"image/addgame.png")));
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
 		joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/join.png")));
+				"image/join.png")));
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 		joinGameButton.setEnabled(false);
 		mGameListToolBar.add(joinGameButton);
@@ -111,7 +111,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		connectGameButton = new JButton("Conectarse a partida");
 		connectGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/connect.png")));
+				"image/connect.png")));
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		connectGameButton.setEnabled(false);
 		mGameListToolBar.add(connectGameButton);
@@ -119,7 +119,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/logout.png")));
+				"image/logout.png")));
 		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
 		mGameListToolBar.add(logoutButton);
 
@@ -142,28 +142,28 @@ public class MainWindow extends JFrame implements GameEventListener {
 		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
 		moveUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/moveunits.png")));
+				"image/moveunits.png")));
 		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
 		attackButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/attack.png")));
+				"image/attack.png")));
 		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
 		buyUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/buy.png")));
+				"image/buy.png")));
 		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
 		sendSpyButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/spy.png")));
+				"image/spy.png")));
 		buyTerritoryButton = new JButton(
 			"Comprar territorio"); //Botón para comprar territorios
 		buyTerritoryButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/buy.png")));
+				"image/buy.png")));
 		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
 		exitGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/exitb.png")));
+				"image/exitb.png")));
 
 		//Añado un capturador de eventos a cada botón
 		attackButton.addMouseListener(new AttackMouseAdapter(this));
@@ -300,7 +300,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						dlg.getDefTime(), dlg.getNegTime());
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -315,7 +315,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				gameMgr.updateGameList();
 			} catch (final Exception e) {
 				JOptionPane.showMessageDialog(MainWindow.this, e,
-					"Error inesperado", ERROR);
+					"Error inesperado", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -336,7 +336,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					gameMgr.updateGameList();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -363,7 +363,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					MainWindow.this.setupGameGUI();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -393,7 +393,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				}
 			} catch (final Exception e) {
 				JOptionPane.showMessageDialog(MainWindow.this, e,
-					"Error inesperado", ERROR);
+					"Error inesperado", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -440,7 +440,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						lad.setVisible(false);
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				} else {
@@ -489,7 +489,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							mud.getICBMCount(), mud.getAntiMissileCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				} else {
@@ -516,7 +516,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					win.getGameManager().getGameEngine().deploySpy(selT);
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -563,7 +563,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							bud.getICBMCount(), bud.getAntiMissileCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				} else {
@@ -598,7 +598,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							engine.buyTerritory(selectedT);
 						} catch (final Exception e) {
 							JOptionPane.showMessageDialog(MainWindow.this, e,
-								"Error inesperado", ERROR);
+								"Error inesperado", JOptionPane.ERROR_MESSAGE);
 							e.printStackTrace();
 						}
 					} else {
@@ -728,7 +728,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					win.getGameManager().getGameEngine().acceptAttack();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			} else {
@@ -737,7 +737,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						rad.getMoney(), rad.getSoldierCount());
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
