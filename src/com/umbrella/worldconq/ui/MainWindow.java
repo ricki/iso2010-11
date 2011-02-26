@@ -66,7 +66,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 			gameMgr.updateGameList();
 		} catch (final Exception e) {
 			JOptionPane.showMessageDialog(this, "Error inesperado",
-				"Error inesperado", ERROR);
+				"Error inesperado", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -300,7 +300,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						dlg.getDefTime(), dlg.getNegTime());
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -315,7 +315,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				gameMgr.updateGameList();
 			} catch (final Exception e) {
 				JOptionPane.showMessageDialog(MainWindow.this, e,
-					"Error inesperado", ERROR);
+					"Error inesperado", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -336,7 +336,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					gameMgr.updateGameList();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -363,7 +363,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					MainWindow.this.setupGameGUI();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -393,7 +393,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				}
 			} catch (final Exception e) {
 				JOptionPane.showMessageDialog(MainWindow.this, e,
-					"Error inesperado", ERROR);
+					"Error inesperado", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
@@ -411,40 +411,48 @@ public class MainWindow extends JFrame implements GameEventListener {
 		public void mouseClicked(MouseEvent evt) {
 			LaunchAttackDialog lad;
 			ArrayList<TerritoryDecorator> adjList;
+			final ArrayList<TerritoryDecorator> filteredList = new ArrayList<TerritoryDecorator>();
 			final ArrayList<String> adjListNames = new ArrayList<String>();
-			final TerritoryDecorator srcT;
+
+			final GameEngine engine = gameMgr.getGameEngine();
+			final Player self = engine.getPlayerListModel().getSelfPlayer();
+
+			TerritoryDecorator srcT = null;
+			TerritoryDecorator dstT = null;
+
+			final int srcId = win.mv.getSelectedRow();
+
 			System.out.println("Atacando...");
-			if (win.attackButton.isEnabled()) {
-				final int selectedT = win.mv.getSelectedRow();
-				srcT = win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
-					selectedT);
+
+			if (win.attackButton.isEnabled() && srcId >= 0) {
+				srcT = engine.getMapListModel().getTerritoryAt(srcId);
+
 				adjList = srcT.getAdjacentTerritories();
-				for (int i = 0; i < adjList.size(); i++) {
-					if ((adjList.get(i).getPlayer() != null)
-							&& (!(((adjList.get(i)).getOwner()).equals(win.gameMgr.getGameEngine().getPlayerListModel().getSelfPlayer().getName())))) {
-						adjListNames.add(adjList.get(i).getName());
-					}
+				for (final TerritoryDecorator t : adjList) {
+					if (t.getPlayer() != null && !t.getPlayer().equals(self))
+						filteredList.add(t);
 				}
-				lad = new LaunchAttackDialog(
-					win,
-					win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
-						selectedT), adjListNames);
+
+				for (final TerritoryDecorator t : filteredList)
+					adjListNames.add(t.getName());
+
+				lad = new LaunchAttackDialog(win, srcT, adjListNames);
 				lad.setModal(true);
 				lad.setVisible(true);
-				if (lad.getSelection() == true) {
+
+				if (lad.getSelection()) {
+					dstT = filteredList.get(lad.getTerritoryIndex());
 					try {
-						win.getGameManager().getGameEngine().attackTerritory(
-							selectedT, lad.getTerritoryIndex(),
-							lad.getSoldierCount(), lad.getCannonCount(),
-							lad.getMissileCount(), lad.getICBMCount());
-						lad.setVisible(false);
+						engine.attackTerritory(srcId, dstT.getId(),
+							lad.getSoldierCount(),
+							lad.getCannonCount(),
+							lad.getMissileCount(),
+							lad.getICBMCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
-				} else {
-					lad.setVisible(false);
 				}
 			}
 		}
@@ -489,7 +497,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							mud.getICBMCount(), mud.getAntiMissileCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				} else {
@@ -516,7 +524,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					win.getGameManager().getGameEngine().deploySpy(selT);
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -563,7 +571,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							bud.getICBMCount(), bud.getAntiMissileCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
-							"Error inesperado", ERROR);
+							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				} else {
@@ -598,7 +606,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							engine.buyTerritory(selectedT);
 						} catch (final Exception e) {
 							JOptionPane.showMessageDialog(MainWindow.this, e,
-								"Error inesperado", ERROR);
+								"Error inesperado", JOptionPane.ERROR_MESSAGE);
 							e.printStackTrace();
 						}
 					} else {
@@ -728,7 +736,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 					win.getGameManager().getGameEngine().acceptAttack();
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			} else {
@@ -737,7 +745,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						rad.getMoney(), rad.getSoldierCount());
 				} catch (final Exception e) {
 					JOptionPane.showMessageDialog(MainWindow.this, e,
-						"Error inesperado", ERROR);
+						"Error inesperado", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
