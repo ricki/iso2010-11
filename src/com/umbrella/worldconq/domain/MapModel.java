@@ -55,6 +55,8 @@ public class MapModel extends AbstractTableModel {
 	}
 
 	public TerritoryDecorator getTerritoryAt(int index) {
+		if (index < 0 || index >= 42)
+			return null;
 		return data.get(index);
 	}
 

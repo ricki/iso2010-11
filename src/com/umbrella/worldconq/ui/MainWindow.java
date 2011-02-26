@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
@@ -43,6 +44,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
+	private JTextArea actionGame = null;
 
 	//Botones de la barra mPlayToolbar
 	private JButton moveUnitsButton; //Botón para mover unidades de un territorio a otro
@@ -255,9 +257,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mv.setFondo();
 			mGamePanel.add(mv);
 			//añadimos el panel para la informacion de la partida
-			mv.setActionGame(new JEditorPane());
+			this.setActionGame(new JTextArea());
 			final JScrollPane ActionGameScroll = new JScrollPane(
-				mv.getActionGame());
+				this.getActionGame());
 			ActionGameScroll.setPreferredSize(new Dimension(300, 125));
 			mGamePanel.add(ActionGameScroll);
 		}
@@ -765,9 +767,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
 			final int Tsel = mv.getSelectedRow();
-			final Player p = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
-				Tsel).getPlayer();
 			if (Tsel != -1) {
+				final Player p = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
+					Tsel).getPlayer();
 				if (p != null) {
 					if (p.getName().equals(
 						win.getGameManager().getGameEngine().getPlayerListModel().getSelfPlayer().getName())) {
@@ -816,33 +818,49 @@ public class MainWindow extends JFrame implements GameEventListener {
 		}
 	}
 
+	public JTextArea getActionGame() {
+		return actionGame;
+	}
+
+	public void setActionGame(JTextArea actionGame) {
+
+		actionGame.setEditable(false);
+		final String list = "Información de la Partida\n\n";
+		this.actionGame = actionGame;
+		this.getActionGame().setText(list);
+	}
+
 	@Override
 	public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
-		// TODO Auto-generated method stub
-
+		final String list = "El territorio " + src.getName()
+				+ " ataca al territorio " + dst.getName() + "\n";
+		this.getActionGame().append(list);
 	}
 
 	@Override
 	public void buyTerritoryEvent(TerritoryDecorator t) {
-		// TODO Auto-generated method stub
-
+		final String list = "Has comprado el territorio " + t.getName() + "\n";
+		this.getActionGame().append(list);
 	}
 
 	@Override
 	public void buyUnitsEvent(TerritoryDecorator t) {
-		// TODO Auto-generated method stub
-
+		final String list = "Has comprado unidades en " + t.getName() + "\n";
+		this.getActionGame().append(list);
 	}
 
 	@Override
 	public void negotiationEvent(TerritoryDecorator src, TerritoryDecorator dst) {
-		// TODO Auto-generated method stub
-
+		final String list = "El territorio " + src.getName()
+				+ " esta negociando con el territorio " + dst.getName() + "\n";
+		this.getActionGame().append(list);
 	}
 
 	@Override
 	public void winnerEvent(Player p) {
-		// TODO Auto-generated method stub
-
+		final String list = "El jugador " + p.getName() + "ha ganado\n";
+		this.getActionGame().append(list);
+		JOptionPane.showMessageDialog(null, "Ganador", list,
+			JOptionPane.INFORMATION_MESSAGE);
 	}
 }
