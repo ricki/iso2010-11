@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+
 import domain.Player;
 
 public class PlayerListModel extends AbstractTableModel {
@@ -25,8 +27,9 @@ public class PlayerListModel extends AbstractTableModel {
 		this.fireTableDataChanged();
 	}
 
-	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) {
+	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) throws InvalidArgumentException {
 		super();
+		if (selfPlayer == null || data == null) throw new InvalidArgumentException();
 		this.selfPlayer = selfPlayer;
 		this.data = new ArrayList<Player>();
 
@@ -34,11 +37,13 @@ public class PlayerListModel extends AbstractTableModel {
 		this.setData(data);
 	}
 
-	public void setData(ArrayList<Player> data) {
+	public void setData(ArrayList<Player> data) throws InvalidArgumentException {
 		if (data != null) {
 			for (final Player p : data) {
 				this.updatePlayer(p);
 			}
+		} else {
+			throw new InvalidArgumentException();
 		}
 	}
 

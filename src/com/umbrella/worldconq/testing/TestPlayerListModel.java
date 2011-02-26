@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.domain.PlayerListModel;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 
@@ -117,7 +118,8 @@ public class TestPlayerListModel extends TestCase {
 		try {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
 			mPlayerListModel.setData(null);
-			fail("Se esperaba excepcion");
+			fail("Se esperaba excepcion InvalidArgumentException");
+		} catch (final InvalidArgumentException e) {
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
@@ -138,10 +140,16 @@ public class TestPlayerListModel extends TestCase {
 		System.out.println("TestCase:: updatePlayer");
 		try {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
-			final Player other = new Player("Other");
-			final Player me = mPlayerListModel.getSelfPlayer();
-			mPlayerListModel.updatePlayer(other);
-			assertTrue(mPlayerListModel.getSelfPlayer() != me);
+			final String owner_name = owner.getName();
+			final int owner_money = owner.getMoney();
+
+			owner.setMoney(100000);
+			owner.setName("cambio de nombre");
+			mPlayerListModel.updatePlayer(owner);
+			assertFalse(mPlayerListModel.getSelfPlayer().getName().equals(
+				owner_name));
+			assertFalse(mPlayerListModel.getSelfPlayer().getName().equals(
+				owner_money));
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -207,11 +215,11 @@ public class TestPlayerListModel extends TestCase {
 	}
 
 	public void testGetPlayerByName2() {
-		System.out.println("TestCase:: testGetPlayerByName1");
+		System.out.println("TestCase:: testGetPlayerByName2");
 		try {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner);
-			mPlayerListModel.getPlayerByName(null);
-			fail("Se esperaba excepcion");
+			final Player player = mPlayerListModel.getPlayerByName(null);
+			assertTrue(player == null);
 		} catch (final Exception e) {
 
 		}
@@ -271,7 +279,7 @@ public class TestPlayerListModel extends TestCase {
 			final PlayerListModel mPlayerListModel = new PlayerListModel(owner,
 				data);
 			final Object turno = mPlayerListModel.getValueAt(0, 1);
-			assertTrue(turno.equals(true));
+			assertTrue(turno.equals(false));
 		} catch (final Exception e) {
 			fail(e.toString());
 		}

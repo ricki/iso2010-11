@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import com.umbrella.worldconq.domain.MapModel;
 import com.umbrella.worldconq.domain.PlayerListModel;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 import domain.Spy;
@@ -33,7 +34,11 @@ public class MapModelTest extends TestCase {
 		players.add(selfPlayer);
 		players.add(new Player("Ambrosio", 1000, true, true,
 			new ArrayList<Spy>()));
-		playerList = new PlayerListModel(selfPlayer, players);
+		try {
+			playerList = new PlayerListModel(selfPlayer, players);
+		} catch (final InvalidArgumentException e) {
+			fail(e.toString());
+		}
 
 		map = new MapModel(selfPlayer, playerList);
 
