@@ -95,39 +95,44 @@ public class GameEngine implements ClientCallback {
 		if (dst < 0 || dst > 41)
 			throw new InvalidArgumentException();
 
+		final TerritoryDecorator srcTerritory = mMapListModel.getTerritoryAt(src);
+		final TerritoryDecorator dstTerritory = mMapListModel.getTerritoryAt(dst);
+
+		if (soldiers < 0 || soldiers > srcTerritory.getNumSoldiers())
+			throw new InvalidArgumentException();
+
+		if (cannons < 0 || cannons > srcTerritory.getNumTotalCannons())
+			throw new InvalidArgumentException();
+
+		if (missiles < 0 || missiles > srcTerritory.getNumMissiles())
+			throw new InvalidArgumentException();
+
+		if (icbm < 0 || icbm > srcTerritory.getNumICBMs())
+			throw new InvalidArgumentException();
+
+		if (srcTerritory.getPlayer() == null
+				|| !srcTerritory.getPlayer().getName().equals(session.getUser()))
+			throw new InvalidArgumentException();
+
+		if (dstTerritory.getPlayer() == null
+				|| dstTerritory.getPlayer().getName().equals(session.getUser()))
+			throw new InvalidArgumentException();
+
+		if (!srcTerritory.getAdjacentTerritories().contains(dstTerritory))
+			throw new InvalidArgumentException();
+
 		if (mCurrentAttack != null)
 			throw new PendingAttackException();
-		else {
-			final TerritoryDecorator srcTerritory = this.getMapListModel().getTerritoryAt(
-				src);
-			final TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
-				dst);
 
-			if (srcTerritory.getPlayer() != null
-					&& srcTerritory.getOwner().equals(session.getUser())
-					&& dstTerritory.getPlayer() != null
-					&& !dstTerritory.getOwner().equals(session.getUser())
-					&& srcTerritory.getAdjacentTerritories().contains(
-						dstTerritory)
-					&& soldiers >= 0 && cannons >= 0
-					&& missiles >= 0 && icbm >= 0
-					&& soldiers <= srcTerritory.getNumSoldiers()
-					&& cannons <= srcTerritory.getNumTotalCannons()
-					&& missiles <= srcTerritory.getNumMissiles()
-					&& icbm <= srcTerritory.getNumICBMs()) {
+		final Arsenal arsenal = new Arsenal(soldiers,
+			cannons, missiles, icbm);
 
-				final Arsenal arsenal = new Arsenal(soldiers,
-					cannons, missiles, icbm);
+		final Attack att = new Attack(arsenal,
+			(TerritoryDecorator) srcTerritory.clone(),
+			(TerritoryDecorator) dstTerritory.clone());
+		adapter.attackTerritory(session, mGame, att);
 
-				final Attack att = new Attack(arsenal,
-					(TerritoryDecorator) srcTerritory.clone(),
-					(TerritoryDecorator) dstTerritory.clone());
-				adapter.attackTerritory(session, mGame, att);
-
-				mCurrentAttack = att;
-			} else
-				throw new InvalidArgumentException();
-		}
+		mCurrentAttack = att;
 	}
 
 	public void acceptAttack() throws Exception {
@@ -200,7 +205,7 @@ public class GameEngine implements ClientCallback {
 				numCannons[2] = t.getNumCannons()[2] + cannons;
 				territoryUpdate.setNumCannons(numCannons);
 
-				final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+				final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
 				territoriesUpdate.add(territoryUpdate);
 
 				adapter.updateGame(session, mGame, playerUpdates,
@@ -277,7 +282,7 @@ public class GameEngine implements ClientCallback {
 			dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
 					+ antimissiles);
 
-			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+			final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
 			territoriesUpdate.add(srcTerritory);
 			territoriesUpdate.add(dstTerritory);
 			adapter.updateGame(session, mGame,
@@ -319,7 +324,7 @@ public class GameEngine implements ClientCallback {
 			final Player playerUpdate = new Player(
 				mPlayerListModel.getSelfPlayer().getName(),
 				mPlayerListModel.getSelfPlayer().getMoney()
-						- mMapListModel.getTerritoryAt(territory).getPrice(),
+					- mMapListModel.getTerritoryAt(territory).getPrice(),
 				mPlayerListModel.getSelfPlayer().isOnline(),
 				mPlayerListModel.getSelfPlayer().isHasTurn(),
 				mPlayerListModel.getSelfPlayer().getSpies());
@@ -332,7 +337,7 @@ public class GameEngine implements ClientCallback {
 
 			territoryUpdate.setPlayer(mPlayerListModel.getSelfPlayer());
 
-			final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+			final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
 			territoriesUpdate.add(territoryUpdate);
 
 			adapter.updateGame(session, mGame, playerUpdates,
@@ -366,7 +371,7 @@ public class GameEngine implements ClientCallback {
 		final ArrayList<Player> playerUpdate = new ArrayList<Player>();
 		playerUpdate.add(p);
 		adapter.updateGame(session, mGame, playerUpdate,
-			new ArrayList<Territory>(), EventType.BuyArsenalEvent);
+			new ArrayList<TerritoryDecorator>(), EventType.BuyArsenalEvent);
 
 		mPlayerListModel.updatePlayer(p);
 	}
@@ -399,7 +404,7 @@ public class GameEngine implements ClientCallback {
 	public void resolveAttack() {
 		mCurrentAttack.resolve();
 
-		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+		final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
 		territoriesUpdate.add(mCurrentAttack.getOrigin());
 		territoriesUpdate.add(mCurrentAttack.getDestination());
 
@@ -450,7 +455,7 @@ public class GameEngine implements ClientCallback {
 		playerUpdates.add(playerUpdateOrigin);
 		playerUpdates.add(playerUpdateDestination);
 
-		final ArrayList<Territory> territoriesUpdate = new ArrayList<Territory>();
+		final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
 		territoriesUpdate.add(territoryUpdateOrigin);
 		territoriesUpdate.add(territoryUpdateDestination);
 
@@ -559,7 +564,7 @@ public class GameEngine implements ClientCallback {
 				final ArrayList<Player> playerList = new ArrayList<Player>();
 				playerList.add(self);
 				adapter.updateGame(session, GameEngine.this.getGame(),
-					playerList, new ArrayList<Territory>(),
+					playerList, new ArrayList<TerritoryDecorator>(),
 					EventType.UnknownEvent);
 				mPlayerListModel.updatePlayer(self);
 			} catch (final Exception e) {

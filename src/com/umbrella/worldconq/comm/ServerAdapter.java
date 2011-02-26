@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.umbrella.worldconq.domain.Attack;
 import com.umbrella.worldconq.domain.Session;
+import com.umbrella.worldconq.domain.TerritoryDecorator;
 import communications.IServer;
 
 import domain.EventType;
@@ -125,7 +126,8 @@ public class ServerAdapter {
 	public void attackTerritory(Session session, Game game, Attack currentAttack) throws Exception {
 		this.checkConnection();
 		mProxy.attackTerritory(session.getId(), game.getGameInfo().getId(),
-			currentAttack.getOrigin(), currentAttack.getDestination(),
+			currentAttack.getOrigin().getDecoratedTerritory(),
+			currentAttack.getDestination().getDecoratedTerritory(),
 			currentAttack.getArsenal());
 	}
 
@@ -140,10 +142,13 @@ public class ServerAdapter {
 			game.getGameInfo().getId(), money, soldiers);
 	}
 
-	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) throws Exception {
+	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<TerritoryDecorator> territoryUpdate, EventType event) throws Exception {
 		this.checkConnection();
+		final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+		for (final TerritoryDecorator t : territoryUpdate)
+			territoryList.add(t.getDecoratedTerritory());
 		mProxy.updateGame(session.getId(), game.getGameInfo().getId(),
-			playerUpdate, territoryUpdate, event);
+			playerUpdate, territoryList, event);
 	}
 
 }

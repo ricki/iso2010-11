@@ -89,21 +89,21 @@ public class MainWindow extends JFrame implements GameEventListener {
 		updateListButton = new JButton("Actualizar lista");
 		updateListButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/refresh.png")));
+			"image/refresh.png")));
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
 		createGameButton = new JButton("Crear partida");
 		createGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/addgame.png")));
+			"image/addgame.png")));
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
 		joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/join.png")));
+			"image/join.png")));
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 		joinGameButton.setEnabled(false);
 		mGameListToolBar.add(joinGameButton);
@@ -111,7 +111,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		connectGameButton = new JButton("Conectarse a partida");
 		connectGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/connect.png")));
+			"image/connect.png")));
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		connectGameButton.setEnabled(false);
 		mGameListToolBar.add(connectGameButton);
@@ -119,7 +119,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/logout.png")));
+			"image/logout.png")));
 		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
 		mGameListToolBar.add(logoutButton);
 
@@ -142,28 +142,28 @@ public class MainWindow extends JFrame implements GameEventListener {
 		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
 		moveUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/moveunits.png")));
+			"image/moveunits.png")));
 		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
 		attackButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/attack.png")));
+			"image/attack.png")));
 		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
 		buyUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/buy.png")));
+			"image/buy.png")));
 		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
 		sendSpyButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/spy.png")));
+			"image/spy.png")));
 		buyTerritoryButton = new JButton(
 			"Comprar territorio"); //Botón para comprar territorios
 		buyTerritoryButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/buy.png")));
+			"image/buy.png")));
 		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
 		exitGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-				"image/exitb.png")));
+			"image/exitb.png")));
 
 		//Añado un capturador de eventos a cada botón
 		attackButton.addMouseListener(new AttackMouseAdapter(this));
@@ -411,40 +411,48 @@ public class MainWindow extends JFrame implements GameEventListener {
 		public void mouseClicked(MouseEvent evt) {
 			LaunchAttackDialog lad;
 			ArrayList<TerritoryDecorator> adjList;
+			final ArrayList<TerritoryDecorator> filteredList = new ArrayList<TerritoryDecorator>();
 			final ArrayList<String> adjListNames = new ArrayList<String>();
-			final TerritoryDecorator srcT;
+
+			final GameEngine engine = gameMgr.getGameEngine();
+			final Player self = engine.getPlayerListModel().getSelfPlayer();
+
+			TerritoryDecorator srcT = null;
+			TerritoryDecorator dstT = null;
+
+			final int srcId = win.mv.getSelectedRow();
+
 			System.out.println("Atacando...");
-			if (win.attackButton.isEnabled()) {
-				final int selectedT = win.mv.getSelectedRow();
-				srcT = win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
-					selectedT);
+
+			if (win.attackButton.isEnabled() && srcId >= 0) {
+				srcT = engine.getMapListModel().getTerritoryAt(srcId);
+
 				adjList = srcT.getAdjacentTerritories();
-				for (int i = 0; i < adjList.size(); i++) {
-					if ((adjList.get(i).getPlayer() != null)
-							&& (!(((adjList.get(i)).getOwner()).equals(win.gameMgr.getGameEngine().getPlayerListModel().getSelfPlayer().getName())))) {
-						adjListNames.add(adjList.get(i).getName());
-					}
+				for (final TerritoryDecorator t : adjList) {
+					if (t.getPlayer() != null && !t.getPlayer().equals(self))
+						filteredList.add(t);
 				}
-				lad = new LaunchAttackDialog(
-					win,
-					win.gameMgr.getGameEngine().getMapListModel().getTerritoryAt(
-						selectedT), adjListNames);
+
+				for (final TerritoryDecorator t : filteredList)
+					adjListNames.add(t.getName());
+
+				lad = new LaunchAttackDialog(win, srcT, adjListNames);
 				lad.setModal(true);
 				lad.setVisible(true);
-				if (lad.getSelection() == true) {
+
+				if (lad.getSelection()) {
+					dstT = filteredList.get(lad.getTerritoryIndex());
 					try {
-						win.getGameManager().getGameEngine().attackTerritory(
-							selectedT, lad.getTerritoryIndex(),
-							lad.getSoldierCount(), lad.getCannonCount(),
-							lad.getMissileCount(), lad.getICBMCount());
-						lad.setVisible(false);
+						engine.attackTerritory(srcId, dstT.getId(),
+							lad.getSoldierCount(),
+							lad.getCannonCount(),
+							lad.getMissileCount(),
+							lad.getICBMCount());
 					} catch (final Exception e) {
 						JOptionPane.showMessageDialog(MainWindow.this, e,
 							"Error inesperado", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
-				} else {
-					lad.setVisible(false);
 				}
 			}
 		}
