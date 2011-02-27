@@ -1,6 +1,6 @@
 package com.umbrella.worldconq.ui;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,16 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-/**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
- */
 public class RegisterDialog extends JDialog {
 
 	/**
@@ -52,13 +42,11 @@ public class RegisterDialog extends JDialog {
 	}
 
 	private void initGUI() {
-		final FlowLayout thisLayout = new FlowLayout();
-		this.getContentPane().setLayout(thisLayout);
 		this.setResizable(false);
 		this.setSize(500, 250);
 
 		registerPanel = new JPanel();
-		this.getContentPane().add(registerPanel);
+		this.getContentPane().add(registerPanel, BorderLayout.CENTER);
 		registerPanel.setLayout(null);
 
 		try {
@@ -96,11 +84,17 @@ public class RegisterDialog extends JDialog {
 		PasswdField.addKeyListener(new AcceptDialogKeyAdapter(this));
 
 		AcceptButton = new JButton("Aceptar");
-		AcceptButton.setBounds(140, 160, 100, 30);
+		AcceptButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/ok.png")));
+		AcceptButton.setBounds(100, 160, 150, 35);
 		AcceptButton.addMouseListener(new AcceptDialogMouseAdapter(this, true));
 
 		CancelButton = new JButton("Cancelar");
-		CancelButton.setBounds(260, 160, 100, 30);
+		CancelButton.setIcon(new ImageIcon(
+			this.getClass().getClassLoader().getResource(
+			"image/cancel.png")));
+		CancelButton.setBounds(265, 160, 150, 35);
 		CancelButton.addMouseListener(new AcceptDialogMouseAdapter(this, false));
 
 		mapLabel = new JLabel();

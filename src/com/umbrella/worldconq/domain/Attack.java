@@ -9,17 +9,23 @@ public class Attack {
 	private final TerritoryDecorator src;
 	private final TerritoryDecorator dst;
 	private boolean resolved;
+	private boolean territoryConquered;
 
 	public Attack(Arsenal arsenal, TerritoryDecorator src, TerritoryDecorator dst) {
 		this.src = src;
 		this.dst = dst;
 		this.arsenal = arsenal;
 
+		territoryConquered = false;
 		resolved = false;
 	}
 
 	public boolean isResolved() {
 		return resolved;
+	}
+
+	public boolean isTerritoryConquered() {
+		return territoryConquered;
 	}
 
 	public TerritoryDecorator getOrigin() {
@@ -67,7 +73,7 @@ public class Attack {
 		if (arsenal.getICBMs() <= antiMissiles)
 			antiMissiles = antiMissiles - arsenal.getICBMs();
 		else {
-			soldiers = soldiers - 20 * (arsenal.getICBMs() - antiMissiles);
+			soldiers = soldiers - 12 * (arsenal.getICBMs() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
 				this.conquerTerritory(aCannons);
@@ -80,7 +86,7 @@ public class Attack {
 		if (arsenal.getMissiles() <= antiMissiles)
 			antiMissiles = antiMissiles - arsenal.getMissiles();
 		else {
-			soldiers = soldiers - 15 * (arsenal.getMissiles() - antiMissiles);
+			soldiers = soldiers - 5 * (arsenal.getMissiles() - antiMissiles);
 			antiMissiles = 0;
 			if (soldiers <= 0) {
 				this.conquerTerritory(aCannons);
@@ -147,5 +153,6 @@ public class Attack {
 		NumCannons[2] = 0;
 		dst.setNumCannons(NumCannons);
 		dst.setNumSoldiers(arsenal.getSoldiers());
+		territoryConquered = true;
 	}
 }

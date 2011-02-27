@@ -35,6 +35,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	private final int puerto = 3234;
 	private final String miIP;
 	private final Registry reg;
+	private Remote callback;
 
 	private final String[][] Users = {
 			{
@@ -82,7 +83,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 			registerUsers.add(user);
 
 		{ // GameInfo 01
-			final int[] p = {
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
 					1, 2, 3
 			};
 			final Game testGame = new Game();
@@ -105,8 +109,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Player> playerList = new ArrayList<Player>();
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 
-			final Territory t = new Territory(3, Territory.Continent.Europe,
-				null, 10, p, 2, 0, 1); // territorio Angel
+			final Territory t = new Territory(2, Territory.Continent.Europe,
+				null, 10, p1, 2, 0, 1); // territorio Angel
 
 			playerList.add(new Player(Users[4][0], 250, true, false,
 				new ArrayList<Spy>()));
@@ -121,8 +125,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Territory> mapList = new ArrayList<Territory>();
 			this.rellenarMapaInicial(mapList);
 
-			mapList.set(0, new Territory(1, Territory.Continent.Europe,
-				playerList.get(1).getName(), 20, p, 1, 0, 1));//terrotorio jorge
+			mapList.set(0, new Territory(0, Territory.Continent.Europe,
+				playerList.get(1).getName(), 20, p2, 1, 6, 1));//terrotorio jorge
 			mapList.set(2, t);
 
 			testGame.setMap(mapList);
@@ -231,43 +235,45 @@ public class Server extends UnicastRemoteObject implements IServer {
 				7, 12, 6, 9, 4, 4
 		};
 		final int[] ca = {
-				-1, -1, -1
+				0, 0, 0
 		};
+		int k = 0;
 		for (int i = 0; i < 6; i++) {
 			for (int j = 1; j <= numTerritorios[i]; j++) {
 				switch (i) {
 				case 0:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Europe,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 1:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Asia,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 2:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Africa,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 3:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.NorthAmerica,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 4:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.SouthAmerica,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 5:
-					mapList.add(new Territory(j,
+					mapList.add(new Territory(k,
 						Territory.Continent.Oceania,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 
 				}
+				k++;
 			}
 		}
 	}
@@ -294,6 +300,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public UUID loginUser(String name, String password, Remote callback) throws RemoteException, WrongLoginException {
 		System.out.println("IServer::loginUser " + name);
+		this.callback = callback;
 		boolean encontrado = false;
 		UUID id = null;
 		for (int i = 0; i < registerUsers.size() && encontrado == false; i++) {

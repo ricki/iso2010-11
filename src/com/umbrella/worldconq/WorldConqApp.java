@@ -49,7 +49,7 @@ public class WorldConqApp {
 
 		gameMgr = new GameManager(srvAdapter, cltAdapter);
 
-		usrMgr = new UserManager(srvAdapter, gameMgr);
+		usrMgr = new UserManager(srvAdapter, gameMgr, cltAdapter);
 
 		gameMgr.setUserManager(usrMgr);
 
@@ -80,7 +80,7 @@ public class WorldConqApp {
 			mainWindow.setVisible(false);
 			mainWindow.dispose();
 		}
-		mainWindow = new MainWindow(gameMgr);
+		mainWindow = new MainWindow(gameMgr, this);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
 	}

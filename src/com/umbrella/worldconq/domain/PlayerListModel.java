@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+
 import domain.Player;
 
 public class PlayerListModel extends AbstractTableModel {
@@ -15,30 +17,57 @@ public class PlayerListModel extends AbstractTableModel {
 	};
 
 	private final ArrayList<Player> data;
-	private Player selfPlayer;
+	private final Player selfPlayer;
 
 	public PlayerListModel(Player selfPlayer) {
 		super();
 		this.selfPlayer = selfPlayer;
 		data = new ArrayList<Player>();
+		data.add(selfPlayer);
+		this.fireTableDataChanged();
 	}
 
-	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) {
+	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) throws InvalidArgumentException {
 		super();
+		if (selfPlayer == null || data == null) throw new InvalidArgumentException();
 		this.selfPlayer = selfPlayer;
 		this.data = new ArrayList<Player>();
-		this.data.addAll(data);
-		this.fireTableDataChanged();
+
+		this.updatePlayer(selfPlayer);
+		this.setData(data);
 	}
 
-	public void setData(ArrayList<Player> data) {
-		this.data.clear();
-		this.data.addAll(data);
-		this.fireTableDataChanged();
+	public void setData(ArrayList<Player> data) throws InvalidArgumentException {
+		if (data != null) {
+			for (final Player p : data) {
+				this.updatePlayer(p);
+			}
+		} else {
+			throw new InvalidArgumentException();
+		}
 	}
 
 	public void updatePlayer(Player player) {
-		selfPlayer = player;
+		if (player == null) return;
+
+		boolean found = false;
+
+		for (final Player p : data) {
+			if (p.equals(player)) {
+				found = true;
+				p.setMoney(player.getMoney());
+				p.setOnline(player.isOnline());
+				p.setHasTurn(player.isHasTurn());
+				p.setSpies(player.getSpies());
+				break;
+			}
+		}
+
+		if (!found) {
+			data.add(player);
+		}
+
+		this.fireTableDataChanged();
 	}
 
 	public Player getSelfPlayer() {
@@ -88,10 +117,12 @@ public class PlayerListModel extends AbstractTableModel {
 	}
 
 	public Player getPlayerByName(String name) {
-		for (final Player p : data) {
-			if (p.getName().equals(name)) return p;
+		if (name != null) {
+			for (final Player p : data) {
+				if (p.getName().equals(name)) return p;
+			}
 		}
 		return null;
-	}
 
+	}
 }

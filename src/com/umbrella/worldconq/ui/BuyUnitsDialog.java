@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.umbrella.worldconq.domain.UnitInfo;
+
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
  * Builder, which is free for non-commercial use. If Jigloo is being used
@@ -24,6 +26,7 @@ import javax.swing.JPanel;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class BuyUnitsDialog extends javax.swing.JDialog {
+	private static final long serialVersionUID = 7085927869047108380L;
 	private JPanel mainPanel;
 	private JButton cancelButton;
 	private JLabel infotextLabel;
@@ -44,11 +47,9 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 	private boolean selection;
 	private int soldiers, cannons, missiles, icbms, antimissiles;
 	private final int money;
-	private final String territoryName;
 
 	public BuyUnitsDialog(JFrame frame, String territory, int maxMoney) {
 		super(frame);
-		territoryName = territory;
 		money = maxMoney;
 		this.initGUI();
 	}
@@ -74,7 +75,10 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 						cancelButton = new JButton();
 						mainPanel.add(cancelButton);
 						cancelButton.setText("Cancelar");
-						cancelButton.setBounds(275, 225, 100, 30);
+						cancelButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/cancel.png")));
+						cancelButton.setBounds(210, 220, 150, 35);
 						cancelButton.setToolTipText("No realizar la compra de ninguna unidad");
 						cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
 							this, false));
@@ -83,7 +87,10 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 						acceptButton = new JButton();
 						mainPanel.add(acceptButton);
 						acceptButton.setText("Aceptar");
-						acceptButton.setBounds(150, 225, 100, 30);
+						acceptButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/ok.png")));
+						acceptButton.setBounds(50, 220, 150, 35);
 						acceptButton.setToolTipText("Comprar las unidades seleccionadas");
 						acceptButton.addKeyListener(new AcceptDialogKeyAdapter(
 							this));
@@ -218,27 +225,27 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 		antiMissilesCombo = new JComboBox();
 
 		//Creo el combo de soldados
-		for (int i = 0; i <= (money / 100); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceSoldier()); i++) {
 			soldiersCombo.addItem(i);
 		}
 
 		//Creo el combo de cañones		
-		for (int i = 0; i <= (money / 300); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceCannon()); i++) {
 			cannonsCombo.addItem(i);
 		}
 
 		//Creo el combo de misiles		
-		for (int i = 0; i <= (money / 500); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceMissil()); i++) {
 			missilesCombo.addItem(i);
 		}
 
 		//Creo el combo de icbms		
-		for (int i = 0; i <= (money / 800); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceICBM()); i++) {
 			icbmsCombo.addItem(i);
 		}
 
 		//Creo el combo de antimisiles		
-		for (int i = 0; i <= (money / 400); i++) {
+		for (int i = 0; i <= (money / UnitInfo.getPriceAntiMissile()); i++) {
 			antiMissilesCombo.addItem(i);
 		}
 	}

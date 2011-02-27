@@ -30,6 +30,7 @@ import com.umbrella.worldconq.domain.TerritoryDecorator;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class MoveUnitsDialog extends javax.swing.JDialog {
+	private static final long serialVersionUID = 3776252326350589936L;
 	private JPanel mainPanel;
 	private JButton cancelButton;
 	private JLabel infotextLabel;
@@ -60,7 +61,9 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 	private JLabel backgroundLabel;
 	private boolean selection;
 	private int destiny, soldiers, missiles, icbms, antimissiles;
-	private int[] cannons;
+	private final int[] cannons = {
+			0, 0, 0
+	};
 	private final TerritoryDecorator srcterritory;
 	private final ArrayList<String> adjacentListNames;
 
@@ -80,7 +83,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 				try {
 					this.setIconImage(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-						"image/logo.png")).getImage());
+							"image/logo.png")).getImage());
 				} catch (final Exception e) {
 					System.out.println("Imagen no encontrada");
 				}
@@ -90,15 +93,6 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					mainPanel.setLayout(null);
 					mainPanel.setToolTipText("La conquista del mundo - Mover unidades");
 					mainPanel.setPreferredSize(new java.awt.Dimension(382, 360));
-				}
-				{
-					cancelButton = new JButton();
-					actionPanel.add(cancelButton);
-					cancelButton.setText("Cancelar");
-					cancelButton.setBounds(205, 10, 150, 30);
-					cancelButton.setToolTipText("No mover ninguna unidad");
-					cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
-						this, false));
 				}
 				{
 					centralPanel = new JPanel();
@@ -199,7 +193,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 						infoPanel.add(alertinfoLabel);
 						alertinfoLabel.setIcon(new ImageIcon(
 							this.getClass().getClassLoader().getResource(
-							"image/half.alerta.png")));
+								"image/half.alerta.png")));
 						alertinfoLabel.setBounds(2, 2, 75, 64);
 						alertinfoLabel.setVisible(false);
 					}
@@ -215,13 +209,28 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 						acceptButton = new JButton();
 						actionPanel.add(acceptButton);
 						acceptButton.setText("Aceptar");
-						acceptButton.setBounds(15, 10, 150, 30);
+						acceptButton.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+								"image/ok.png")));
+						acceptButton.setBounds(15, 7, 150, 35);
 						acceptButton.setToolTipText("Mover las unidades seleccionadas");
 						acceptButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
 						acceptButton.addKeyListener(new AcceptDialogKeyAdapter(
 							this));
 						acceptButton.addMouseListener(new AcceptDialogMouseAdapter(
 							this, true));
+						{
+							cancelButton = new JButton();
+							actionPanel.add(cancelButton);
+							cancelButton.setText("Cancelar");
+							cancelButton.setIcon(new ImageIcon(
+								this.getClass().getClassLoader().getResource(
+									"image/cancel.png")));
+							cancelButton.setBounds(205, 7, 150, 35);
+							cancelButton.setToolTipText("No mover ninguna unidad");
+							cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
+								this, false));
+						}
 					}
 					mainPanel.add(actionPanel);
 					actionPanel.setBounds(12, 310, 370, 50);
@@ -246,7 +255,6 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 							350, 20));
 					}
 					{
-						territoriesCombo = new JComboBox();
 						territoriesPanel.add(territoriesCombo);
 						territoriesCombo.setPreferredSize(new java.awt.Dimension(
 							300, 20));
@@ -258,7 +266,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					backgroundLabel.setLayout(null);
 					backgroundLabel.setIcon(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-						"image/mapa.png")));
+							"image/mapa.png")));
 					backgroundLabel.setBounds(20, 77, 357, 153);
 				}
 			}
@@ -271,6 +279,11 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 	//Método que devuleve la selección tomada
 	public boolean getSelection() {
 		return selection;
+	}
+
+	//Método que devuelve el índice del territorio destino
+	public int getDestiny() {
+		return destiny;
 	}
 
 	//Método que devuelve el número de soldados comprados
@@ -300,6 +313,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 
 	//Método que genera los distintos Combos
 	private void createCombos() {
+		territoriesCombo = new JComboBox();
 		soldiersCombo = new JComboBox();
 		missilesCombo = new JComboBox();
 		cannonsCombo = new JComboBox();
@@ -308,9 +322,14 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 		cannonTtwoCombo = new JComboBox();
 		cannonTthreeCombo = new JComboBox();
 
-		//Genero el contenido del ComboBox de territorios a los que mover unidades
-		for (int i = 0; i < adjacentListNames.size(); i++) {
-			territoriesCombo.addItem(adjacentListNames.get(i));
+		//Genero el contenido del ComboBox de territorios a los que mover unidades		
+		final int numadj = adjacentListNames.size();
+		if (numadj == 0) {
+			territoriesCombo.addItem("No hay territorios donde mover");
+		} else {
+			for (int i = 0; i < adjacentListNames.size(); i++) {
+				territoriesCombo.addItem(adjacentListNames.get(i));
+			}
 		}
 
 		//Creo el combo de soldados		
@@ -367,16 +386,21 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 		public void mouseClicked(MouseEvent evt) {
 			if (doselection == true) {
 				if (dlg.correctArsenal()) {
-					dlg.selection = doselection;
-					dlg.destiny = dlg.territoriesCombo.getSelectedIndex();
-					dlg.soldiers = dlg.soldiersCombo.getSelectedIndex();
-					dlg.cannons[0] = dlg.cannonsCombo.getSelectedIndex();
-					dlg.cannons[1] = dlg.cannonTtwoCombo.getSelectedIndex();
-					dlg.cannons[2] = dlg.cannonTthreeCombo.getSelectedIndex();
-					dlg.missiles = dlg.missilesCombo.getSelectedIndex();
-					dlg.icbms = dlg.icbmsCombo.getSelectedIndex();
-					dlg.antimissiles = dlg.antiMissilesCombo.getSelectedIndex();
-					dlg.setVisible(false);
+					if (dlg.adjacentListNames.size() == 0) {
+						dlg.alertinfoLabel.setVisible(true);
+						dlg.alertsetinfoLabel.setText("No puede mover tropas a ningún territorio");
+					} else {
+						dlg.selection = doselection;
+						dlg.destiny = dlg.territoriesCombo.getSelectedIndex();
+						dlg.soldiers = dlg.soldiersCombo.getSelectedIndex();
+						dlg.cannons[0] = dlg.cannonsCombo.getSelectedIndex();
+						dlg.cannons[1] = dlg.cannonTtwoCombo.getSelectedIndex();
+						dlg.cannons[2] = dlg.cannonTthreeCombo.getSelectedIndex();
+						dlg.missiles = dlg.missilesCombo.getSelectedIndex();
+						dlg.icbms = dlg.icbmsCombo.getSelectedIndex();
+						dlg.antimissiles = dlg.antiMissilesCombo.getSelectedIndex();
+						dlg.setVisible(false);
+					}
 				} else {
 					dlg.alertinfoLabel.setVisible(true);
 					dlg.alertsetinfoLabel.setText("Mueve más unidades de las que tiene");

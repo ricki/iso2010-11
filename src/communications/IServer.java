@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import domain.Arsenal;
+import domain.EventType;
 import domain.Game;
 import domain.GameInfo;
 import domain.Player;
@@ -50,7 +51,7 @@ public interface IServer extends Remote {
 
 	Game playGame(UUID session, UUID game) throws RemoteException,
 			GameNotFoundException, InvalidSessionException,
-			InvalidTimeException, NotCurrentPlayerGameException;
+			InvalidTimeException, NotCurrentPlayerGameException, AlreadyInGameException;
 
 	void quitGame(UUID session, UUID game) throws RemoteException,
 			GameNotFoundException, InvalidSessionException,

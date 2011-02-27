@@ -169,6 +169,17 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 		this.playerList = playerList;
 	}
 
+	/*
+	 * En las pruebas hechas en prototypes.rmisample, se puede mandar un
+	 * TerritoryDecorator aunque en la interfaz ServerInterface aparezca un
+	 * Territory. Al probarlo con la interfaz del juego salta un
+	 * UnmarshallException. Segun el patron decorador esta funcion no deberia
+	 * ser necesaria, pero lo es...
+	 */
+	public Territory getDecoratedTerritory() {
+		return decoratedTerritory;
+	}
+
 	@Deprecated
 	@Override
 	public int getIdTerritory() {
@@ -178,6 +189,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	@Deprecated
 	@Override
 	public void setIdTerritory(int id) {
+		super.setIdTerritory(id);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setIdTerritory(id);
 	}
@@ -197,6 +209,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setContinent(Continent continent) {
+		super.setContinent(continent);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setContinent(continent);
 	}
@@ -208,6 +221,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setNumSoldiers(int numSoldiers) {
+		super.setNumSoldiers(numSoldiers);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setNumSoldiers(numSoldiers);
 	}
@@ -227,6 +241,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setNumCannons(int[] numCannons) {
+		super.setNumCannons(numCannons);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setNumCannons(numCannons);
 	}
@@ -238,6 +253,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setNumMissiles(int numMissiles) {
+		super.setNumMissiles(numMissiles);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setNumMissiles(numMissiles);
 	}
@@ -249,6 +265,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setNumICBMs(int numICBMs) {
+		super.setNumICBMs(numICBMs);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setNumICBMs(numICBMs);
 	}
@@ -260,12 +277,14 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	@Override
 	public void setNumAntiMissiles(int numAntiMissiles) {
+		super.setNumAntiMissiles(numAntiMissiles);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setNumAntiMissiles(numAntiMissiles);
 	}
 
 	@Override
 	public void setOwner(String owner) {
+		super.setOwner(owner);
 		if (decoratedTerritory != null)
 			decoratedTerritory.setOwner(owner);
 	}
@@ -289,8 +308,12 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	}
 
 	public void setPlayer(Player p) {
-		if (decoratedTerritory != null)
-			decoratedTerritory.setOwner(p.getName());
+		if (decoratedTerritory != null) {
+			if (p == null)
+				decoratedTerritory.setOwner(null);
+			else
+				decoratedTerritory.setOwner(p.getName());
+		}
 	}
 
 	public int getPrice() {
@@ -299,7 +322,7 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 
 	public ArrayList<TerritoryDecorator> getAdjacentTerritories() {
 		final ArrayList<TerritoryDecorator> adjlist = new ArrayList<TerritoryDecorator>();
-		for (final int i : adjgraph[this.getIdTerritory()]) {
+		for (final int i : adjgraph[this.getId()]) {
 			adjlist.add(map.getTerritoryAt(i));
 		}
 		return adjlist;
@@ -319,5 +342,15 @@ public class TerritoryDecorator extends domain.Territory implements Cloneable {
 	public Object clone() {
 		return new TerritoryDecorator((Territory) this.cloneTerritory(), map,
 			playerList);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (!(o instanceof TerritoryDecorator))
+			return false;
+		final TerritoryDecorator td = (TerritoryDecorator) o;
+		return decoratedTerritory.getIdTerritory() == td.getIdTerritory();
 	}
 }

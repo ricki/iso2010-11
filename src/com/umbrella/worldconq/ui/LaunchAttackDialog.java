@@ -22,11 +22,24 @@ import com.cloudgarden.layout.AnchorConstraint;
 import com.cloudgarden.layout.AnchorLayout;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 
+/**
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
+ * Builder, which is free for non-commercial use. If Jigloo is being used
+ * commercially (ie, by a corporation, company or business for any purpose
+ * whatever) then you should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details. Use of Jigloo implies
+ * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
+ * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
+ * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
 public class LaunchAttackDialog extends javax.swing.JDialog {
 
+	private static final long serialVersionUID = 3384340224276468944L;
 	private boolean selection; //almacena la selección
 	private int territoryIndex; //almacena el índice del territorio a atacar
 	private int soldierCount; //almacena el número de soldados con los que se ataca
+	private JPanel infoPanel;
+	private JLabel soldiersIconLabel;
 	private JPanel mainPanel; //Panel principal
 
 	private JSpinner cannonTtwoSpinner; //Spinner de selección del número de cañones del segundo tipo
@@ -57,8 +70,6 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 	private genericSpinnerListModel missileSpinnerModel;
 	private genericSpinnerListModel icbmSpinnerModel;
 
-	private static final long serialVersionUID = 3384340224276468944L;
-
 	public LaunchAttackDialog(JFrame frame, TerritoryDecorator src, ArrayList<String> adjacentList) {
 		super(frame);
 		this.src = src;
@@ -66,6 +77,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 		this.initGUI();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initGUI() {
 		this.createSpinners();
 		try {
@@ -88,104 +100,139 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 				mainPanel.setLayout(mainPanelLayout);
 				{
 					mainPanel.setNextFocusableComponent(territoryCombo);
+					{
+						infoPanel = new JPanel();
+						final AnchorLayout infoPanelLayout = new AnchorLayout();
+						infoPanel.setLayout(infoPanelLayout);
+						mainPanel.add(infoPanel, new AnchorConstraint(423, 965,
+							676, 31, AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL));
+						infoPanel.setPreferredSize(new java.awt.Dimension(368,
+							94));
+						infoPanel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+						{
+							infoLabel = new JLabel();
+							infoPanel.add(infoLabel, new AnchorConstraint(122,
+								976, 867, 25, AnchorConstraint.ANCHOR_REL,
+								AnchorConstraint.ANCHOR_REL,
+								AnchorConstraint.ANCHOR_REL,
+								AnchorConstraint.ANCHOR_REL));
+							infoLabel.setIcon(new ImageIcon(
+								this.getClass().getClassLoader().getResource(
+								"image/half.alerta.png")));
+							infoLabel.setPreferredSize(new java.awt.Dimension(
+								350, 70));
+							infoLabel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+							infoLabel.setVisible(false);
+						}
+					}
+					{
+						soldiersIconLabel = new JLabel();
+						mainPanel.add(soldiersIconLabel, new AnchorConstraint(
+							700, 280, 969, 26, AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL,
+							AnchorConstraint.ANCHOR_REL));
+						soldiersIconLabel.setIcon(new ImageIcon(
+							this.getClass().getClassLoader().getResource(
+							"image/soldados.png")));
+						soldiersIconLabel.setPreferredSize(new java.awt.Dimension(
+							100, 100));
+					}
 					mainPanel.add(territoryCombo, new AnchorConstraint(33, 965,
-						87, 585, AnchorConstraint.ANCHOR_REL,
+						100, 585, AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_REL));
 					territoryCombo.setPreferredSize(new java.awt.Dimension(150,
-						20));
+						25));
 				}
 				{
 					cannonToneSpinner = new JSpinner();
-					mainPanel.add(cannonToneSpinner, new AnchorConstraint(62,
+					mainPanel.add(cannonToneSpinner, new AnchorConstraint(72,
 						14, 297, 851, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_REL));
 					cannonToneSpinner.setModel(cannonToneSpinnerModel);
 					cannonToneSpinner.setPreferredSize(new java.awt.Dimension(
-						45, 20));
+						45, 25));
 					cannonToneSpinner.setMaximumSize(new java.awt.Dimension(45,
 						20));
 				}
 				{
-					infoLabel = new JLabel();
-					mainPanel.add(infoLabel, new AnchorConstraint(200, 953,
-						773, 25, AnchorConstraint.ANCHOR_ABS,
-						AnchorConstraint.ANCHOR_REL,
-						AnchorConstraint.ANCHOR_NONE,
-						AnchorConstraint.ANCHOR_ABS));
-					infoLabel.setIcon(new ImageIcon(
-						this.getClass().getClassLoader().getResource(
-						"image/half.alerta.png")));
-					infoLabel.setPreferredSize(new java.awt.Dimension(350, 70));
-					infoLabel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-					infoLabel.setVisible(false);
-				}
-				{
 					icbmCountSpinner = new JSpinner();
-					mainPanel.add(icbmCountSpinner, new AnchorConstraint(112,
+					mainPanel.add(icbmCountSpinner, new AnchorConstraint(122,
 						14, 487, 851, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_REL));
 					icbmCountSpinner.setModel(icbmSpinnerModel);
 					icbmCountSpinner.setPreferredSize(new java.awt.Dimension(
-						45, 20));
+						45, 25));
 				}
 				{
 					missileCountSpinner = new JSpinner();
-					mainPanel.add(missileCountSpinner, new AnchorConstraint(87,
+					mainPanel.add(missileCountSpinner, new AnchorConstraint(97,
 						14, 395, 851, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_REL));
 					missileCountSpinner.setModel(missileSpinnerModel);
 					missileCountSpinner.setPreferredSize(new java.awt.Dimension(
-						45, 20));
+						45, 25));
 				}
 				{
 					soldierCountSpinner = new JSpinner();
-					mainPanel.add(soldierCountSpinner, new AnchorConstraint(37,
+					mainPanel.add(soldierCountSpinner, new AnchorConstraint(47,
 						14, 211, 851, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_REL));
 					soldierCountSpinner.setModel(soldierSpinnerModel);
 					soldierCountSpinner.setPreferredSize(new java.awt.Dimension(
-						45, 20));
+						45, 25));
 				}
 				{
 					acceptButton = new JButton();
-					mainPanel.add(acceptButton, new AnchorConstraint(829, 139,
-						15, 394, AnchorConstraint.ANCHOR_NONE,
+					mainPanel.add(acceptButton, new AnchorConstraint(829, 149,
+						22, 394, AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE));
 					acceptButton.setText("Aceptar");
-					acceptButton.setPreferredSize(new java.awt.Dimension(100,
-						32));
+					acceptButton.setPreferredSize(new java.awt.Dimension(125,
+						35));
+					acceptButton.setToolTipText("Atacar");
+					acceptButton.setIcon(new ImageIcon(
+						this.getClass().getClassLoader().getResource(
+						"image/ok.png")));
 					acceptButton.addKeyListener(new AcceptDialogKeyAdapter(this));
 					acceptButton.addMouseListener(new AcceptDialogMouseAdapter(
 						this, true));
 				}
 				{
 					cancelButton = new JButton();
-					mainPanel.add(cancelButton, new AnchorConstraint(829, 19,
-						15, 699, AnchorConstraint.ANCHOR_NONE,
+					mainPanel.add(cancelButton, new AnchorConstraint(829, 14,
+						22, 699, AnchorConstraint.ANCHOR_NONE,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_NONE));
 					cancelButton.setText("Cancelar");
-					cancelButton.setPreferredSize(new java.awt.Dimension(100,
-						32));
+					cancelButton.setPreferredSize(new java.awt.Dimension(125,
+						35));
+					cancelButton.setToolTipText("Cancelar el ataque");
+					cancelButton.setIcon(new ImageIcon(
+						this.getClass().getClassLoader().getResource(
+						"image/cancel.png")));
 					cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
 						this, false));
 				}
 				{
 					icbmCountLabel = new JLabel();
-					mainPanel.add(icbmCountLabel, new AnchorConstraint(110,
+					mainPanel.add(icbmCountLabel, new AnchorConstraint(120,
 						585, 498, 10, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_NONE,
@@ -196,7 +243,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 				}
 				{
 					missileCountLabel = new JLabel();
-					mainPanel.add(missileCountLabel, new AnchorConstraint(85,
+					mainPanel.add(missileCountLabel, new AnchorConstraint(95,
 						585, 406, 10, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_NONE,
@@ -207,7 +254,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 				}
 				{
 					cannonCountLabel = new JLabel();
-					mainPanel.add(cannonCountLabel, new AnchorConstraint(60,
+					mainPanel.add(cannonCountLabel, new AnchorConstraint(70,
 						585, 314, 10, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_NONE,
@@ -218,7 +265,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 				}
 				{
 					soldierCountLabel = new JLabel();
-					mainPanel.add(soldierCountLabel, new AnchorConstraint(35,
+					mainPanel.add(soldierCountLabel, new AnchorConstraint(45,
 						585, 222, 10, AnchorConstraint.ANCHOR_ABS,
 						AnchorConstraint.ANCHOR_REL,
 						AnchorConstraint.ANCHOR_NONE,
@@ -279,8 +326,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 		//Creo el spinner de territorios
 		final String[] adjacentListNames = new String[adjacentList.size()];
 
-		//Genero el contenido del ComboBox de territorios a atacar
-		//final String[] adjacentListNames = new String[adjacentList.size()];
+		//Genero el contenido del ComboBox de territorios a atacar		
 		territoryCombo = new JComboBox();
 		for (int i = 0; i < adjacentList.size(); i++) {
 			adjacentListNames[i] = adjacentList.get(i);
@@ -354,15 +400,9 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 		if (src.getNumSoldiers() < Integer.parseInt((String) (soldierCountSpinner.getValue()))) {
 			return false;
 		}
-		if ((src.getNumCannons()[0] + src.getNumCannons()[1] + src.getNumCannons()[3]) < Integer.parseInt((String) (cannonToneSpinner.getValue()))) {
+		if ((src.getNumCannons()[0] + src.getNumCannons()[1] + src.getNumCannons()[2]) < Integer.parseInt((String) (cannonToneSpinner.getValue()))) {
 			return false;
 		}
-		//if (src.getNumCannons()[1] < Integer.parseInt((String) (cannonTtwoSpinner.getValue()))) {
-		//return false;
-		//}
-		//if (src.getNumCannons()[3] < Integer.parseInt((String) (cannonTthreeSpinner.getValue()))) {
-		//return false;
-		//}
 		if (src.getNumMissiles() < Integer.parseInt((String) (missileCountSpinner.getValue()))) {
 			return false;
 		}
@@ -374,6 +414,7 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 
 	//Esta es una clase privada, usada para crear los spinnerList
 	private class genericSpinnerListModel extends SpinnerListModel {
+		private static final long serialVersionUID = -2331150917776748019L;
 
 		public genericSpinnerListModel(String[] adjacentList) {
 			super(adjacentList);
@@ -392,19 +433,22 @@ public class LaunchAttackDialog extends javax.swing.JDialog {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-
-			if (dlg.correctArsenal()) {
-				dlg.selection = doselection;
-				dlg.territoryIndex = dlg.territoryCombo.getSelectedIndex();
-				dlg.soldierCount = Integer.parseInt((String) (dlg.soldierCountSpinner.getValue()));
-				dlg.cannonCount = Integer.parseInt(((String) (dlg.cannonToneSpinner.getValue())));
-				dlg.missileCount = Integer.parseInt(((String) (dlg.missileCountSpinner.getValue())));
-				dlg.icbmCount = Integer.parseInt(((String) (dlg.icbmCountSpinner.getValue())));
-				dlg.setVisible(false);
+			if (doselection == true) {
+				if (dlg.correctArsenal()) {
+					dlg.selection = doselection;
+					dlg.territoryIndex = dlg.territoryCombo.getSelectedIndex();
+					dlg.soldierCount = Integer.parseInt((String) (dlg.soldierCountSpinner.getValue()));
+					dlg.cannonCount = Integer.parseInt(((String) (dlg.cannonToneSpinner.getValue())));
+					dlg.missileCount = Integer.parseInt(((String) (dlg.missileCountSpinner.getValue())));
+					dlg.icbmCount = Integer.parseInt(((String) (dlg.icbmCountSpinner.getValue())));
+					dlg.setVisible(false);
+				} else {
+					dlg.infoLabel.setText("Arsenal no disponible");
+					dlg.infoLabel.setVisible(true);
+				}
 			} else {
 				dlg.selection = false;
-				dlg.infoLabel.setText("No ataque con un arsenal no disponible");
-				dlg.infoLabel.setVisible(true);
+				dlg.setVisible(false);
 			}
 		}
 	}

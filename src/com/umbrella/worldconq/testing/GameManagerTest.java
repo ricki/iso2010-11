@@ -56,7 +56,7 @@ public class GameManagerTest extends TestCase {
 			srvAdapter.connect();
 
 			gameMgr = new GameManager(srvAdapter, cltAdapter);
-			usrMgr = new UserManager(srvAdapter, gameMgr);
+			usrMgr = new UserManager(srvAdapter, gameMgr, cltAdapter);
 
 			gameMgr.setUserManager(usrMgr);
 
@@ -88,7 +88,7 @@ public class GameManagerTest extends TestCase {
 
 			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() == 0);
 			assertTrue(gameMgr.getOpenGameListModel().getRowCount() == 0);
-			usrMgr.getGameManager().updateGameList();
+			gameMgr.updateGameList();
 			assertTrue(gameMgr.getCurrentGameListModel() != null);
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 		} catch (final Exception e) {
@@ -119,7 +119,7 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame2() {
 		System.out.println("TestCase::testGameManagerCreateGame2");
 		try {
-			gameMgr.createGame("", "", hoy, 0, -1, 0);
+			gameMgr.createGame("", "", hoy, 1, 0, 1);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por each choice 2");
@@ -132,7 +132,7 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame3");
 		try {
 			gameMgr.createGame(null, "partida guerra mundo",
-				antes, -1, -1, -1);
+				antes, 0, 0, 0);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por each choice 3");
@@ -144,8 +144,8 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame4() {
 		System.out.println("TestCase::testGameManagerCreateGame4");
 		try {
-			gameMgr.createGame("partida", null, despues, 0, 0,
-				0);
+			gameMgr.createGame("partida", null, despues, 1, 1,
+				1);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por each choice 4");
@@ -157,7 +157,7 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame5() {
 		System.out.println("TestCase::testGameManagerCreateGame5");
 		try {
-			gameMgr.createGame("", "", despues, 0, 0, 0);
+			gameMgr.createGame("", "", despues, 1, 1, 1);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por nombre vacio");
@@ -170,7 +170,7 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame6");
 		try {
 			gameMgr.createGame(null, "partida guerra mundo",
-				despues, 0, 0, 0);
+				despues, 1, 1, 1);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por nombre null");
@@ -182,7 +182,7 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame7() {
 		System.out.println("TestCase::testGameManagerCreateGame7");
 		try {
-			gameMgr.createGame("partida", null, hoy, 0, 0, 33);
+			gameMgr.createGame("partida", null, hoy, 1, 1, 33);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por descripcion null");
@@ -195,7 +195,7 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame8");
 		try {
 			gameMgr.createGame("partida",
-				"partida guerra mundo", antes, 0, 0, 33);
+				"partida guerra mundo", antes, 1, 1, 33);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException por fecha anterior");
@@ -208,7 +208,7 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame9");
 		try {
 			gameMgr.createGame("partida",
-				"partida guerra mundo", null, 0, 0, 33);
+				"partida guerra mundo", null, 1, 1, 33);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException fecha null");
@@ -221,10 +221,10 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame10");
 		try {
 			gameMgr.createGame("partida",
-				"partida guerra mundo", hoy, -1, 20, 33);
+				"partida guerra mundo", hoy, 0, 20, 33);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException por turno -1");
+			System.out.println("InvalidArgumentException por turno 0");
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
@@ -234,10 +234,10 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame11");
 		try {
 			gameMgr.createGame("partida",
-				"partida guerra mundo", hoy, 112, -1, 33);
+				"partida guerra mundo", hoy, 112, 0, 33);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException por defensa -1");
+			System.out.println("InvalidArgumentException por defensa 0");
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
@@ -247,10 +247,10 @@ public class GameManagerTest extends TestCase {
 		System.out.println("TestCase::testGameManagerCreateGame12");
 		try {
 			gameMgr.createGame("partida",
-				"partida guerra mundo", hoy, 112, 20, -1);
+				"partida guerra mundo", hoy, 112, 20, 0);
 			fail("Esperaba InvalidArgumentException");
 		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException por nombre negociacion -1");
+			System.out.println("InvalidArgumentException por nombre negociacion 0");
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Esperaba InvalidArgumentException");
 		}
@@ -271,7 +271,7 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame14() {
 		System.out.println("TestCase::testGameManagerCreateGame14");
 		try {
-			gameMgr.createGame("partida", "", despues, 0, 0, 0);
+			gameMgr.createGame("partida", "", despues, 1, 1, 1);
 		} catch (final InvalidArgumentException e) {
 			fail("InvalidArgumentException");
 		} catch (final Exception e) {
@@ -421,6 +421,28 @@ public class GameManagerTest extends TestCase {
 			gameMgr.connectToGame(1, null);
 			fail("Esperaba InvalidArgumentException");
 			assertTrue(gameMgr.getGameEngine() != null);
+		} catch (final InvalidArgumentException e) {
+			System.out.println("InvalidArgumentException fuera de rango por arriba");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+		}
+	}
+
+	public void testGameManagerDisconnectFromGame1() {
+		System.out.println("TestCase::testGameManagerDisconnectFromGame1");
+		try {
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() == 0);
+			assertTrue(gameMgr.getOpenGameListModel().getRowCount() == 0);
+			gameMgr.updateGameList();
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() > 0);
+			assertTrue(gameMgr.getOpenGameListModel() != null);
+
+			assertTrue(gameMgr.getGameEngine() == null);
+			gameMgr.connectToGame(0, null);
+			assertTrue(gameMgr.getGameEngine() != null);
+
+			gameMgr.disconnectFromGame();
+			assertTrue(gameMgr.getGameEngine() == null);
 		} catch (final InvalidArgumentException e) {
 			System.out.println("InvalidArgumentException fuera de rango por arriba");
 		} catch (final Exception e) {
