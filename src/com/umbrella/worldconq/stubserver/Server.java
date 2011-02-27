@@ -235,7 +235,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 				7, 12, 6, 9, 4, 4
 		};
 		final int[] ca = {
-				-1, -1, -1
+				0, 0, 0
 		};
 		int k = 0;
 		for (int i = 0; i < 6; i++) {
@@ -244,32 +244,32 @@ public class Server extends UnicastRemoteObject implements IServer {
 				case 0:
 					mapList.add(new Territory(k,
 						Territory.Continent.Europe,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 1:
 					mapList.add(new Territory(k,
 						Territory.Continent.Asia,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 2:
 					mapList.add(new Territory(k,
 						Territory.Continent.Africa,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 3:
 					mapList.add(new Territory(k,
 						Territory.Continent.NorthAmerica,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 4:
 					mapList.add(new Territory(k,
 						Territory.Continent.SouthAmerica,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 				case 5:
 					mapList.add(new Territory(k,
 						Territory.Continent.Oceania,
-						null, -1, ca, -1, -1, -1));
+						null, 0, ca, 0, 0, 0));
 					break;
 
 				}

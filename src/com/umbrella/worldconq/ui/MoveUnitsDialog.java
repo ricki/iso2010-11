@@ -83,7 +83,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 				try {
 					this.setIconImage(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-						"image/logo.png")).getImage());
+							"image/logo.png")).getImage());
 				} catch (final Exception e) {
 					System.out.println("Imagen no encontrada");
 				}
@@ -193,7 +193,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 						infoPanel.add(alertinfoLabel);
 						alertinfoLabel.setIcon(new ImageIcon(
 							this.getClass().getClassLoader().getResource(
-							"image/half.alerta.png")));
+								"image/half.alerta.png")));
 						alertinfoLabel.setBounds(2, 2, 75, 64);
 						alertinfoLabel.setVisible(false);
 					}
@@ -211,7 +211,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 						acceptButton.setText("Aceptar");
 						acceptButton.setIcon(new ImageIcon(
 							this.getClass().getClassLoader().getResource(
-							"image/ok.png")));
+								"image/ok.png")));
 						acceptButton.setBounds(15, 7, 150, 35);
 						acceptButton.setToolTipText("Mover las unidades seleccionadas");
 						acceptButton.setMargin(new java.awt.Insets(1, 1, 1, 1));
@@ -225,7 +225,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 							cancelButton.setText("Cancelar");
 							cancelButton.setIcon(new ImageIcon(
 								this.getClass().getClassLoader().getResource(
-								"image/cancel.png")));
+									"image/cancel.png")));
 							cancelButton.setBounds(205, 7, 150, 35);
 							cancelButton.setToolTipText("No mover ninguna unidad");
 							cancelButton.addMouseListener(new AcceptDialogMouseAdapter(
@@ -266,7 +266,7 @@ public class MoveUnitsDialog extends javax.swing.JDialog {
 					backgroundLabel.setLayout(null);
 					backgroundLabel.setIcon(new ImageIcon(
 						this.getClass().getClassLoader().getResource(
-						"image/mapa.png")));
+							"image/mapa.png")));
 					backgroundLabel.setBounds(20, 77, 357, 153);
 				}
 			}

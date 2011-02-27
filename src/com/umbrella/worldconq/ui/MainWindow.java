@@ -291,6 +291,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private void showErrorAndExit(Exception e) {
 		JOptionPane.showMessageDialog(MainWindow.this, e,
 			"Error inesperado", JOptionPane.ERROR_MESSAGE);
+		e.printStackTrace();
 		try {
 			gameMgr.getUserManager().closeSession();
 		} catch (final Exception e1) {
