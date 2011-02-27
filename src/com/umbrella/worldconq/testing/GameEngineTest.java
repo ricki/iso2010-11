@@ -3,6 +3,7 @@ package com.umbrella.worldconq.testing;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -13,9 +14,18 @@ import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
+import com.umbrella.worldconq.domain.TerritoryDecorator;
 import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
+import com.umbrella.worldconq.ui.GameEventListener;
+
+import domain.Arsenal;
+import domain.EventType;
+import domain.Player;
+import domain.Spy;
+import domain.Territory;
+import exceptions.InvalidTerritoryException;
 
 public class GameEngineTest extends TestCase {
 
@@ -147,7 +157,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory3() {
 		System.out.println("TestCase::testAttackTerritory3");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -167,7 +176,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory4() {
 		System.out.println("TestCase::testAttackTerritory4");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -187,7 +195,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory5() {
 		System.out.println("TestCase::testAttackTerritory5");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -207,7 +214,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory6() {
 		System.out.println("TestCase::testAttackTerritory6");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -227,7 +233,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory7() {
 		System.out.println("TestCase::testAttackTerritory7");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -247,7 +252,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory8() {
 		System.out.println("TestCase::testAttackTerritory8");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -267,7 +271,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory9() {
 		System.out.println("TestCase::testAttackTerritory9");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -287,7 +290,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory10() {
 		System.out.println("TestCase::testAttackTerritory10");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -307,7 +309,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory11() {
 		System.out.println("TestCase::testAttackTerritory11");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -327,7 +328,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory12() {
 		System.out.println("TestCase::testAttackTerritory12");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -347,7 +347,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory13() {
 		System.out.println("TestCase::testAttackTerritory13");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -367,7 +366,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory14() {
 		System.out.println("TestCase::testAttackTerritory14");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -387,7 +385,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory15() {
 		System.out.println("TestCase::testAttackTerritory15");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -407,7 +404,6 @@ public class GameEngineTest extends TestCase {
 	public void testAttackTerritory16() {
 		System.out.println("TestCase::testAttackTerritory16");
 		try {
-			//Voy a atacar dos veces
 			gameEngine = gameMgr.getGameEngine();
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
@@ -428,6 +424,25 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testAttackTerritory17");
 		try {
 			gameEngine = gameMgr.getGameEngine();
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
+			gameEngine.attackTerritory(0, 2, 0, 0, 0, 0);
+			fail("Esperaba InvalidArgumentException");
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException");
+		} catch (final InvalidArgumentException e) {
+			System.out.println("InvalidArgumentException atacar sin tropas");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testAttackTerritory18() {
+		System.out.println("TestCase::testAttackTerritory18");
+		try {
+			gameEngine = gameMgr.getGameEngine();
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
@@ -441,6 +456,178 @@ public class GameEngineTest extends TestCase {
 			System.out.println("InvalidArgumentException");
 		} catch (final Exception e) {
 			fail(e.toString());
+		}
+	}
+
+	public void testTerritoryUnderAttack1() {
+		System.out.println("TestCase::testTerritoryUnderAttack1");
+		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
+			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, false,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNotNull(o);
+		} catch (final InvalidTerritoryException e) {
+			fail("InvalidTerritoryException");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void testTerritoryUnderAttack2() {
+		System.out.println("TestCase::testTerritoryUnderAttack2");
+		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
+			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, false,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			gameEngine.territoryUnderAttack(null, tDefensor, tropas);
+			fail("InvalidArgumentException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException atacante null");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void testTerritoryUnderAttack3() {
+		System.out.println("TestCase::testTerritoryUnderAttack3");
+		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
+			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, false,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			gameEngine.territoryUnderAttack(tAtacante, null, tropas);
+			fail("InvalidArgumentException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException atacante null");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void testTerritoryUnderAttack4() {
+		System.out.println("TestCase::testTerritoryUnderAttack4");
+		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, false,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, null);
+			fail("InvalidArgumentException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException atacante null");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
 		}
 	}
 
@@ -652,6 +839,29 @@ public class GameEngineTest extends TestCase {
 	 * e) { System.out.println(e.toString()); } }
 	 */
 
+	public void testResolveNegotiation1() {
+		System.out.println("TestCase::testResolveNegotiation1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			//Hacer el ataque
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNotNull(o);
+			//Resolver la negociacion
+			//resolveNegotiation(money, soldiers);
+			gameEngine.resolveNegotiation(1, 1);
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNull(o);
+		} catch (final InvalidArgumentException e) {
+			fail("InvalidArgumentException");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
 	@Override
 	@After
 	public void tearDown() throws Exception {
@@ -669,5 +879,55 @@ public class GameEngineTest extends TestCase {
 		final ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
 		final URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
 		return urls[0].getFile();
+	}
+
+	private class TestUnterAttack implements GameEventListener {
+
+		boolean territoryUnderAttackCalled = false;
+
+		public void territoryUnderAttack(final TerritoryDecorator src, final TerritoryDecorator dst, final Arsenal arsenal) {
+			territoryUnderAttackCalled = true;
+		}
+
+		boolean territoryUnderAttackWasCalled() {
+			return territoryUnderAttackCalled;
+		}
+
+		@Override
+		public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void buyTerritoryEvent(TerritoryDecorator t) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void buyUnitsEvent(TerritoryDecorator t) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void negotiationEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void negotiationRequested(int money, int soldiers) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void winnerEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }

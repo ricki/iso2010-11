@@ -82,7 +82,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 			registerUsers.add(user);
 
 		{ // GameInfo 01
-			final int[] p = {
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
 					1, 2, 3
 			};
 			final Game testGame = new Game();
@@ -106,7 +109,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 
 			final Territory t = new Territory(2, Territory.Continent.Europe,
-				null, 10, p, 2, 0, 1); // territorio Angel
+				null, 10, p1, 2, 0, 1); // territorio Angel
 
 			playerList.add(new Player(Users[4][0], 250, true, false,
 				new ArrayList<Spy>()));
@@ -122,7 +125,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 			this.rellenarMapaInicial(mapList);
 
 			mapList.set(0, new Territory(0, Territory.Continent.Europe,
-				playerList.get(1).getName(), 20, p, 1, 6, 1));//terrotorio jorge
+				playerList.get(1).getName(), 20, p2, 1, 6, 1));//terrotorio jorge
 			mapList.set(2, t);
 
 			testGame.setMap(mapList);
