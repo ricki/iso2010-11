@@ -692,19 +692,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 			final String question = "Quieren nogociar con usted\nofreciéndole "
 					+ soldiers + "soldados y " + money + " gallifantes.\n"
 					+ "¿Acepta la negociación?";
-			final Object questionDialog = JOptionPane.showInputDialog(
-				win,
-				(question),
-				"Abandonar la partida",
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options, options[0]);
-			if (questionDialog.toString().equals("Sí")) {
-				//Revisar
+
+			final int opt = JOptionPane.showOptionDialog(win, question,
+				"Negociacion", JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+			if (opt == JOptionPane.YES_OPTION) {
 				win.getGameManager().getGameEngine().resolveNegotiation(money,
 					soldiers);
 			} else {
-				//Revisar
 				win.getGameManager().getGameEngine().resolveAttack();
 			}
 		}
