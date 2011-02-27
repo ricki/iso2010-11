@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import com.umbrella.worldconq.domain.MapModel;
 import com.umbrella.worldconq.domain.PlayerListModel;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
+import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 import domain.Spy;
@@ -25,7 +26,13 @@ public class TerritoryDecoratorTest extends TestCase {
 
 		final ArrayList<Player> players = new ArrayList<Player>();
 		players.add(selfPlayer);
-		playerList = new PlayerListModel(selfPlayer, players);
+
+		try {
+			playerList = new PlayerListModel(selfPlayer, players);
+		} catch (final InvalidArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		map = new MapModel(selfPlayer, playerList);
 
@@ -42,13 +49,6 @@ public class TerritoryDecoratorTest extends TestCase {
 			}, 3, 9, 0), map, playerList);
 
 		map.updateTerritory(T2);
-
-		final TerritoryDecorator T3 = new TerritoryDecorator(new Territory(6,
-			null, null, 9, new int[] {
-					0, 0, 0
-			}, 0, 0, 0), map, playerList);
-
-		map.updateTerritory(T3);
 	}
 
 	public void testgetclone1() {
@@ -76,19 +76,24 @@ public class TerritoryDecoratorTest extends TestCase {
 	public void testgetName1() {
 		assertNotSame(map.getTerritoryAt(6).getName(),
 			map.getTerritoryAt(14).getName());
-		assertNotSame(map.getTerritoryAt(0), map.getTerritoryAt(14));
 	}
 
 	public void testgetAdjacentTerritories1() {
 
+		assertNotNull(map.getTerritoryAt(0).getAdjacentTerritories());
+
 		assertTrue(map.getTerritoryAt(0).getAdjacentTerritories().contains(
 			map.getTerritoryAt(1)));
+		assertTrue(map.getTerritoryAt(1).getAdjacentTerritories().contains(
+			map.getTerritoryAt(0)));
 
 		assertFalse(map.getTerritoryAt(0).getAdjacentTerritories().contains(
 			map.getTerritoryAt(30)));
 
 		assertTrue(map.getTerritoryAt(6).getAdjacentTerritories().contains(
 			map.getTerritoryAt(0)));
+		assertTrue(map.getTerritoryAt(0).getAdjacentTerritories().contains(
+			map.getTerritoryAt(6)));
 
 		assertFalse(map.getTerritoryAt(6).getAdjacentTerritories().contains(
 			map.getTerritoryAt(17)));

@@ -39,11 +39,12 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 	private JToolBar mGameListToolBar = null;
 	private JPanel mGameListPanel = null;
-	private JPanel mGamePanel = null;
-	private JPanel mGameInfoPanel = null;
-	private JToolBar mPlayToolBar = null;
 	private JTable mOpenList = null;
 	private JTable mCurrentList = null;
+
+	private JToolBar mPlayToolBar = null;
+	private JPanel mGamePanel = null;
+	private JPanel mGameInfoPanel = null;
 	private JTextArea actionGame = null;
 
 	//Botones de la barra mPlayToolbar
@@ -91,21 +92,21 @@ public class MainWindow extends JFrame implements GameEventListener {
 		updateListButton = new JButton("Actualizar lista");
 		updateListButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/refresh.png")));
+				"image/refresh.png")));
 		updateListButton.addMouseListener(new UpdateListMouseAdapter());
 		mGameListToolBar.add(updateListButton);
 
 		createGameButton = new JButton("Crear partida");
 		createGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/addgame.png")));
+				"image/addgame.png")));
 		createGameButton.addMouseListener(new CreateGameMouseAdapter());
 		mGameListToolBar.add(createGameButton);
 
 		joinGameButton = new JButton("Unirse a la partida");
 		joinGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/join.png")));
+				"image/join.png")));
 		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
 		joinGameButton.setEnabled(false);
 		mGameListToolBar.add(joinGameButton);
@@ -113,7 +114,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		connectGameButton = new JButton("Conectarse a partida");
 		connectGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/connect.png")));
+				"image/connect.png")));
 		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
 		connectGameButton.setEnabled(false);
 		mGameListToolBar.add(connectGameButton);
@@ -121,7 +122,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		logoutButton = new JButton("Cerrar sesión");
 		logoutButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/logout.png")));
+				"image/logout.png")));
 		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
 		mGameListToolBar.add(logoutButton);
 
@@ -144,28 +145,28 @@ public class MainWindow extends JFrame implements GameEventListener {
 		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
 		moveUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/moveunits.png")));
+				"image/moveunits.png")));
 		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
 		attackButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/attack.png")));
+				"image/attack.png")));
 		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
 		buyUnitsButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/buy.png")));
+				"image/buy.png")));
 		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
 		sendSpyButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/spy.png")));
+				"image/spy.png")));
 		buyTerritoryButton = new JButton(
 			"Comprar territorio"); //Botón para comprar territorios
 		buyTerritoryButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/buy.png")));
+				"image/buy.png")));
 		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
 		exitGameButton.setIcon(new ImageIcon(
 			this.getClass().getClassLoader().getResource(
-			"image/exitb.png")));
+				"image/exitb.png")));
 
 		//Añado un capturador de eventos a cada botón
 		attackButton.addMouseListener(new AttackMouseAdapter(this));
@@ -212,10 +213,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 			new MapViewObserver(this, mv));
 		this.generateButtons();
 		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
-		this.getContentPane().add(this.getGamePanel(mv), BorderLayout.CENTER);
-		this.getContentPane().add(this.getGameInfoPanel(mv), BorderLayout.EAST);
+		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
+		this.getContentPane().add(this.getGameInfoPanel(), BorderLayout.EAST);
 		mPlayToolBar.setVisible(true);
-		this.getGamePanel(mv).setVisible(true);
+		this.getGamePanel().setVisible(true);
 		this.pack();
 		this.setLocationRelativeTo(null);
 
@@ -250,7 +251,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		return mGameListPanel;
 	}
 
-	private JPanel getGamePanel(MapView mv) {
+	private JPanel getGamePanel() {
 		if (mGamePanel == null) {
 			mGamePanel = new JPanel();
 			mGamePanel.setLayout(new BoxLayout(mGamePanel, BoxLayout.Y_AXIS));
@@ -266,22 +267,22 @@ public class MainWindow extends JFrame implements GameEventListener {
 		return mGamePanel;
 	}
 
-	private JPanel getGameInfoPanel(MapView mv) {
-		if (mGameInfoPanel == null) {
-			mGameInfoPanel = new JPanel();
-			mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
+	private JPanel getGameInfoPanel() {
+		//if (mGameInfoPanel == null) {
+		mGameInfoPanel = new JPanel();
+		mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
 				BoxLayout.Y_AXIS));
-			mv.setInfoPlayer(new JEditorPane());
-			final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
+		mv.setInfoPlayer(new JEditorPane());
+		final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
 				gameMgr.getGameEngine().getPlayerListModel()));
-			listPlayerSroll.setPreferredSize(new Dimension(150, 300));
+		listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
-			final JScrollPane listInfoSroll = new JScrollPane(
+		final JScrollPane listInfoSroll = new JScrollPane(
 				mv.getInfoPlayer());
-			listInfoSroll.setPreferredSize(new Dimension(150, 300));
-			mGameInfoPanel.add(listPlayerSroll);
-			mGameInfoPanel.add(listInfoSroll);
-		}
+		listInfoSroll.setPreferredSize(new Dimension(150, 300));
+		mGameInfoPanel.add(listPlayerSroll);
+		mGameInfoPanel.add(listInfoSroll);
+		//}
 		return mGameInfoPanel;
 	}
 
