@@ -49,7 +49,7 @@ public class WorldConqApp {
 
 		gameMgr = new GameManager(srvAdapter, cltAdapter);
 
-		usrMgr = new UserManager(srvAdapter, gameMgr);
+		usrMgr = new UserManager(srvAdapter, gameMgr, cltAdapter);
 
 		gameMgr.setUserManager(usrMgr);
 

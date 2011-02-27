@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -77,9 +78,9 @@ public class ServerAdapter {
 		if (!this.isConnected()) throw new RemoteException();
 	}
 
-	public UUID createSession(String login, String passwd) throws Exception {
+	public UUID createSession(String login, String passwd, Remote callback) throws Exception {
 		this.checkConnection();
-		return mProxy.loginUser(login, passwd, null);
+		return mProxy.loginUser(login, passwd, callback);
 	}
 
 	public void closeSession(Session session) throws Exception {
