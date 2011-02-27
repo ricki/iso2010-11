@@ -68,17 +68,6 @@ public class MainWindow extends JFrame implements GameEventListener {
 		super();
 		this.gameMgr = gameMgr;
 		this.app = app;
-		this.initGUI();
-		try {
-			gameMgr.updateGameList();
-		} catch (final Exception e) {
-			this.showErrorAndExit(e);
-		}
-	}
-
-	void initGUI() {
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
 		try {
 			this.setIconImage(new ImageIcon(
 				ClassLoader.getSystemResource("image/logo.png")).getImage());
@@ -88,140 +77,66 @@ public class MainWindow extends JFrame implements GameEventListener {
 		this.setResizable(false);
 		this.setTitle("La Conquista del Mundo");
 		this.setSize(800, 500);
-
-		mGameListToolBar = new JToolBar();
-
-		updateListButton = new JButton("Actualizar lista");
-		updateListButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/refresh.png")));
-		updateListButton.addMouseListener(new UpdateListMouseAdapter());
-		mGameListToolBar.add(updateListButton);
-
-		createGameButton = new JButton("Crear partida");
-		createGameButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/addgame.png")));
-		createGameButton.addMouseListener(new CreateGameMouseAdapter());
-		mGameListToolBar.add(createGameButton);
-
-		joinGameButton = new JButton("Unirse a la partida");
-		joinGameButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/join.png")));
-		joinGameButton.addMouseListener(new JoinGameMouseAdapter());
-		joinGameButton.setEnabled(false);
-		mGameListToolBar.add(joinGameButton);
-
-		connectGameButton = new JButton("Conectarse a partida");
-		connectGameButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/connect.png")));
-		connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
-		connectGameButton.setEnabled(false);
-		mGameListToolBar.add(connectGameButton);
-
-		logoutButton = new JButton("Cerrar sesión");
-		logoutButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/logout.png")));
-		logoutButton.addMouseListener(new LogoutMouseAdapter(this));
-		mGameListToolBar.add(logoutButton);
-
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setupListGUI();
-	}
 
-	//Método que devuelve el Game Manager
-	public GameManager getGameManager() {
-		return gameMgr;
-	}
-
-	//Método que devuelve el MapView
-	public MapView getMapView() {
-		return mv;
-	}
-
-	//Método que genera los botones que llevará la barra 
-	//de herramientas mPlayToolbar cuando se está jugando
-	public void generateButtons() {
-		moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
-		moveUnitsButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/moveunits.png")));
-		attackButton = new JButton("Atacar"); //Botón para atacar un territorio
-		attackButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/attack.png")));
-		buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
-		buyUnitsButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/buy.png")));
-		sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
-		sendSpyButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/spy.png")));
-		buyTerritoryButton = new JButton(
-			"Comprar territorio"); //Botón para comprar territorios
-		buyTerritoryButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/buy.png")));
-		exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
-		exitGameButton.setIcon(new ImageIcon(
-			this.getClass().getClassLoader().getResource(
-				"image/exitb.png")));
-
-		//Añado un capturador de eventos a cada botón
-		attackButton.addMouseListener(new AttackMouseAdapter(this));
-		moveUnitsButton.addMouseListener(new MoveUnitsMouseAdapter(this));
-		sendSpyButton.addMouseListener(new SendSpyMouseAdapter(this));
-		buyUnitsButton.addMouseListener(new BuyUnitsMouseAdapter(this));
-		buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(this));
-		exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
-
-		//Deshabilito los botones
-		attackButton.setEnabled(false);
-		moveUnitsButton.setEnabled(false);
-		sendSpyButton.setEnabled(false);
-		buyUnitsButton.setEnabled(false);
-		buyTerritoryButton.setEnabled(false);
-
-		//Creo la toolbar
-		mPlayToolBar = new JToolBar();
-
-		mPlayToolBar.add(attackButton);
-		mPlayToolBar.add(moveUnitsButton);
-		mPlayToolBar.add(sendSpyButton);
-		mPlayToolBar.add(buyUnitsButton);
-		mPlayToolBar.add(buyTerritoryButton);
-		mPlayToolBar.add(exitGameButton);
+		try {
+			gameMgr.updateGameList();
+		} catch (final Exception e) {
+			this.showErrorAndExit(e);
+		}
 	}
 
 	public void setupListGUI() {
-		this.getContentPane().add(mGameListToolBar, BorderLayout.NORTH);
+		this.getContentPane().add(this.getGameListToolBar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
 		this.getGameListPanel().setVisible(true);
 	}
 
-	public void setupGameGUI() throws IOException {
-		// hacemos invisible lo anterior
-		this.getGameListPanel().setVisible(false);
-		mGameListToolBar.setVisible(false);
-		// mostramos el mapa y lo demas
-		mv = new MapView(
-			gameMgr.getGameEngine().getMapListModel());
-		//Añado un observador al modelo de lista de selección del mapView
-		mv.getListSelectionModel().addListSelectionListener(
-			new MapViewObserver(this, mv));
-		this.generateButtons();
-		this.getContentPane().add(mPlayToolBar, BorderLayout.NORTH);
-		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
-		this.getContentPane().add(this.getGameInfoPanel(), BorderLayout.EAST);
-		mPlayToolBar.setVisible(true);
-		this.getGamePanel().setVisible(true);
-		this.pack();
-		this.setLocationRelativeTo(null);
+	private JToolBar getGameListToolBar() {
+		if (mGameListPanel == null) {
+			mGameListToolBar = new JToolBar();
 
+			updateListButton = new JButton("Actualizar lista");
+			updateListButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/refresh.png")));
+			updateListButton.addMouseListener(new UpdateListMouseAdapter());
+			mGameListToolBar.add(updateListButton);
+
+			createGameButton = new JButton("Crear partida");
+			createGameButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/addgame.png")));
+			createGameButton.addMouseListener(new CreateGameMouseAdapter());
+			mGameListToolBar.add(createGameButton);
+
+			joinGameButton = new JButton("Unirse a la partida");
+			joinGameButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/join.png")));
+			joinGameButton.addMouseListener(new JoinGameMouseAdapter());
+			joinGameButton.setEnabled(false);
+			mGameListToolBar.add(joinGameButton);
+
+			connectGameButton = new JButton("Conectarse a partida");
+			connectGameButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/connect.png")));
+			connectGameButton.addMouseListener(new ConnectGameMouseAdapter(this));
+			connectGameButton.setEnabled(false);
+			mGameListToolBar.add(connectGameButton);
+
+			logoutButton = new JButton("Cerrar sesión");
+			logoutButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/logout.png")));
+			logoutButton.addMouseListener(new LogoutMouseAdapter(this));
+			mGameListToolBar.add(logoutButton);
+
+		}
+		return mGameListToolBar;
 	}
 
 	private JPanel getGameListPanel() {
@@ -251,6 +166,27 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mGameListPanel.add(openListPanel);
 		}
 		return mGameListPanel;
+	}
+
+	public void setupGameGUI() throws IOException {
+		// hacemos invisible lo anterior
+		this.getGameListPanel().setVisible(false);
+		this.getGameListToolBar().setVisible(false);
+		// mostramos el mapa y lo demas
+		mv = new MapView(
+			gameMgr.getGameEngine().getMapListModel());
+		//Añado un observador al modelo de lista de selección del mapView
+		mv.getListSelectionModel().addListSelectionListener(
+			new MapViewObserver(this, mv));
+		//this.getPlayToolbar();
+		this.getContentPane().add(this.getPlayToolbar(), BorderLayout.NORTH);
+		this.getContentPane().add(this.getGamePanel(), BorderLayout.CENTER);
+		this.getContentPane().add(this.getGameInfoPanel(), BorderLayout.EAST);
+		this.getPlayToolbar().setVisible(true);
+		this.getGamePanel().setVisible(true);
+		this.pack();
+		this.setLocationRelativeTo(null);
+
 	}
 
 	private JPanel getGamePanel() {
@@ -288,10 +224,78 @@ public class MainWindow extends JFrame implements GameEventListener {
 		return mGameInfoPanel;
 	}
 
+	//Método que devuelve el Game Manager
+	public GameManager getGameManager() {
+		return gameMgr;
+	}
+
+	//Método que devuelve el MapView
+	public MapView getMapView() {
+		return mv;
+	}
+
+	//Método que genera los botones que llevará la barra 
+	//de herramientas mPlayToolbar cuando se está jugando
+	public JToolBar getPlayToolbar() {
+		if (mPlayToolBar == null) {
+			moveUnitsButton = new JButton("Mover tropas"); //Botón para mover unidades de un territorio a otro
+			moveUnitsButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/moveunits.png")));
+			attackButton = new JButton("Atacar"); //Botón para atacar un territorio
+			attackButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/attack.png")));
+			buyUnitsButton = new JButton("Comprar refuerzos"); //Botón para comprar refuerzos
+			buyUnitsButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/buy.png")));
+			sendSpyButton = new JButton("Enviar espía"); //Botón para enviar un espía a un territorio
+			sendSpyButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/spy.png")));
+			buyTerritoryButton = new JButton(
+				"Comprar territorio"); //Botón para comprar territorios
+			buyTerritoryButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/buy.png")));
+			exitGameButton = new JButton("Desconectarse"); //Botón para desconectarse de la partida
+			exitGameButton.setIcon(new ImageIcon(
+				this.getClass().getClassLoader().getResource(
+					"image/exitb.png")));
+
+			//Añado un capturador de eventos a cada botón
+			attackButton.addMouseListener(new AttackMouseAdapter(this));
+			moveUnitsButton.addMouseListener(new MoveUnitsMouseAdapter(this));
+			sendSpyButton.addMouseListener(new SendSpyMouseAdapter(this));
+			buyUnitsButton.addMouseListener(new BuyUnitsMouseAdapter(this));
+			buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(
+				this));
+			exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
+
+			//Deshabilito los botones
+			attackButton.setEnabled(false);
+			moveUnitsButton.setEnabled(false);
+			sendSpyButton.setEnabled(false);
+			buyUnitsButton.setEnabled(false);
+			buyTerritoryButton.setEnabled(false);
+
+			//Creo la toolbar
+			mPlayToolBar = new JToolBar();
+
+			mPlayToolBar.add(attackButton);
+			mPlayToolBar.add(moveUnitsButton);
+			mPlayToolBar.add(sendSpyButton);
+			mPlayToolBar.add(buyUnitsButton);
+			mPlayToolBar.add(buyTerritoryButton);
+			mPlayToolBar.add(exitGameButton);
+		}
+		return mPlayToolBar;
+	}
+
 	private void showErrorAndExit(Exception e) {
 		JOptionPane.showMessageDialog(MainWindow.this, e,
 			"Error inesperado", JOptionPane.ERROR_MESSAGE);
-		e.printStackTrace();
 		try {
 			gameMgr.getUserManager().closeSession();
 		} catch (final Exception e1) {
