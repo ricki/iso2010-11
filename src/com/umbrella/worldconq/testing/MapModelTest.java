@@ -132,15 +132,8 @@ public class MapModelTest extends TestCase {
 
 		map.updateTerritory(T2);
 
-		final TerritoryDecorator T3 = new TerritoryDecorator(new Territory(6,
-			null, null, 9, new int[] {
-					0, 0, 0
-			}, 0, 0, 0), map, playerList);
-
-		map.updateTerritory(T3);
-
-		assertEquals(map.getValueAt(14, 1), "¿?");
 		assertEquals(map.getValueAt(14, 0), 14);
+		assertEquals(map.getValueAt(14, 1), "¿?");
 		assertEquals(map.getValueAt(6, 0), 6);
 		assertEquals(map.getValueAt(6, 2), "¿?");
 
