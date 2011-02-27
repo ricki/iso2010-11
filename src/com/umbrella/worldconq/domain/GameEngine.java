@@ -220,15 +220,6 @@ public class GameEngine implements ClientCallback {
 	}
 
 	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int ICMB, int antimissiles) throws Exception {
-		System.out.println("Territorio origen" + src);
-		System.out.println("Territorio destino" + dst);
-		System.out.println("slodados" + soldiers);
-		System.out.println("cañones 1" + cannons[0]);
-		System.out.println("cañones 2" + cannons[1]);
-		System.out.println("cañones 3" + cannons[2]);
-		System.out.println("misiles" + missiles);
-		System.out.println("icbm" + ICMB);
-		System.out.println("anti" + antimissiles);
 
 		this.checkInTurn();
 
@@ -242,87 +233,68 @@ public class GameEngine implements ClientCallback {
 		TerritoryDecorator dstTerritory = this.getMapListModel().getTerritoryAt(
 			dst);
 
-		if (srcTerritory.getPlayer() != null)
-			throw new InvalidArgumentException();
-		if (srcTerritory.getOwner().equals(session.getUser()))
-			throw new InvalidArgumentException();
-		if (dstTerritory.getPlayer() != null)
-			throw new InvalidArgumentException();
-		if (dstTerritory.getOwner().equals(session.getUser()))
-			throw new InvalidArgumentException();
-		if (srcTerritory.getAdjacentTerritories().contains(dstTerritory))
-			throw new InvalidArgumentException();
-		if (soldiers <= srcTerritory.getNumSoldiers())
-			throw new InvalidArgumentException();
-		if (soldiers >= 0)
-			throw new InvalidArgumentException();
-		if (cannons[0] <= srcTerritory.getNumCannons()[0])
-			throw new InvalidArgumentException();
-		if (cannons[0] >= 0)
-			throw new InvalidArgumentException();
-		if (cannons[1] <= srcTerritory.getNumCannons()[1])
-			throw new InvalidArgumentException();
-		if (cannons[1] >= 0)
-			throw new InvalidArgumentException();
-		if (cannons[2] <= srcTerritory.getNumCannons()[2])
-			throw new InvalidArgumentException();
-		if (cannons[2] >= 0)
-			throw new InvalidArgumentException();
-		if (missiles <= srcTerritory.getNumMissiles())
-			throw new InvalidArgumentException();
-		if (missiles >= 0)
-			throw new InvalidArgumentException();
-		if (ICMB <= srcTerritory.getNumICBMs())
-			throw new InvalidArgumentException();
-		if (ICMB >= 0)
-			throw new InvalidArgumentException();
-		if (antimissiles <= srcTerritory.getNumAntiMissiles())
-			throw new InvalidArgumentException();
-		if (antimissiles >= 0)
-			throw new InvalidArgumentException();
+		if (srcTerritory.getPlayer() != null
+				&& srcTerritory.getOwner().equals(session.getUser())
+				&& dstTerritory.getPlayer() != null
+				&& dstTerritory.getOwner().equals(session.getUser())
+				&& srcTerritory.getAdjacentTerritories().contains(dstTerritory)
+				&& soldiers <= srcTerritory.getNumSoldiers() && soldiers >= 0
+				&& cannons[0] <= srcTerritory.getNumCannons()[0]
+				&& cannons[0] >= 0
+				&& cannons[1] <= srcTerritory.getNumCannons()[1]
+				&& cannons[1] >= 0
+				&& cannons[2] <= srcTerritory.getNumCannons()[2]
+				&& cannons[2] >= 0
+				&& missiles <= srcTerritory.getNumMissiles() && missiles >= 0
+				&& ICMB <= srcTerritory.getNumICBMs() && ICMB >= 0
+				&& antimissiles <= srcTerritory.getNumAntiMissiles()
+				&& antimissiles >= 0) {
 
-		srcTerritory = (TerritoryDecorator) srcTerritory.clone();
+			srcTerritory = (TerritoryDecorator) srcTerritory.clone();
 
-		srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
+			srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
 					- soldiers);
 
-		final int numCannons[] = new int[3];
-		for (int i = 0; i < 3; i++)
-			numCannons[i] = srcTerritory.getNumCannons()[i] - cannons[i];
-		srcTerritory.setNumCannons(numCannons);
+			final int numCannons[] = new int[3];
+			for (int i = 0; i < 3; i++)
+				numCannons[i] = srcTerritory.getNumCannons()[i] - cannons[i];
+			srcTerritory.setNumCannons(numCannons);
 
-		srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()
+			srcTerritory.setNumMissiles(srcTerritory.getNumMissiles()
 					- missiles);
-		srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()
+			srcTerritory.setNumICBMs(srcTerritory.getNumICBMs()
 					- ICMB);
-		srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()
+			srcTerritory.setNumAntiMissiles(srcTerritory.getNumAntiMissiles()
 					- antimissiles);
 
-		dstTerritory = (TerritoryDecorator) dstTerritory.clone();
+			dstTerritory = (TerritoryDecorator) dstTerritory.clone();
 
-		dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
+			dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
 					+ soldiers);
 
-		for (int i = 0; i < 3; i++)
-			numCannons[i] = srcTerritory.getNumCannons()[i] + cannons[i];
-		dstTerritory.setNumCannons(numCannons);
+			for (int i = 0; i < 3; i++)
+				numCannons[i] = srcTerritory.getNumCannons()[i] + cannons[i];
+			dstTerritory.setNumCannons(numCannons);
 
-		dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
+			dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
 					+ missiles);
-		dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()
+			dstTerritory.setNumICBMs(dstTerritory.getNumICBMs()
 					+ ICMB);
-		dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
+			dstTerritory.setNumAntiMissiles(dstTerritory.getNumAntiMissiles()
 					+ antimissiles);
 
-		final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
-		territoriesUpdate.add(srcTerritory);
-		territoriesUpdate.add(dstTerritory);
-		adapter.updateGame(session, mGame,
+			final ArrayList<TerritoryDecorator> territoriesUpdate = new ArrayList<TerritoryDecorator>();
+			territoriesUpdate.add(srcTerritory);
+			territoriesUpdate.add(dstTerritory);
+			adapter.updateGame(session, mGame,
 				new ArrayList<Player>(), territoriesUpdate,
 				EventType.UnknownEvent);
 
-		mMapListModel.updateTerritory(srcTerritory);
-		mMapListModel.updateTerritory(dstTerritory);
+			mMapListModel.updateTerritory(srcTerritory);
+			mMapListModel.updateTerritory(dstTerritory);
+		} else {
+			throw new InvalidArgumentException();
+		}
 
 	}
 
