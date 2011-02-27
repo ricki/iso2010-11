@@ -80,7 +80,7 @@ public class WorldConqApp {
 			mainWindow.setVisible(false);
 			mainWindow.dispose();
 		}
-		mainWindow = new MainWindow(gameMgr);
+		mainWindow = new MainWindow(gameMgr, this);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
 	}

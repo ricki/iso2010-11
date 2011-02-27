@@ -308,8 +308,9 @@ public class GameEngine implements ClientCallback {
 		TerritoryDecorator myTerritory = null;
 
 		for (int i = 0; i < AdjacentTerritories.size() && myTerritory == null; i++) {
-			if (AdjacentTerritories.get(i).getOwner().equals(
-				mPlayerListModel.getSelfPlayer().getName()))
+			if (AdjacentTerritories.get(i).getOwner() != null
+					&& AdjacentTerritories.get(i).getOwner().equals(
+						mPlayerListModel.getSelfPlayer().getName()))
 				myTerritory = AdjacentTerritories.get(i);
 		}
 		if (myTerritory == null)
@@ -324,7 +325,7 @@ public class GameEngine implements ClientCallback {
 			final Player playerUpdate = new Player(
 				mPlayerListModel.getSelfPlayer().getName(),
 				mPlayerListModel.getSelfPlayer().getMoney()
-					- mMapListModel.getTerritoryAt(territory).getPrice(),
+						- mMapListModel.getTerritoryAt(territory).getPrice(),
 				mPlayerListModel.getSelfPlayer().isOnline(),
 				mPlayerListModel.getSelfPlayer().isHasTurn(),
 				mPlayerListModel.getSelfPlayer().getSpies());

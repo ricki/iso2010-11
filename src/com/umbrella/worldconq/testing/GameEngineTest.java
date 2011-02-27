@@ -64,7 +64,7 @@ public class GameEngineTest extends TestCase {
 			srvAdapter.connect();
 
 			gameMgr = new GameManager(srvAdapter, cltAdapter);
-			usrMgr = new UserManager(srvAdapter, gameMgr);
+			usrMgr = new UserManager(srvAdapter, gameMgr, cltAdapter);
 			gameMgr.setUserManager(usrMgr);
 			usrMgr.createSession("JorgeCA", "jorge");
 

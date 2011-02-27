@@ -35,6 +35,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	private final int puerto = 3234;
 	private final String miIP;
 	private final Registry reg;
+	private Remote callback;
 
 	private final String[][] Users = {
 			{
@@ -299,6 +300,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public UUID loginUser(String name, String password, Remote callback) throws RemoteException, WrongLoginException {
 		System.out.println("IServer::loginUser " + name);
+		this.callback = callback;
 		boolean encontrado = false;
 		UUID id = null;
 		for (int i = 0; i < registerUsers.size() && encontrado == false; i++) {

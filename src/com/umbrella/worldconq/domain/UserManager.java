@@ -57,14 +57,17 @@ public class UserManager {
 	}
 
 	public void createSession(String login, String passwd) throws Exception {
-		if (login == null || passwd == null || login.isEmpty()
-				|| passwd.isEmpty())
+		if (login == null)
 			throw new InvalidArgumentException();
-		else {
-			if (mSession != null) this.closeSession();
-			final UUID id = srvAdapter.createSession(login, passwd, cltAdapter);
-			mSession = new Session(id, login);
-		}
+		if (passwd == null)
+			throw new InvalidArgumentException();
+		if (login.isEmpty())
+			throw new InvalidArgumentException();
+		if (passwd.isEmpty())
+			throw new InvalidArgumentException();
+		if (mSession != null) this.closeSession();
+		final UUID id = srvAdapter.createSession(login, passwd, cltAdapter);
+		mSession = new Session(id, login);
 	}
 
 	public void closeSession() throws Exception {
