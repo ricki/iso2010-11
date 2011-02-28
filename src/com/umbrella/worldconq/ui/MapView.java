@@ -197,7 +197,9 @@ public class MapView extends JComponent implements TableModelListener {
 					+ "<TR><TD Align=\"right\">ICBMs:<TD Align=\"center\">"
 					+ mMapm.getValueAt(idx, 7)
 					+ "<TR><TD Align=\"right\">Antimisiles:<TD Align=\"center\">"
-					+ mMapm.getValueAt(idx, 8) + "</TABLE>\n</P>";
+					+ mMapm.getValueAt(idx, 8)
+					+ "<TR><TD Align=\"right\">Precio:<TD Align=\"center\">"
+					+ mMapm.getValueAt(idx, 9) + "</TABLE>\n</P>";
 			this.getInfoPlayer().setContentType("text/html");
 			this.getInfoPlayer().setText(ret);
 		} else {

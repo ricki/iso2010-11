@@ -15,7 +15,7 @@ public class MapModel extends AbstractTableModel {
 	private static final String[] colTitles = {
 			"Territorio", "Jugador", "Nº Soldados", "Nº Canones 1",
 			"Nº Canones 2", "Nº Canones 3", "Nº Misiles", "Nº ICBMs",
-			"Nº AntiMisiles"
+			"Nº AntiMisiles", "Precio"
 	};
 
 	private final ArrayList<TerritoryDecorator> data;
@@ -112,6 +112,8 @@ public class MapModel extends AbstractTableModel {
 					return t.getNumICBMs();
 				case 8:
 					return t.getNumAntiMissiles();
+				case 9:
+					return t.getPrice();
 				default:
 					return null;
 				}
@@ -119,6 +121,8 @@ public class MapModel extends AbstractTableModel {
 				switch (columnIndex) {
 				case 0:
 					return rowIndex;
+				case 9:
+					return t.getPrice();
 				default:
 					return "¿?";
 				}
@@ -128,6 +132,8 @@ public class MapModel extends AbstractTableModel {
 			switch (columnIndex) {
 			case 0:
 				return rowIndex;
+			case 9:
+				return t.getPrice();
 			default:
 				return "¿?";
 			}
