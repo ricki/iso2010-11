@@ -132,6 +132,8 @@ public class MapModel extends AbstractTableModel {
 			switch (columnIndex) {
 			case 0:
 				return rowIndex;
+			case 9:
+				return t.getPrice();
 			default:
 				return "¿?";
 			}
