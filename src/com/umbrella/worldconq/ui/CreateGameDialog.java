@@ -46,6 +46,7 @@ public class CreateGameDialog extends JDialog {
 	private JButton cancelButton;
 	private ArrayList<Calendar> calendarList;
 	private JScrollPane scroll;
+	private JLabel errorLabel;
 
 	public CreateGameDialog(JFrame f, String string, boolean b) {
 		super(f, string, b);
@@ -120,6 +121,9 @@ public class CreateGameDialog extends JDialog {
 		cancelButton = new JButton("Cancelar");
 		cancelButton.addMouseListener(new CancelMouseAdapter(this, false));
 
+		errorLabel = new JLabel("¡ Datos erróneos o insuficientes !");
+		errorLabel.setHorizontalAlignment(JLabel.CENTER);
+
 		calendarList = new ArrayList<Calendar>();
 		scroll = new JScrollPane();
 		scroll.setViewportView(datesList);
@@ -177,12 +181,20 @@ public class CreateGameDialog extends JDialog {
 		c.gridx = 0;
 		c.gridy = 9;
 		c.gridwidth = 2;
+		c.gridheight = 2;
+		mainPanel.add(errorLabel, c);
+		errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+		errorLabel.setVisible(false);
+
+		c.gridx = 0;
+		c.gridy = 11;
+		c.gridwidth = 2;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		mainPanel.add(createButton, c);
 
 		c.gridx = 3;
-		c.gridy = 9;
+		c.gridy = 11;
 		c.weightx = 0.5;
 		c.gridwidth = 2;
 		c.gridheight = 1;
@@ -292,9 +304,13 @@ public class CreateGameDialog extends JDialog {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-			selection = true;
-			dlg.selection = selection;
-			dlg.setVisible(false);
+			if (dlg.getGameName() != "" && dlg.getGameName() != null
+					&& CreateGameDialog.this.getCalendarList().size() > 0) {
+				selection = true;
+				dlg.selection = selection;
+				dlg.setVisible(false);
+			} else
+				errorLabel.setVisible(true);
 		}
 	}
 
