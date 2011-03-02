@@ -92,8 +92,11 @@ public class GameManager {
 		for (final Calendar c : gameSessions) {
 			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
 		}
+		final ArrayList<String> listPlayer = new ArrayList<String>();
+		listPlayer.add(usrMgr.getSession().getUser());
 		srvAdapter.createGame(usrMgr.getSession(), new GameInfo(null, name,
-			description, null, gameSessions, 0, turnTime, defTime, negTime));
+			description, listPlayer, gameSessions, 42, turnTime, defTime,
+			negTime));
 	}
 
 	public void joinGame(int gameSelected) throws Exception {

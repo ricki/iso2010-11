@@ -2,6 +2,7 @@ package com.umbrella.worldconq.comm;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -15,7 +16,8 @@ import domain.Territory;
 import exceptions.GameNotFoundException;
 import exceptions.InvalidTerritoryException;
 
-public class ClientAdapter implements IClient, Serializable {
+public class ClientAdapter extends UnicastRemoteObject
+		implements IClient, Serializable {
 
 	/**
 	 * 
@@ -23,11 +25,11 @@ public class ClientAdapter implements IClient, Serializable {
 	private static final long serialVersionUID = -3191656668310586049L;
 	private ClientCallback mClientCallback;
 
-	public ClientAdapter() {
+	public ClientAdapter() throws RemoteException {
 		mClientCallback = null;
 	}
 
-	public ClientAdapter(ClientCallback mClientCallback) {
+	public ClientAdapter(ClientCallback mClientCallback) throws RemoteException {
 		this.mClientCallback = mClientCallback;
 	}
 

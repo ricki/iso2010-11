@@ -63,6 +63,7 @@ public class ServerAdapter {
 			mRemoteHost.getHostAddress(),
 			mRemotePort,
 			mRemoteName);
+		System.out.println("Connecting to " + url);
 		mProxy = (IServer) Naming.lookup(url);
 	}
 

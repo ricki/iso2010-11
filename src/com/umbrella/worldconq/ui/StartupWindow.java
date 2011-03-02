@@ -134,7 +134,6 @@ public class StartupWindow extends JFrame {
 			boolean invalidArgument = false;
 
 			do {
-				stw.setVisible(false);
 				final JFrame f = new JFrame();
 				final RegisterDialog dlg = new RegisterDialog(f,
 					"La Conquista del Mundo - Registro", true);
@@ -142,6 +141,7 @@ public class StartupWindow extends JFrame {
 				dlg.setVisible(true);
 
 				if (dlg.getSelection() == true) {
+					System.out.println("Iniciando registro");
 					try {
 						usrMgr.registerUser(
 							dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
@@ -156,11 +156,13 @@ public class StartupWindow extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 						invalidArgument = true;
 					} catch (final Exception e) {
+						System.out.println(e.toString());
 						stw.NoticeLabel.setText("El servidor indica: Error en el registro");
 						NoticeLabel.setForeground(new Color(255, 0, 0));
 						stw.setVisible(true);
 						invalidArgument = false;
 					}
+					System.out.println("Fin registro");
 				} else {
 					stw.NoticeLabel.setText("");
 					invalidArgument = false;
