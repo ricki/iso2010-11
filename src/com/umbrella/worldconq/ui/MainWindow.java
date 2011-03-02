@@ -65,6 +65,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JButton updateListButton;
 	private JButton createGameButton;
 	private MapView mv; //MapView
+	private TerritoryInfoView tinfov; //MapView
 
 	public MainWindow(GameManager gameMgr, WorldConqApp app) {
 		super();
@@ -177,9 +178,13 @@ public class MainWindow extends JFrame implements GameEventListener {
 		// mostramos el mapa y lo demas
 		mv = new MapView(
 			gameMgr.getGameEngine().getMapListModel());
+		tinfov = new TerritoryInfoView(
+			gameMgr.getGameEngine().getMapListModel());
 		//Añado un observador al modelo de lista de selección del mapView
 		mv.getListSelectionModel().addListSelectionListener(
 			new MapViewObserver(this, mv));
+		//tinfov.getListSelectionModel().addListSelectionListener(
+		//	new TerritoryInfoViewObserver(this, tinfov));
 		//this.getPlayToolbar();
 		this.getContentPane().add(this.getPlayToolbar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.createGamePanel(), BorderLayout.CENTER);
@@ -210,12 +215,13 @@ public class MainWindow extends JFrame implements GameEventListener {
 		mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
 				BoxLayout.Y_AXIS));
 		mv.setInfoPlayer(new JEditorPane());
+		tinfov.setInfoPlayer(new JEditorPane());
 		final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
 				gameMgr.getGameEngine().getPlayerListModel()));
 		listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
-		final JScrollPane listInfoSroll = new JScrollPane(
-				mv.getInfoPlayer());
+		final JScrollPane listInfoSroll = new JScrollPane(mv.getInfoPlayer());
+		//final JScrollPane listInfoSroll = new JScrollPane(tinfov.getInfoPlayer());
 		listInfoSroll.setPreferredSize(new Dimension(150, 300));
 		mGameInfoPanel.add(listPlayerSroll);
 		mGameInfoPanel.add(listInfoSroll);
