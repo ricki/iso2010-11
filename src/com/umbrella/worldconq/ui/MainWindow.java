@@ -30,6 +30,7 @@ import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
+import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
 
 import domain.Arsenal;
@@ -475,6 +476,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 							"Hay otro ataque en curso",
 							"Dos ataques simultáneos",
 							JOptionPane.WARNING_MESSAGE);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion denegada, no tiene el turna",
+							"Acción denegada",
+							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
 						MainWindow.this.showErrorAndExit(e);
 					}
@@ -531,6 +537,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 							"Algún parámetro es inválido",
 							"Parámetro erroneo",
 							JOptionPane.WARNING_MESSAGE);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion denegada, no tiene el turna",
+							"Acción denegada",
+							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
 						MainWindow.this.showErrorAndExit(e);
 					}
@@ -565,6 +576,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 					JOptionPane.showMessageDialog(win,
 						"Algún parámetro es inválido",
 						"Parámetro erroneo",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final OutOfTurnException e) {
+					JOptionPane.showMessageDialog(win,
+						"Accion denegada, no tiene el turna",
+						"Acción denegada",
 						JOptionPane.WARNING_MESSAGE);
 				} catch (final Exception e) {
 					MainWindow.this.showErrorAndExit(e);
@@ -617,6 +633,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 							"Algún parámetro es inválido",
 							"Parámetro erroneo",
 							JOptionPane.WARNING_MESSAGE);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion denegada, no tiene el turna",
+							"Acción denegada",
+							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
 						MainWindow.this.showErrorAndExit(e);
 					}
@@ -655,6 +676,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 								JOptionPane.showMessageDialog(win,
 									"El territorio no se puede comprar",
 									"Territorio no dosponible para usted",
+									JOptionPane.WARNING_MESSAGE);
+							} catch (final OutOfTurnException e) {
+								JOptionPane.showMessageDialog(win,
+									"Accion denegada, no tiene el turna",
+									"Acción denegada",
 									JOptionPane.WARNING_MESSAGE);
 							} catch (final Exception e) {
 								MainWindow.this.showErrorAndExit(e);
