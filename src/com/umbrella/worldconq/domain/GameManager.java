@@ -2,6 +2,7 @@ package com.umbrella.worldconq.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
@@ -94,9 +95,10 @@ public class GameManager {
 		}
 		final ArrayList<String> listPlayer = new ArrayList<String>();
 		listPlayer.add(usrMgr.getSession().getUser());
-		srvAdapter.createGame(usrMgr.getSession(), new GameInfo(null, name,
-			description, listPlayer, gameSessions, 42, turnTime, defTime,
-			negTime));
+		srvAdapter.createGame(usrMgr.getSession(),
+			new GameInfo(UUID.randomUUID(), name,
+				description, listPlayer, gameSessions, 42, turnTime, defTime,
+				negTime));
 		this.updateGameList();
 	}
 
