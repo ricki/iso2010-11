@@ -43,8 +43,11 @@ public class ClientAdapter extends UnicastRemoteObject
 	}
 
 	private void checkValidGame(UUID game) throws GameNotFoundException {
-		if (mClientCallback == null || !mClientCallback.getId().equals(game))
+		System.out.println("ClientAdapter::checkValidGame");
+		if (mClientCallback == null || !mClientCallback.getId().equals(game)) {
+			System.out.println("GameNotFoundException");
 			throw new GameNotFoundException("");
+		}
 	}
 
 	@Override

@@ -312,7 +312,7 @@ public class GameEngine implements ClientCallback {
 		for (int i = 0; i < AdjacentTerritories.size() && myTerritory == null; i++) {
 			if (AdjacentTerritories.get(i).getOwner() != null
 					&& AdjacentTerritories.get(i).getOwner().equals(
-						mPlayerListModel.getSelfPlayer().getName()))
+				mPlayerListModel.getSelfPlayer().getName()))
 				myTerritory = AdjacentTerritories.get(i);
 		}
 		if (myTerritory == null)
@@ -327,7 +327,7 @@ public class GameEngine implements ClientCallback {
 			final Player playerUpdate = new Player(
 				mPlayerListModel.getSelfPlayer().getName(),
 				mPlayerListModel.getSelfPlayer().getMoney()
-						- mMapListModel.getTerritoryAt(territory).getPrice(),
+					- mMapListModel.getTerritoryAt(territory).getPrice(),
 				mPlayerListModel.getSelfPlayer().isOnline(),
 				mPlayerListModel.getSelfPlayer().isHasTurn(),
 				mPlayerListModel.getSelfPlayer().getSpies());
@@ -524,9 +524,11 @@ public class GameEngine implements ClientCallback {
 		for (final Player p : playerUpdate) {
 			mPlayerListModel.updatePlayer(p);
 		}
-		for (final Territory t : territoryUpdate) {
-			mMapListModel.updateTerritory(new TerritoryDecorator(t,
-				mMapListModel, mPlayerListModel));
+		if (territoryUpdate != null) {
+			for (final Territory t : territoryUpdate) {
+				mMapListModel.updateTerritory(new TerritoryDecorator(t,
+					mMapListModel, mPlayerListModel));
+			}
 		}
 
 		if (event == EventType.TurnChanged) {
