@@ -87,7 +87,7 @@ public class GameManager {
 	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
 
 		if (name == null || name.equals("") || gameSessions == null
-				|| description == null || name.isEmpty() || turnTime <= 0
+				|| name.isEmpty() || turnTime <= 0
 				|| defTime <= 0 || negTime <= 0) throw new InvalidArgumentException();
 		for (final Calendar c : gameSessions) {
 			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
