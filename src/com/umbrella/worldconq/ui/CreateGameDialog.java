@@ -99,7 +99,6 @@ public class CreateGameDialog extends JDialog {
 		turnTimeLabel.setVerticalAlignment(JLabel.CENTER);
 
 		turnTimeSpinner = new JSpinner(new SpinnerNumberModel(60, 1, 999, 1));
-		//	turnTimeTextField.setToolTipText("Introduzca aqui tiempo del turno");
 
 		defTimeLabel = new JLabel();
 		defTimeLabel.setText("Tiempo de defensa (segundos):");
