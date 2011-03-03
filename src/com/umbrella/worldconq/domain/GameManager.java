@@ -97,6 +97,7 @@ public class GameManager {
 		srvAdapter.createGame(usrMgr.getSession(), new GameInfo(null, name,
 			description, listPlayer, gameSessions, 42, turnTime, defTime,
 			negTime));
+		this.updateGameList();
 	}
 
 	public void joinGame(int gameSelected) throws Exception {
