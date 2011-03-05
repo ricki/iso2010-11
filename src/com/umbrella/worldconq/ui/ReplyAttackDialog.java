@@ -99,8 +99,6 @@ public class ReplyAttackDialog extends javax.swing.JDialog {
 			negotiateButton.setToolTipText("Rechazar el ataque y negociar");
 			negotiateButton.setBounds(178, 87, 204, 35);
 			//+++++++++++++++++++++
-			acceptButton.addMouseListener(new AcceptDialogMouseAdapter(
-				this, false));
 
 			acceptButton = new JButton();
 			attackpanel.add(acceptButton);
