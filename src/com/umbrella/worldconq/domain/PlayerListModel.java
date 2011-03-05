@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
-
 import domain.Player;
 
 public class PlayerListModel extends AbstractTableModel {
@@ -21,15 +19,22 @@ public class PlayerListModel extends AbstractTableModel {
 
 	public PlayerListModel(Player selfPlayer) {
 		super();
+
+		if (selfPlayer == null)
+			throw new NullPointerException();
+
 		this.selfPlayer = selfPlayer;
 		data = new ArrayList<Player>();
 		data.add(selfPlayer);
 		this.fireTableDataChanged();
 	}
 
-	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) throws InvalidArgumentException {
+	public PlayerListModel(Player selfPlayer, ArrayList<Player> data) {
 		super();
-		if (selfPlayer == null || data == null) throw new InvalidArgumentException();
+
+		if (selfPlayer == null)
+			throw new NullPointerException();
+
 		this.selfPlayer = selfPlayer;
 		this.data = new ArrayList<Player>();
 
@@ -37,37 +42,28 @@ public class PlayerListModel extends AbstractTableModel {
 		this.setData(data);
 	}
 
-	public void setData(ArrayList<Player> data) throws InvalidArgumentException {
+	public void setData(ArrayList<Player> data) {
 		if (data != null) {
 			for (final Player p : data) {
 				this.updatePlayer(p);
 			}
-		} else {
-			throw new InvalidArgumentException();
 		}
 	}
 
 	public void updatePlayer(Player player) {
-		if (player == null) return;
-
-		boolean found = false;
-
-		for (final Player p : data) {
-			if (p.equals(player)) {
-				found = true;
+		if (player != null) {
+			final int pos = data.indexOf(player);
+			if (pos >= 0) {
+				final Player p = data.get(pos);
 				p.setMoney(player.getMoney());
 				p.setOnline(player.isOnline());
 				p.setHasTurn(player.isHasTurn());
 				p.setSpies(player.getSpies());
-				break;
+			} else {
+				data.add(player);
 			}
+			this.fireTableDataChanged();
 		}
-
-		if (!found) {
-			data.add(player);
-		}
-
-		this.fireTableDataChanged();
 	}
 
 	public Player getSelfPlayer() {
@@ -91,17 +87,18 @@ public class PlayerListModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
+		final Player p = data.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
-			return data.get(rowIndex).getName();
+			return p.getName();
 		case 1:
-			return data.get(rowIndex).isHasTurn();
+			return p.isHasTurn();
 		case 2:
-			return data.get(rowIndex).isOnline();
+			return p.isOnline();
 		default:
-			return null;
+			throw new IndexOutOfBoundsException("Index: " + columnIndex
+					+ ", Size: " + this.getColumnCount());
 		}
 	}
 

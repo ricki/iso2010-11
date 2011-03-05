@@ -49,20 +49,21 @@ public class GameListModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
+
+		final GameInfo game = mGameList.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
-			return mGameList.get(rowIndex).getName();
+			return game.getName();
 		case 1:
-			return mGameList.get(rowIndex).getDescription();
+			return game.getDescription();
 		case 2:
-			return new Integer(mGameList.get(rowIndex).getPlayers().size());
+			return new Integer(game.getPlayers().size());
 		case 3:
-			return new Integer(mGameList.get(rowIndex).getnFreeTerritories());
+			return new Integer(game.getnFreeTerritories());
 		default:
-			mGameList.get(0).getId();
-			return null;
+			throw new IndexOutOfBoundsException("Index: " + columnIndex
+					+ ", Size: " + this.getColumnCount());
 		}
 	}
 

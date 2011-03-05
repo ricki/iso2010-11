@@ -23,6 +23,11 @@ public class MapModel extends AbstractTableModel {
 
 	public MapModel(Player selfPlayer, PlayerListModel playerModel) {
 		super();
+		if (selfPlayer == null)
+			throw new NullPointerException();
+		if (playerModel == null)
+			throw new NullPointerException();
+
 		data = new ArrayList<TerritoryDecorator>();
 		for (int i = 0; i < 42; i++) {
 			final Territory t = new Territory(i, null, null, 0, null, 0, 0, 0);
@@ -55,8 +60,6 @@ public class MapModel extends AbstractTableModel {
 	}
 
 	public TerritoryDecorator getTerritoryAt(int index) {
-		if (index < 0 || index >= 42)
-			return null;
 		return data.get(index);
 	}
 
@@ -77,9 +80,9 @@ public class MapModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex < 0 || rowIndex >= this.getRowCount()) return null;
-
-		if (columnIndex < 0 || columnIndex >= this.getColumnCount()) return null;
+		if (columnIndex < 0 || columnIndex >= this.getColumnCount())
+			throw new IndexOutOfBoundsException("Index: " + columnIndex
+				+ ", Size" + this.getColumnCount());
 
 		boolean hasSpy = false;
 		final TerritoryDecorator t = data.get(rowIndex);
