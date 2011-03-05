@@ -19,9 +19,6 @@ import exceptions.InvalidTerritoryException;
 public class ClientAdapter extends UnicastRemoteObject
 		implements IClient, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3191656668310586049L;
 	private ClientCallback mClientCallback;
 
@@ -46,7 +43,8 @@ public class ClientAdapter extends UnicastRemoteObject
 		System.out.println("ClientAdapter::checkValidGame");
 		if (mClientCallback == null || !mClientCallback.getId().equals(game)) {
 			System.out.println("GameNotFoundException");
-			throw new GameNotFoundException("");
+			throw new GameNotFoundException("ClientAdapter: Game with UUID "
+					+ game + "not found");
 		}
 	}
 

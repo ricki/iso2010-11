@@ -3,6 +3,8 @@ package com.umbrella.worldconq.domain;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import communications.IClient.TimeType;
+
 import domain.Arsenal;
 import domain.EventType;
 import domain.Player;
@@ -19,9 +21,7 @@ public interface ClientCallback {
 
 	public void resolveAttack();
 
-	//public void resolveNegotiation(int money, int soldiers);
-
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event);
 
-	public void timeExpired(UUID game, communications.IClient.TimeType whatTime);
+	public void timeExpired(UUID game, TimeType whatTime);
 }
