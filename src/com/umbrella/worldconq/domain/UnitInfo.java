@@ -10,31 +10,31 @@ package com.umbrella.worldconq.domain;
  */
 
 public class UnitInfo {
-	static final private int priceList[] = {
+	static final private int costList[] = {
 			100, 300, 500, 800, 400, 600
 	};
 
-	public static int getPriceSoldier() {
-		return priceList[0];
+	public static int getSoldierCost() {
+		return costList[0];
 	}
 
-	public static int getPriceCannon() {
-		return priceList[1];
+	public static int getCannonCost() {
+		return costList[1];
 	}
 
-	public static int getPriceMissil() {
-		return priceList[2];
+	public static int getMissileCost() {
+		return costList[2];
 	}
 
-	public static int getPriceICBM() {
-		return priceList[3];
+	public static int getICBMCost() {
+		return costList[3];
 	}
 
-	public static int getPriceAntiMissile() {
-		return priceList[4];
+	public static int getAntiMissileCost() {
+		return costList[4];
 	}
 
-	public static int getPricSpy() {
-		return priceList[5];
+	public static int getSpyCost() {
+		return costList[5];
 	}
 }

@@ -302,21 +302,21 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 		//Genero la lista de precios
 		final String pricesList = "<html>\n<P ALIGN=\"left\"> Lista de precios:<BR>"
 				+ "<TABLE BORDER=0><TR><TD Align=\"left\">Soldados</TD><TD Align=\"left\">--></TD><TD Align=\"left\">"
-				+ UnitInfo.getPriceSoldier()
+				+ UnitInfo.getSoldierCost()
 				+ "</TD> gallifantes.</TD></TR><TR><TD Align=\"left\">Cañones</TD><TD Align=\"left\">--></TD><TD Align=\"left\">"
-				+ UnitInfo.getPriceCannon()
+				+ UnitInfo.getCannonCost()
 				+ "</TD> gallifantes.</TD></TR><TR><TD Align=\"left\">Misiles</TD><TD Align=\"left\">--></TD><TD Align=\"left\">"
-				+ UnitInfo.getPriceMissil()
+				+ UnitInfo.getMissileCost()
 				+ "</TD> gallifantes.</TD></TR><TR><TD Align=\"left\">ICBMs</TD><TD Align=\"left\">--></TD><TD Align=\"left\">"
-				+ UnitInfo.getPriceICBM()
+				+ UnitInfo.getICBMCost()
 				+ "</TD> gallifantes.</TD></TR><TR><TD Align=\"left\">Anti-Misiles</TD><TD Align=\"left\">--></TD><TD Align=\"left\">"
-				+ UnitInfo.getPriceAntiMissile()
+				+ UnitInfo.getAntiMissileCost()
 				+ "</TD> gallifantes.</TD></TR></TABLE>";
 		infoListLabel.setText(pricesList);
 
 		//Creo el combo de soldados			
 
-		units = (money / UnitInfo.getPriceSoldier());
+		units = (money / UnitInfo.getSoldierCost());
 		values = new SpinnerNumberModel(0, 0,
 			units, 1);
 		soldiersCombo.setModel(values);
@@ -350,7 +350,7 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 
 		//Creo el combo de cañones		
 
-		units = (money / UnitInfo.getPriceCannon());
+		units = (money / UnitInfo.getCannonCost());
 		values = new SpinnerNumberModel(0, 0,
 			units, 1);
 		cannonsCombo.setModel(values);
@@ -362,7 +362,7 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 
 		//Creo el combo de misiles		
 
-		units = (money / UnitInfo.getPriceMissil());
+		units = (money / UnitInfo.getMissileCost());
 		values = new SpinnerNumberModel(0, 0,
 			units, 1);
 		missilesCombo.setModel(values);
@@ -374,7 +374,7 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 
 		//Creo el combo de icbms		
 
-		units = (money / UnitInfo.getPriceICBM());
+		units = (money / UnitInfo.getICBMCost());
 		values = new SpinnerNumberModel(0, 0,
 			units, 1);
 		icbmsCombo.setModel(values);
@@ -386,7 +386,7 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 
 		//Creo el combo de antimisiles		
 
-		units = (money / UnitInfo.getPriceAntiMissile());
+		units = (money / UnitInfo.getAntiMissileCost());
 		values = new SpinnerNumberModel(0, 0,
 			units, 1);
 		antiMissilesCombo.setModel(values);
@@ -400,28 +400,28 @@ public class BuyUnitsDialog extends javax.swing.JDialog {
 	//Método que calcula el precio toal de la compra
 	public int totalPrice() {
 		final int arsenalCount = ((Integer) soldiersCombo.getValue())
-				* UnitInfo.getPriceSoldier()
+				* UnitInfo.getSoldierCost()
 				+ ((Integer) cannonsCombo.getValue())
-				* UnitInfo.getPriceCannon()
+				* UnitInfo.getCannonCost()
 				+ ((Integer) missilesCombo.getValue())
-				* UnitInfo.getPriceMissil()
-				+ ((Integer) icbmsCombo.getValue()) * UnitInfo.getPriceICBM()
+				* UnitInfo.getMissileCost()
+				+ ((Integer) icbmsCombo.getValue()) * UnitInfo.getICBMCost()
 				+ ((Integer) antiMissilesCombo.getValue())
-				* UnitInfo.getPriceAntiMissile();
+				* UnitInfo.getAntiMissileCost();
 		return arsenalCount;
 	}
 
 	//Método que comprueba que los valores del arsenal a comprar
 	public boolean correctArsenal() {
 		final int arsenalCount = ((Integer) soldiersCombo.getValue())
-				* UnitInfo.getPriceSoldier()
+				* UnitInfo.getSoldierCost()
 				+ ((Integer) cannonsCombo.getValue())
-				* UnitInfo.getPriceCannon()
+				* UnitInfo.getCannonCost()
 				+ ((Integer) missilesCombo.getValue())
-				* UnitInfo.getPriceMissil()
-				+ ((Integer) icbmsCombo.getValue()) * UnitInfo.getPriceICBM()
+				* UnitInfo.getMissileCost()
+				+ ((Integer) icbmsCombo.getValue()) * UnitInfo.getICBMCost()
 				+ ((Integer) antiMissilesCombo.getValue())
-				* UnitInfo.getPriceAntiMissile();
+				* UnitInfo.getAntiMissileCost();
 		if (arsenalCount > money) {
 			return false;
 		}

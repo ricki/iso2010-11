@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
+import com.umbrella.worldconq.exceptions.EmptyStringException;
+import com.umbrella.worldconq.exceptions.NegativeValueException;
 import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Game;

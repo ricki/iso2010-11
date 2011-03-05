@@ -478,7 +478,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final OutOfTurnException e) {
 						JOptionPane.showMessageDialog(win,
-							"Accion denegada, no tiene el turna",
+							"Accion denegada, no tiene el turno",
 							"Acción denegada",
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
@@ -539,7 +539,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final OutOfTurnException e) {
 						JOptionPane.showMessageDialog(win,
-							"Accion denegada, no tiene el turna",
+							"Accion denegada, no tiene el turno",
 							"Acción denegada",
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
@@ -579,7 +579,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 						JOptionPane.WARNING_MESSAGE);
 				} catch (final OutOfTurnException e) {
 					JOptionPane.showMessageDialog(win,
-						"Accion denegada, no tiene el turna",
+						"Accion denegada, no tiene el turno",
 						"Acción denegada",
 						JOptionPane.WARNING_MESSAGE);
 				} catch (final Exception e) {
@@ -635,7 +635,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final OutOfTurnException e) {
 						JOptionPane.showMessageDialog(win,
-							"Accion denegada, no tiene el turna",
+							"Accion denegada, no tiene el turno",
 							"Acción denegada",
 							JOptionPane.WARNING_MESSAGE);
 					} catch (final Exception e) {
@@ -679,7 +679,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 									JOptionPane.WARNING_MESSAGE);
 							} catch (final OutOfTurnException e) {
 								JOptionPane.showMessageDialog(win,
-									"Accion denegada, no tiene el turna",
+									"Accion denegada, no tiene el turno",
 									"Acción denegada",
 									JOptionPane.WARNING_MESSAGE);
 							} catch (final Exception e) {
@@ -777,8 +777,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 			if (opt == JOptionPane.YES_OPTION) {
-				win.getGameManager().getGameEngine().resolveNegotiation(money,
-					soldiers);
+				win.getGameManager().getGameEngine().resolveNegotiation();
 			} else {
 				win.getGameManager().getGameEngine().resolveAttack();
 			}
