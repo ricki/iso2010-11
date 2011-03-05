@@ -14,8 +14,13 @@ import org.junit.Before;
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameManager;
+import com.umbrella.worldconq.domain.TerritoryDecorator;
 import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.ui.GameEventListener;
+
+import domain.Arsenal;
+import domain.Player;
 
 public class GameManagerTest extends TestCase {
 
@@ -63,6 +68,7 @@ public class GameManagerTest extends TestCase {
 			usrMgr.createSession("JorgeCA", "jorge");
 
 			final Calendar c = Calendar.getInstance();
+			c.add(Calendar.MINUTE, 2);
 			hoy = new ArrayList<Calendar>();
 			hoy.add(c);
 
@@ -399,7 +405,8 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(0, null);
+			final TestGameEventListener tgel = new TestGameEventListener();
+			gameMgr.connectToGame(0, tgel);
 			assertTrue(gameMgr.getGameEngine() != null);
 		} catch (final InvalidArgumentException e) {
 			fail("InvalidArgumentException");
@@ -438,7 +445,8 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(0, null);
+			final TestGameEventListener tgel = new TestGameEventListener();
+			gameMgr.connectToGame(0, tgel);
 			assertTrue(gameMgr.getGameEngine() != null);
 
 			gameMgr.disconnectFromGame();
@@ -467,5 +475,51 @@ public class GameManagerTest extends TestCase {
 		final ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
 		final URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
 		return urls[0].getFile();
+	}
+
+	private class TestGameEventListener implements GameEventListener {
+
+		@Override
+		public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst, Arsenal arsenal) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void negotiationRequested(int money, int soldiers) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void negotiationEvent(TerritoryDecorator src, TerritoryDecorator dst) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void buyTerritoryEvent(TerritoryDecorator t) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void buyUnitsEvent(TerritoryDecorator t) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void winnerEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }
