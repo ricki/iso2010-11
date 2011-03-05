@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
-
 import domain.GameInfo;
 
 public class GameListModel extends AbstractTableModel {
@@ -26,11 +24,12 @@ public class GameListModel extends AbstractTableModel {
 		mGameList = new ArrayList<GameInfo>();
 	}
 
-	public void setData(ArrayList<GameInfo> data) throws InvalidArgumentException {
-		if (data == null) throw new InvalidArgumentException();
+	public void setData(ArrayList<GameInfo> data) {
 		mGameList.clear();
-		mGameList.addAll(data);
-		this.fireTableDataChanged();
+		if (data != null) {
+			mGameList.addAll(data);
+			this.fireTableDataChanged();
+		}
 	}
 
 	@Override
@@ -67,14 +66,6 @@ public class GameListModel extends AbstractTableModel {
 		}
 	}
 
-	/**
-	 * Función que devuelve el objeto juego que se encuentra en la posición
-	 * indicada
-	 * 
-	 * @param gameSelected
-	 *            : Posición del objeto que queremos obtener.
-	 * @return
-	 */
 	public GameInfo getGameAt(int gameSelected) {
 		return mGameList.get(gameSelected);
 	}
