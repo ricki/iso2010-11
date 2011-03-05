@@ -29,18 +29,31 @@ public class GameEngine implements ClientCallback {
 	private Attack mCurrentAttack;
 
 	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) throws InvalidArgumentException {
+		if (game == null)
+			throw new NullPointerException("GameEngine: Null Game");
+		if (session == null)
+			throw new NullPointerException("GameEngine: Null Session");
+		if (adapter == null)
+			throw new NullPointerException("GameEngine: Null ServerAdapter");
+		if (gameListener == null)
+			throw new NullPointerException("GameEngine: Null GameEventListener");
+
 		mCurrentAttack = null;
 		this.gameListener = gameListener;
 		mGame = game;
 		this.session = session;
 		this.adapter = adapter;
 
-		mPlayerListModel = new PlayerListModel(game.strToPlayer(
-			this.session.getUser(),
-			game), game.getPlayers());
+		final Player self = game.strToPlayer(session.getUser(), game);
+		if (self == null)
+			throw new NullPointerException("GameEngine: User not found in game");
 
-		mMapListModel = new MapModel(game.strToPlayer(this.session.getUser(),
-			game), mPlayerListModel);
+		if (game.getPlayers() == null)
+			throw new NullPointerException("GameEngine: Player list not found");
+
+		mPlayerListModel = new PlayerListModel(self, game.getPlayers());
+
+		mMapListModel = new MapModel(self, mPlayerListModel);
 
 		final ArrayList<TerritoryDecorator> mMapList = new ArrayList<TerritoryDecorator>();
 		final ArrayList<Territory> map = game.getMap();
