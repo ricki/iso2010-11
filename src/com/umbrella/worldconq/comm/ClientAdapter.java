@@ -14,7 +14,9 @@ import domain.EventType;
 import domain.Player;
 import domain.Territory;
 import exceptions.GameNotFoundException;
+import exceptions.InvalidArsenalException;
 import exceptions.InvalidTerritoryException;
+import exceptions.NotCurrentPlayerGameException;
 
 public class ClientAdapter extends UnicastRemoteObject
 		implements IClient, Serializable {
@@ -49,7 +51,7 @@ public class ClientAdapter extends UnicastRemoteObject
 	}
 
 	@Override
-	public void updateClient(UUID game, ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) throws RemoteException, GameNotFoundException {
+	public void updateClient(UUID game, ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) throws RemoteException, GameNotFoundException, NotCurrentPlayerGameException {
 		this.checkValidGame(game);
 		mClientCallback.updateClient(playerUpdate, territoryUpdate, event);
 
@@ -63,7 +65,7 @@ public class ClientAdapter extends UnicastRemoteObject
 	}
 
 	@Override
-	public void negotiationRequested(UUID game, int money, int soldiers) throws RemoteException, GameNotFoundException {
+	public void negotiationRequested(UUID game, int money, int soldiers) throws RemoteException, GameNotFoundException, InvalidArsenalException {
 		this.checkValidGame(game);
 		mClientCallback.negotiationRequested(money, soldiers);
 
