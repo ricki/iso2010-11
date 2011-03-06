@@ -200,8 +200,11 @@ public class GameEngine implements ClientCallback {
 		mCurrentAttack = null;
 	}
 
-	public void buyUnits(int index, int soldiers, int cannons, int missiles, int icbm, int antimissiles) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, InvalidTerritoryException, UnocupiedTerritoryException, OutOfTurnException, NotEnoughMoneyException {
+	public void buyUnits(int index, int soldiers, int cannons, int missiles, int icbm, int antimissiles) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, InvalidTerritoryException, UnocupiedTerritoryException, OutOfTurnException, NotEnoughMoneyException, PendingAttackException {
 		this.checkInTurn();
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
+
 		final Player self = mPlayerListModel.getSelfPlayer();
 
 		final TerritoryDecorator t = mMapListModel.getTerritoryAt(index);
@@ -268,8 +271,11 @@ public class GameEngine implements ClientCallback {
 		mMapListModel.updateTerritory(territoryUpdate);
 	}
 
-	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int icbm, int antimissiles) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, UnocupiedTerritoryException, InvalidTerritoryException, NotEnoughUnitsException {
+	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int icbm, int antimissiles) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, UnocupiedTerritoryException, InvalidTerritoryException, NotEnoughUnitsException, PendingAttackException {
 		this.checkInTurn();
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
+
 		final Player self = mPlayerListModel.getSelfPlayer();
 
 		TerritoryDecorator srcTerritory = mMapListModel.getTerritoryAt(src);
@@ -368,8 +374,11 @@ public class GameEngine implements ClientCallback {
 		mMapListModel.updateTerritory(dstTerritory);
 	}
 
-	public void buyTerritory(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OcupiedTerritoryException, InvalidTerritoryException, OutOfTurnException, NotEnoughMoneyException {
+	public void buyTerritory(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OcupiedTerritoryException, InvalidTerritoryException, OutOfTurnException, NotEnoughMoneyException, PendingAttackException {
 		this.checkInTurn();
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
+
 		final Player self = mPlayerListModel.getSelfPlayer();
 		final TerritoryDecorator territory = mMapListModel.getTerritoryAt(index);
 
@@ -416,8 +425,10 @@ public class GameEngine implements ClientCallback {
 		mMapListModel.updateTerritory(territoryUpdate);
 	}
 
-	public void deploySpy(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, NotEnoughMoneyException {
+	public void deploySpy(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, NotEnoughMoneyException, PendingAttackException {
 		this.checkInTurn();
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
 
 		final Player self = mPlayerListModel.getSelfPlayer();
 
@@ -553,50 +564,48 @@ public class GameEngine implements ClientCallback {
 	@Override
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) {
 		final Player curPlayer = mPlayerListModel.getActivePlayer();
+		ArrayList<TerritoryDecorator> terrList = null;
 
-		if (event == EventType.AttackEvent) {
-			if (territoryUpdate.size() == 2) {
-				final TerritoryDecorator t1 = new TerritoryDecorator(
-					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
-				final TerritoryDecorator t2 = new TerritoryDecorator(
-					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
+		if (territoryUpdate != null) {
+			terrList = new ArrayList<TerritoryDecorator>();
+			for (final Territory t : territoryUpdate) {
+				terrList.add(new TerritoryDecorator(t, mMapListModel,
+					mPlayerListModel));
+			}
+		}
 
-				if (t1.getPlayer().equals(curPlayer))
-					gameListener.attackEvent(t1, t2);
+		if (event == EventType.AttackEvent && terrList != null) {
+			if (terrList.size() == 2) {
+				if (terrList.get(0).getPlayer().equals(curPlayer))
+					gameListener.attackEvent(terrList.get(0), terrList.get(1));
 				else
-					gameListener.attackEvent(t2, t1);
+					gameListener.attackEvent(terrList.get(1), terrList.get(0));
 			}
-		} else if (event == EventType.NegotiationEvent) {
-			if (territoryUpdate.size() == 2) {
-				final TerritoryDecorator t1 = new TerritoryDecorator(
-					territoryUpdate.get(0), mMapListModel, mPlayerListModel);
-				final TerritoryDecorator t2 = new TerritoryDecorator(
-					territoryUpdate.get(1), mMapListModel, mPlayerListModel);
-
-				if (t1.getPlayer().equals(curPlayer))
-					gameListener.negotiationEvent(t1, t2);
+		} else if (event == EventType.NegotiationEvent && terrList != null) {
+			if (terrList.size() == 2) {
+				if (terrList.get(0).getPlayer().equals(curPlayer))
+					gameListener.negotiationEvent(terrList.get(0),
+						terrList.get(1));
 				else
-					gameListener.negotiationEvent(t2, t1);
+					gameListener.negotiationEvent(terrList.get(1),
+						terrList.get(0));
 			}
-		} else if (event == EventType.BuyArsenalEvent) {
-			if (territoryUpdate.size() == 1) {
-				gameListener.buyUnitsEvent(new TerritoryDecorator(
-					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+		} else if (event == EventType.BuyArsenalEvent && terrList != null) {
+			if (terrList.size() == 1) {
+				gameListener.buyUnitsEvent(terrList.get(0));
 			}
-		} else if (event == EventType.BuyTerritoryEvent) {
-			if (territoryUpdate.size() == 1) {
-				gameListener.buyTerritoryEvent(new TerritoryDecorator(
-					territoryUpdate.get(0), mMapListModel, mPlayerListModel));
+		} else if (event == EventType.BuyTerritoryEvent && terrList != null) {
+			if (terrList.size() == 1) {
+				gameListener.buyTerritoryEvent(terrList.get(0));
 			}
 		}
 
 		for (final Player p : playerUpdate) {
 			mPlayerListModel.updatePlayer(p);
 		}
-		if (territoryUpdate != null) {
-			for (final Territory t : territoryUpdate) {
-				mMapListModel.updateTerritory(new TerritoryDecorator(t,
-					mMapListModel, mPlayerListModel));
+		if (terrList != null) {
+			for (final TerritoryDecorator t : terrList) {
+				mMapListModel.updateTerritory(t);
 			}
 		}
 
