@@ -2,16 +2,16 @@ package com.umbrella.worldconq.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -19,7 +19,10 @@ import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
 import com.umbrella.worldconq.domain.UserManager;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.MalformedEmailException;
+
+import exceptions.UserAlreadyExistsException;
+import exceptions.WrongLoginException;
 
 public class StartupWindow extends JFrame {
 
@@ -47,7 +50,7 @@ public class StartupWindow extends JFrame {
 	}
 
 	private void initGUI() {
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		try {
 			this.setIconImage(new ImageIcon(
@@ -66,7 +69,7 @@ public class StartupWindow extends JFrame {
 		NoticeLabel = new JLabel();
 		NoticeLabel.setText("");
 		NoticeLabel.setBounds(50, 10, 300, 25);
-		NoticeLabel.setForeground(new Color(255, 0, 0));
+		NoticeLabel.setForeground(Color.RED);
 
 		UserLabel = new JLabel();
 		UserLabel.setText("Login :");
@@ -75,7 +78,7 @@ public class StartupWindow extends JFrame {
 		UserTextField = new JTextField();
 		UserTextField.setBounds(150, 50, 200, 30);
 		UserTextField.setToolTipText("Introduzca aqui su nombre de usuario");
-		UserTextField.addKeyListener(new StartupKeyAdapter(this));
+		UserTextField.addActionListener(new CreateSessionAction(this));
 
 		PasswdLabel = new JLabel();
 		PasswdLabel.setText("Contraseña :");
@@ -84,11 +87,11 @@ public class StartupWindow extends JFrame {
 		PasswdField = new JPasswordField();
 		PasswdField.setBounds(150, 90, 200, 30);
 		PasswdField.setToolTipText("Introduzca aqui su contraseña");
-		PasswdField.addKeyListener(new StartupKeyAdapter(this));
+		PasswdField.addActionListener(new CreateSessionAction(this));
 
 		AcceptButton = new JButton("Aceptar");
 		AcceptButton.setBounds(75, 160, 100, 30);
-		AcceptButton.addMouseListener(new StartupAcceptMouseAdapter(this));
+		AcceptButton.addActionListener(new CreateSessionAction(this));
 
 		RegisterButton = new JButton("Registrarse");
 		RegisterButton.setBounds(225, 160, 100, 30);
@@ -134,6 +137,7 @@ public class StartupWindow extends JFrame {
 			boolean invalidArgument = false;
 
 			do {
+				invalidArgument = true;
 				final JFrame f = new JFrame();
 				final RegisterDialog dlg = new RegisterDialog(f,
 					"La Conquista del Mundo - Registro", true);
@@ -145,73 +149,54 @@ public class StartupWindow extends JFrame {
 					try {
 						usrMgr.registerUser(
 							dlg.getUser(), dlg.getPasswd(), dlg.getEmail());
-						stw.NoticeLabel.setText("Usuario :" + dlg.getUser()
-								+ " registrado");
+						stw.NoticeLabel.setText("Usuario registrado con éxito.");
 						NoticeLabel.setForeground(new Color(0, 200, 0));
+						stw.UserTextField.setText(dlg.getUser());
+						stw.PasswdField.requestFocusInWindow();
 						invalidArgument = false;
-						stw.setVisible(true);
-					} catch (final InvalidArgumentException e) {
-						JOptionPane.showMessageDialog(null,
-							"Algún argumento es erroneo", "Error",
-							JOptionPane.ERROR_MESSAGE);
-						invalidArgument = true;
-					} catch (final Exception e) {
-						System.out.println(e.toString());
-						stw.NoticeLabel.setText("El servidor indica: Error en el registro");
-						NoticeLabel.setForeground(new Color(255, 0, 0));
-						stw.setVisible(true);
-						invalidArgument = false;
+					} catch (final RemoteException e) {
+						stw.NoticeLabel.setText(e.toString());
+						NoticeLabel.setForeground(Color.RED);
+					} catch (final UserAlreadyExistsException e) {
+						stw.NoticeLabel.setText("El usuario seleccionado ya existe.");
+						NoticeLabel.setForeground(Color.RED);
+					} catch (final MalformedEmailException e) {
+						stw.NoticeLabel.setText("Dirección de email mal escrita.");
+						NoticeLabel.setForeground(Color.RED);
 					}
 					System.out.println("Fin registro");
 				} else {
 					stw.NoticeLabel.setText("");
 					invalidArgument = false;
-					stw.setVisible(true);
 				}
 				f.dispose();
 			} while (invalidArgument);
 		}
 	}
 
-	private class StartupAcceptMouseAdapter extends MouseAdapter {
+	private class CreateSessionAction extends AbstractAction {
 
-		private final StartupWindow stw;
+		private static final long serialVersionUID = 7000145813855380346L;
+		private final StartupWindow win;
 
-		public StartupAcceptMouseAdapter(StartupWindow stw) {
-			this.stw = stw;
+		public CreateSessionAction(StartupWindow win) {
+			this.win = win;
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent evt) {
+		public void actionPerformed(ActionEvent event) {
 			try {
-				usrMgr.createSession(stw.getUser(), stw.getPasswd());
+				win.usrMgr.createSession(win.getUser(), win.getPasswd());
 				app.setMainMode();
-			} catch (final Exception e) {
-				stw.NoticeLabel.setText("Contraseña o login Erroneos");
-				NoticeLabel.setForeground(new Color(255, 0, 0));
-			}
-
-		}
-	}
-
-	private class StartupKeyAdapter extends KeyAdapter {
-		private final StartupWindow stw;
-
-		public StartupKeyAdapter(StartupWindow stw) {
-			this.stw = stw;
-		}
-
-		@Override
-		public void keyPressed(KeyEvent evt) {
-			if (evt.getKeyCode() == 10) {
-				try {
-					usrMgr.createSession(stw.getUser(), stw.getPasswd());
-					app.setMainMode();
-				} catch (final Exception e) {
-					stw.NoticeLabel.setText("Contraseña o login Erroneos");
-					NoticeLabel.setForeground(new Color(255, 0, 0));
-				}
+			} catch (final RemoteException e) {
+				win.NoticeLabel.setText(e.toString());
+				win.NoticeLabel.setForeground(Color.RED);
+			} catch (final WrongLoginException e) {
+				win.NoticeLabel.setText("Datos de usuario incorrectos.");
+				win.NoticeLabel.setForeground(Color.RED);
 			}
 		}
+
 	}
+
 }

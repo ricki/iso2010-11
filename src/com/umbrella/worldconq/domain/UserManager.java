@@ -73,7 +73,7 @@ public class UserManager {
 		srvAdapter.registerUser(login, passwd, email);
 	}
 
-	public void createSession(String login, String passwd) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException, WrongLoginException {
+	public void createSession(String login, String passwd) throws RemoteException, WrongLoginException {
 		if (login == null)
 			throw new NullPointerException();
 		if (passwd == null)
@@ -82,15 +82,34 @@ public class UserManager {
 			throw new EmptyStringException();
 		if (passwd.isEmpty())
 			throw new EmptyStringException();
-		if (mSession != null) this.closeSession();
+
+		if (mSession != null) {
+			try {
+				this.closeSession();
+			} catch (final InvalidSessionException e) {
+				// Silently ignore
+			}
+		}
+
 		final UUID id = srvAdapter.createSession(login, passwd, cltAdapter);
 		mSession = new Session(id, login);
 	}
 
-	public void closeSession() throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
-		if (gameMgr.getGameEngine() != null) gameMgr.disconnectFromGame();
+	public void closeSession() throws RemoteException, InvalidSessionException {
+		if (gameMgr.getGameEngine() != null) {
+			try {
+				gameMgr.disconnectFromGame();
+			} catch (final GameNotFoundException e) {
+				// Silently ignore
+			} catch (final InvalidSessionException e) {
+				// Silently ignore
+			} catch (final InvalidTimeException e) {
+				// Silently ignore
+			} catch (final NotCurrentPlayerGameException e) {
+				// Silently ignore
+			}
+		}
 		srvAdapter.closeSession(mSession);
 		mSession = null;
-
 	}
 }
