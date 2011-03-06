@@ -100,6 +100,8 @@ public class PlayerListModel extends AbstractTableModel {
 			return data.get(rowIndex).isHasTurn();
 		case 2:
 			return data.get(rowIndex).isOnline();
+		case 3:
+			return data.get(rowIndex).getMoney();
 		default:
 			return null;
 		}

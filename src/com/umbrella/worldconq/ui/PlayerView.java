@@ -23,9 +23,13 @@ public class PlayerView extends JEditorPane implements TableModelListener {
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		String list = "<html>\n<P ALIGN=\"center\"><BIG>" + "Jugadores"
+		String list = "<html>\n<P Align=\"left\">Usted es:<BR>"
+				+ plm.getSelfPlayer().getName() + "Dispone de "
+				+ plm.getSelfPlayer().getMoney() + " gallifantes.</P>";
+		list += "<P ALIGN=\"center\">----------</P>";
+		list += "<P ALIGN=\"center\"><BIG>" + "Jugadores"
 				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
-
+		;
 		for (int i = 0; i < plm.getRowCount(); i++) {
 			list += "<TR><TD Align=\"left\">" + "<IMG SRC=\"";
 			if ((Boolean) plm.getValueAt(i, 2)) {
@@ -39,10 +43,8 @@ public class PlayerView extends JEditorPane implements TableModelListener {
 			}
 			list += "\"><TD Align=\"left\">" + plm.getValueAt(i, 0);
 		}
-
 		list += "</TABLE>\n</P>";
 		this.setContentType("text/html");
 		this.setText(list);
 	}
-
 }
