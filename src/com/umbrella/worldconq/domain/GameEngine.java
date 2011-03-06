@@ -268,7 +268,7 @@ public class GameEngine implements ClientCallback {
 		mMapListModel.updateTerritory(territoryUpdate);
 	}
 
-	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int icbm, int antimissiles) throws Exception {
+	public void moveUnits(int src, int dst, int soldiers, int[] cannons, int missiles, int icbm, int antimissiles) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, UnocupiedTerritoryException, InvalidTerritoryException, NotEnoughUnitsException {
 		this.checkInTurn();
 		final Player self = mPlayerListModel.getSelfPlayer();
 
