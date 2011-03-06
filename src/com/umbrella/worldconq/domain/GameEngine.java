@@ -36,7 +36,7 @@ public class GameEngine implements ClientCallback {
 	private final GameEventListener gameListener;
 	private Attack mCurrentAttack;
 
-	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) {
+	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) throws NotCurrentPlayerGameException {
 		if (game == null)
 			throw new NullPointerException();
 		if (session == null)
@@ -54,7 +54,7 @@ public class GameEngine implements ClientCallback {
 
 		final Player self = game.strToPlayer(session.getUser(), game);
 		if (self == null)
-			throw new NullPointerException("GameEngine: User not found in game");
+			throw new NotCurrentPlayerGameException(null);
 
 		if (game.getPlayers() == null)
 			throw new NullPointerException("GameEngine: Player list not found");
@@ -111,13 +111,23 @@ public class GameEngine implements ClientCallback {
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws RemoteException, InvalidTerritoryException, GameNotFoundException, InvalidSessionException, InvalidTimeException, OutOfTurnException, UnocupiedTerritoryException, NotEnoughUnitsException, PendingAttackException {
 		this.checkInTurn();
 
-		//if (src < 0 || src > 41)
-		//	throw new InvalidTerritoryException();
 		final TerritoryDecorator srcTerritory = mMapListModel.getTerritoryAt(src);
-
-		//if (dst < 0 || dst > 41)
-		//	throw new InvalidTerritoryException();
 		final TerritoryDecorator dstTerritory = mMapListModel.getTerritoryAt(dst);
+
+		if (srcTerritory.getPlayer() == null)
+			throw new UnocupiedTerritoryException(src);
+
+		if (!srcTerritory.getPlayer().equals(mPlayerListModel.getSelfPlayer()))
+			throw new InvalidTerritoryException();
+
+		if (dstTerritory.getPlayer() == null)
+			throw new UnocupiedTerritoryException(dst);
+
+		if (dstTerritory.getPlayer().equals(mPlayerListModel.getSelfPlayer()))
+			throw new InvalidTerritoryException();
+
+		if (!srcTerritory.getAdjacentTerritories().contains(dstTerritory))
+			throw new InvalidTerritoryException();
 
 		if (soldiers < 0)
 			throw new NegativeValueException();
@@ -142,21 +152,6 @@ public class GameEngine implements ClientCallback {
 		if (icbm > srcTerritory.getNumICBMs())
 			throw new NotEnoughUnitsException(icbm,
 				srcTerritory.getNumICBMs());
-
-		if (srcTerritory.getPlayer() == null)
-			throw new UnocupiedTerritoryException(src);
-
-		if (!srcTerritory.getPlayer().equals(mPlayerListModel.getSelfPlayer()))
-			throw new InvalidTerritoryException();
-
-		if (dstTerritory.getPlayer() == null)
-			throw new UnocupiedTerritoryException(dst);
-
-		if (dstTerritory.getPlayer().equals(mPlayerListModel.getSelfPlayer()))
-			throw new InvalidTerritoryException();
-
-		if (!srcTerritory.getAdjacentTerritories().contains(dstTerritory))
-			throw new InvalidTerritoryException();
 
 		if (mCurrentAttack != null)
 			throw new PendingAttackException();
@@ -458,6 +453,7 @@ public class GameEngine implements ClientCallback {
 
 	@Override
 	public void territoryUnderAttack(Territory src, Territory dst, Arsenal arsenal) throws InvalidTerritoryException {
+
 		if (src == null)
 			throw new NullPointerException();
 
