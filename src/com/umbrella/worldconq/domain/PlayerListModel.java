@@ -96,6 +96,8 @@ public class PlayerListModel extends AbstractTableModel {
 			return p.isHasTurn();
 		case 2:
 			return p.isOnline();
+		case 3:
+			return p.getMoney();
 		default:
 			throw new IndexOutOfBoundsException("Index: " + columnIndex
 					+ ", Size: " + this.getColumnCount());
