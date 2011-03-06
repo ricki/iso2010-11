@@ -16,7 +16,6 @@ import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 import com.umbrella.worldconq.domain.UserManager;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
 import com.umbrella.worldconq.ui.GameEventListener;
@@ -111,8 +110,6 @@ public class GameEngineTest extends TestCase {
 			assertNotNull(o);
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -148,8 +145,6 @@ public class GameEngineTest extends TestCase {
 			fail("Esperaba PendingAttackException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException ya hay un ataque en proceso");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -167,8 +162,6 @@ public class GameEngineTest extends TestCase {
 			fail("Esperaba InvalidArgumentException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
