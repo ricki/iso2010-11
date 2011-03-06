@@ -16,8 +16,11 @@ import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
 import com.umbrella.worldconq.domain.UserManager;
+import com.umbrella.worldconq.exceptions.NegativeValueException;
+import com.umbrella.worldconq.exceptions.NotEnoughUnitsException;
 import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
+import com.umbrella.worldconq.exceptions.UnocupiedTerritoryException;
 import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Arsenal;
@@ -75,7 +78,7 @@ public class GameEngineTest extends TestCase {
 			assertTrue(gameMgr.getCurrentGameListModel() != null);
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(0, null);
+			gameMgr.connectToGame(0, new TestUnterAttack());
 			assertTrue(gameMgr.getGameEngine() != null);
 
 		} catch (final Exception e) {
@@ -159,9 +162,9 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(-1, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
+			fail("Esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio origen -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -177,10 +180,8 @@ public class GameEngineTest extends TestCase {
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(42, 2, 0, 0, 1, 6);
 			fail("Esperaba InvalidArgumentException");
-		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen 42");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio origen 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -195,13 +196,13 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(41, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba InvalidTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen 41, Jorge esta en 0");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio origen 41, Jorge esta en 0");
 		} catch (final Exception e) {
-			fail(e.toString());
+			System.out.println(e.toString());
 		}
 	}
 
@@ -214,11 +215,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, -1, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba InvalidTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio destino -1");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio destino -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -233,11 +234,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 42, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba InvalidTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio destino 42");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio destino 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -252,11 +253,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 0, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba InvalidTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen = destino y destino no es Angel");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio origen = destino y destino no es Angel");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -271,11 +272,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, -1, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException soldados -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -290,11 +291,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 21, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados 21");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException soldados 21");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -309,11 +310,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, -1, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException canones -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException canones -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -328,11 +329,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 7, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException canones 7");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException canones 7");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -347,11 +348,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, -1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException misiles -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException misiles -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -366,11 +367,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 2, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException misiles 2");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException misiles 2");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -385,11 +386,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 1, -1);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException icbm -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException icbm -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -404,11 +405,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 1, 7);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException icbm 7");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException icbm 7");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -418,16 +419,23 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testAttackTerritory17");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 0, 0, 0, 0);
-			fail("Esperaba InvalidArgumentException");
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNotNull(o);
 		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException atacar sin tropas");
+			fail("PendingAttackException");
+		} catch (final InvalidTerritoryException e) {
+			fail("InvalidTerritoryException");
+		} catch (final NegativeValueException e) {
+			fail("NegativeValueException");
+		} catch (final NotEnoughUnitsException e) {
+			fail("NotEnoughUnitsException");
+		} catch (final UnocupiedTerritoryException e) {
+			fail("UnocupiedTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -445,9 +453,15 @@ public class GameEngineTest extends TestCase {
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
 		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
+			fail("PendingAttackException");
+		} catch (final InvalidTerritoryException e) {
+			fail("InvalidTerritoryException");
+		} catch (final NegativeValueException e) {
+			fail("NegativeValueException");
+		} catch (final NotEnoughUnitsException e) {
+			fail("NotEnoughUnitsException");
+		} catch (final UnocupiedTerritoryException e) {
+			fail("UnocupiedTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}

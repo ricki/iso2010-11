@@ -111,32 +111,37 @@ public class GameEngine implements ClientCallback {
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws RemoteException, InvalidTerritoryException, GameNotFoundException, InvalidSessionException, InvalidTimeException, OutOfTurnException, UnocupiedTerritoryException, NotEnoughUnitsException, PendingAttackException {
 		this.checkInTurn();
 
+		if (src < 0 || src > 41)
+			throw new InvalidTerritoryException();
 		final TerritoryDecorator srcTerritory = mMapListModel.getTerritoryAt(src);
+
+		if (dst < 0 || dst > 41)
+			throw new InvalidTerritoryException();
 		final TerritoryDecorator dstTerritory = mMapListModel.getTerritoryAt(dst);
 
 		if (soldiers < 0)
 			throw new NegativeValueException();
 		if (soldiers > srcTerritory.getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			srcTerritory.getNumSoldiers());
+				srcTerritory.getNumSoldiers());
 
 		if (cannons < 0)
 			throw new NegativeValueException();
 		if (cannons > srcTerritory.getNumTotalCannons())
 			throw new NotEnoughUnitsException(cannons,
-			srcTerritory.getNumTotalCannons());
+				srcTerritory.getNumTotalCannons());
 
 		if (missiles < 0)
 			throw new NegativeValueException();
 		if (missiles > srcTerritory.getNumMissiles())
 			throw new NotEnoughUnitsException(missiles,
-			srcTerritory.getNumMissiles());
+				srcTerritory.getNumMissiles());
 
 		if (icbm < 0)
 			throw new NegativeValueException();
 		if (icbm > srcTerritory.getNumICBMs())
 			throw new NotEnoughUnitsException(icbm,
-			srcTerritory.getNumICBMs());
+				srcTerritory.getNumICBMs());
 
 		if (srcTerritory.getPlayer() == null)
 			throw new UnocupiedTerritoryException(src);
@@ -194,7 +199,7 @@ public class GameEngine implements ClientCallback {
 
 		if (soldiers > mCurrentAttack.getDestination().getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			mCurrentAttack.getDestination().getNumSoldiers());
+				mCurrentAttack.getDestination().getNumSoldiers());
 
 		adapter.requestNegotiation(session, mGame, money, soldiers);
 		mCurrentAttack = null;
@@ -300,7 +305,7 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (soldiers > srcTerritory.getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			srcTerritory.getNumSoldiers());
+				srcTerritory.getNumSoldiers());
 
 		if (cannons[0] < 0)
 			throw new NegativeValueException();
@@ -310,25 +315,25 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (cannons[0] > srcTerritory.getNumCannons()[0])
 			throw new NotEnoughUnitsException(cannons[0],
-			srcTerritory.getNumCannons()[0]);
+				srcTerritory.getNumCannons()[0]);
 		if (cannons[1] > srcTerritory.getNumCannons()[1])
 			throw new NotEnoughUnitsException(cannons[1],
-			srcTerritory.getNumCannons()[1]);
+				srcTerritory.getNumCannons()[1]);
 		if (cannons[2] > srcTerritory.getNumCannons()[2])
 			throw new NotEnoughUnitsException(cannons[2],
-			srcTerritory.getNumCannons()[2]);
+				srcTerritory.getNumCannons()[2]);
 
 		if (missiles < 0)
 			throw new NegativeValueException();
 		if (missiles > srcTerritory.getNumMissiles())
 			throw new NotEnoughUnitsException(missiles,
-			srcTerritory.getNumMissiles());
+				srcTerritory.getNumMissiles());
 
 		if (icbm < 0)
 			throw new NegativeValueException();
 		if (icbm > srcTerritory.getNumICBMs())
 			throw new NotEnoughUnitsException(icbm,
-			srcTerritory.getNumICBMs());
+				srcTerritory.getNumICBMs());
 
 		srcTerritory = (TerritoryDecorator) srcTerritory.clone();
 
@@ -517,7 +522,7 @@ public class GameEngine implements ClientCallback {
 		final Player playerUpdateOrigin = new Player(
 			mPlayerListModel.getSelfPlayer().getName(),
 			mPlayerListModel.getSelfPlayer().getMoney()
-				+ mCurrentAttack.getOfferedMoney(),
+					+ mCurrentAttack.getOfferedMoney(),
 			mPlayerListModel.getSelfPlayer().isOnline(),
 			mPlayerListModel.getSelfPlayer().isHasTurn(),
 			mPlayerListModel.getSelfPlayer().getSpies());
@@ -530,7 +535,7 @@ public class GameEngine implements ClientCallback {
 		final Player playerUpdateDestination = new Player(
 			mCurrentAttack.getDestination().getPlayer().getName(),
 			mCurrentAttack.getDestination().getPlayer().getMoney()
-				- mCurrentAttack.getOfferedMoney(),
+					- mCurrentAttack.getOfferedMoney(),
 			mCurrentAttack.getDestination().getPlayer().isOnline(),
 			mCurrentAttack.getDestination().getPlayer().isHasTurn(),
 			mCurrentAttack.getDestination().getPlayer().getSpies());
