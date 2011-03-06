@@ -86,8 +86,8 @@ public class UserManager {
 		if (mSession != null) {
 			try {
 				this.closeSession();
-			} catch (final InvalidSessionException e) {
-				// Silently ignore
+			} catch (final Exception e) {
+				// Silently ignore exception
 			}
 		}
 
@@ -95,21 +95,36 @@ public class UserManager {
 		mSession = new Session(id, login);
 	}
 
-	public void closeSession() throws RemoteException, InvalidSessionException {
+	public void closeSession() throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
 		if (gameMgr.getGameEngine() != null) {
 			try {
 				gameMgr.disconnectFromGame();
+			} catch (final RemoteException e) {
+				mSession = null;
+				throw e;
 			} catch (final GameNotFoundException e) {
-				// Silently ignore
+				mSession = null;
+				throw e;
 			} catch (final InvalidSessionException e) {
-				// Silently ignore
+				mSession = null;
+				throw e;
 			} catch (final InvalidTimeException e) {
-				// Silently ignore
+				mSession = null;
+				throw e;
 			} catch (final NotCurrentPlayerGameException e) {
-				// Silently ignore
+				mSession = null;
+				throw e;
 			}
 		}
-		srvAdapter.closeSession(mSession);
-		mSession = null;
+		try {
+			srvAdapter.closeSession(mSession);
+			mSession = null;
+		} catch (final RemoteException e) {
+			mSession = null;
+			throw e;
+		} catch (final InvalidSessionException e) {
+			mSession = null;
+			throw e;
+		}
 	}
 }

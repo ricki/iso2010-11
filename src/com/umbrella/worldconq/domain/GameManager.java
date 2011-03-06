@@ -145,7 +145,24 @@ public class GameManager {
 	}
 
 	public void disconnectFromGame() throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
-		srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
-		mGameEngine = null;
+		try {
+			srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
+			mGameEngine = null;
+		} catch (final RemoteException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final GameNotFoundException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final InvalidSessionException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final InvalidTimeException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final NotCurrentPlayerGameException e) {
+			mGameEngine = null;
+			throw e;
+		}
 	}
 }
