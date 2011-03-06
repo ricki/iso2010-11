@@ -36,7 +36,7 @@ public class GameEngine implements ClientCallback {
 	private final GameEventListener gameListener;
 	private Attack mCurrentAttack;
 
-	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) {
+	public GameEngine(Game game, Session session, ServerAdapter adapter, GameEventListener gameListener) throws NotCurrentPlayerGameException {
 		if (game == null)
 			throw new NullPointerException();
 		if (session == null)
@@ -54,10 +54,10 @@ public class GameEngine implements ClientCallback {
 
 		final Player self = game.strToPlayer(session.getUser(), game);
 		if (self == null)
-			throw new NullPointerException("GameEngine: User not found in game");
+			throw new NotCurrentPlayerGameException(null);
 
 		if (game.getPlayers() == null)
-			throw new NullPointerException("GameEngine: Player list not found");
+			throw new NullPointerException();
 
 		mPlayerListModel = new PlayerListModel(self, game.getPlayers());
 
