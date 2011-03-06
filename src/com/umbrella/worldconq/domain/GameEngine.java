@@ -111,12 +111,12 @@ public class GameEngine implements ClientCallback {
 	public void attackTerritory(int src, int dst, int soldiers, int cannons, int missiles, int icbm) throws RemoteException, InvalidTerritoryException, GameNotFoundException, InvalidSessionException, InvalidTimeException, OutOfTurnException, UnocupiedTerritoryException, NotEnoughUnitsException, PendingAttackException {
 		this.checkInTurn();
 
-		if (src < 0 || src > 41)
-			throw new InvalidTerritoryException();
+		//if (src < 0 || src > 41)
+		//	throw new InvalidTerritoryException();
 		final TerritoryDecorator srcTerritory = mMapListModel.getTerritoryAt(src);
 
-		if (dst < 0 || dst > 41)
-			throw new InvalidTerritoryException();
+		//if (dst < 0 || dst > 41)
+		//	throw new InvalidTerritoryException();
 		final TerritoryDecorator dstTerritory = mMapListModel.getTerritoryAt(dst);
 
 		if (soldiers < 0)

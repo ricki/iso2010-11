@@ -162,9 +162,9 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(-1, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidTerritoryException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException territorio origen -1");
+			fail("Esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException territorio origen -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -179,9 +179,9 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(42, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException territorio origen 42");
+			fail("Esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException territorio origen 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -202,7 +202,7 @@ public class GameEngineTest extends TestCase {
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("InvalidTerritoryException territorio origen 41, Jorge esta en 0");
 		} catch (final Exception e) {
-			System.out.println(e.toString());
+			fail(e.toString());
 		}
 	}
 
@@ -215,11 +215,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, -1, 0, 0, 1, 6);
-			fail("Esperaba InvalidTerritoryException");
+			fail("Esperaba ArrayIndexOutOfBoundsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException territorio destino -1");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException territorio destino -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -234,11 +234,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 42, 0, 0, 1, 6);
-			fail("Esperaba InvalidTerritoryException");
+			fail("Esperaba IndexOutOfBoundsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException territorio destino 42");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException territorio destino 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}

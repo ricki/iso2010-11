@@ -22,8 +22,6 @@ import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Arsenal;
 import domain.Player;
-import exceptions.GameNotFoundException;
-import exceptions.InvalidSessionException;
 
 public class GameManagerTest extends TestCase {
 
@@ -32,7 +30,6 @@ public class GameManagerTest extends TestCase {
 	private ClientAdapter cltAdapter;
 	private GameManager gameMgr;
 	private UserManager usrMgr;
-	private ArrayList<Calendar> antes;
 	private ArrayList<Calendar> despues;
 	private ArrayList<Calendar> hoy;
 
@@ -75,11 +72,6 @@ public class GameManagerTest extends TestCase {
 			hoy = new ArrayList<Calendar>();
 			hoy.add(c);
 
-			final Calendar a = Calendar.getInstance();
-			a.set(2009, Calendar.MARCH, 1, 14, 0);
-			antes = new ArrayList<Calendar>();
-			antes.add(a);
-
 			final Calendar d = Calendar.getInstance();
 			d.set(2012, Calendar.MARCH, 1, 14, 0);
 			despues = new ArrayList<Calendar>();
@@ -116,32 +108,29 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame1() {
 		System.out.println("TestCase::testGameManagerCreateGame1");
 		try {
-			gameMgr.createGame("", "", null, 112, 20, 33);
-			fail("Esperaba NullPointerException");
-		} catch (final NullPointerException e) {
-			System.out.println("NullPointerException por each choice 1");
+			gameMgr.createGame("partida", "partida guerra mundo", despues, 112,
+				1, 1);
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba NullPointerException");
+			fail(e.toString() + "\n Esperaba por each choice 1");
 		}
 	}
 
 	public void testGameManagerCreateGame2() {
 		System.out.println("TestCase::testGameManagerCreateGame2");
 		try {
-			gameMgr.createGame("", "", hoy, 1, 0, 1);
-			fail("Esperaba EmptyStringException");
-		} catch (final EmptyStringException e) {
-			System.out.println("EmptyStringException por each choice 2");
+			gameMgr.createGame(null, null, hoy, 1, 20, 33);
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException por each choice 2");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba EmptyStringException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
 	public void testGameManagerCreateGame3() {
 		System.out.println("TestCase::testGameManagerCreateGame3");
 		try {
-			gameMgr.createGame(null, "partida guerra mundo",
-				antes, 0, 0, 0);
+			gameMgr.createGame("", "", null, 0, 0, 0);
 			fail("Esperaba NullPointerException");
 		} catch (final NullPointerException e) {
 			System.out.println("NullPointerException por each choice 3");
@@ -153,19 +142,6 @@ public class GameManagerTest extends TestCase {
 	public void testGameManagerCreateGame4() {
 		System.out.println("TestCase::testGameManagerCreateGame4");
 		try {
-			gameMgr.createGame("partida", null, despues, 1, 1,
-				1);
-			fail("Esperaba NullPointerException");
-		} catch (final NullPointerException e) {
-			System.out.println("NullPointerException por each choice 4");
-		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba NullPointerException");
-		}
-	}
-
-	public void testGameManagerCreateGame5() {
-		System.out.println("TestCase::testGameManagerCreateGame5");
-		try {
 			gameMgr.createGame("", "", despues, 1, 1, 1);
 			fail("Esperaba EmptyStringException");
 		} catch (final EmptyStringException e) {
@@ -175,8 +151,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame6() {
-		System.out.println("TestCase::testGameManagerCreateGame6");
+	public void testGameManagerCreateGame5() {
+		System.out.println("TestCase::testGameManagerCreateGame5");
 		try {
 			gameMgr.createGame(null, "partida guerra mundo",
 				despues, 1, 1, 1);
@@ -188,8 +164,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame7() {
-		System.out.println("TestCase::testGameManagerCreateGame7");
+	public void testGameManagerCreateGame6() {
+		System.out.println("TestCase::testGameManagerCreateGame6");
 		try {
 			gameMgr.createGame("partida", null, hoy, 1, 1, 33);
 			fail("Esperaba NullPointerException");
@@ -200,21 +176,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame8() {
-		System.out.println("TestCase::testGameManagerCreateGame8");
-		try {
-			gameMgr.createGame("partida",
-				"partida guerra mundo", antes, 1, 1, 33);
-			fail("Esperaba InvalidSessionException");
-		} catch (final InvalidSessionException e) {
-			System.out.println("InvalidSessionException por fecha anterior");
-		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidSessionException");
-		}
-	}
-
-	public void testGameManagerCreateGame9() {
-		System.out.println("TestCase::testGameManagerCreateGame9");
+	public void testGameManagerCreateGame7() {
+		System.out.println("TestCase::testGameManagerCreateGame7");
 		try {
 			gameMgr.createGame("partida",
 				"partida guerra mundo", null, 1, 1, 33);
@@ -226,8 +189,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame10() {
-		System.out.println("TestCase::testGameManagerCreateGame10");
+	public void testGameManagerCreateGame8() {
+		System.out.println("TestCase::testGameManagerCreateGame8");
 		try {
 			gameMgr.createGame("partida",
 				"partida guerra mundo", hoy, 0, 20, 33);
@@ -239,8 +202,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame11() {
-		System.out.println("TestCase::testGameManagerCreateGame11");
+	public void testGameManagerCreateGame9() {
+		System.out.println("TestCase::testGameManagerCreateGame9");
 		try {
 			gameMgr.createGame("partida",
 				"partida guerra mundo", hoy, 112, 0, 33);
@@ -252,8 +215,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame12() {
-		System.out.println("TestCase::testGameManagerCreateGame12");
+	public void testGameManagerCreateGame10() {
+		System.out.println("TestCase::testGameManagerCreateGame10");
 		try {
 			gameMgr.createGame("partida",
 				"partida guerra mundo", hoy, 112, 20, 0);
@@ -265,8 +228,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame13() {
-		System.out.println("TestCase::testGameManagerCreateGame13");
+	public void testGameManagerCreateGame11() {
+		System.out.println("TestCase::testGameManagerCreateGame11");
 		try {
 			gameMgr.createGame("partida",
 				"partida guerra mundo", hoy, 112, 20, 33);
@@ -275,8 +238,8 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
-	public void testGameManagerCreateGame14() {
-		System.out.println("TestCase::testGameManagerCreateGame14");
+	public void testGameManagerCreateGame12() {
+		System.out.println("TestCase::testGameManagerCreateGame12");
 		try {
 			gameMgr.createGame("partida", "", despues, 1, 1, 1);
 		} catch (final Exception e) {
@@ -299,11 +262,11 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel().getRowCount() > 0);
 
 			gameMgr.joinGame(-1);
-			fail("Esperaba GameNotFoundException");
-		} catch (final GameNotFoundException e) {
-			System.out.println("GameNotFoundException fuera de rango por debajo");
+			fail("Esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException fuera de rango por debajo");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba GameNotFoundException");
+			fail(e.toString() + "\n Esperaba ArrayIndexOutOfBoundsException");
 		}
 	}
 
@@ -357,11 +320,11 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			gameMgr.joinGame(2);
-			fail("Esperaba GameNotFoundException");
-		} catch (final GameNotFoundException e) {
-			System.out.println("GameNotFoundException fuera de rango por arriba");
+			fail("Esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException fuera de rango por arriba");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba GameNotFoundException");
+			fail(e.toString() + "\n Esperaba IndexOutOfBoundsException");
 		}
 	}
 
@@ -380,13 +343,13 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(-1, null);
-			fail("Esperaba GameNotFoundException");
+			gameMgr.connectToGame(-1, new TestGameEventListener());
+			fail("Esperaba ArrayIndexOutOfBoundsException");
 			assertTrue(gameMgr.getGameEngine() != null);
-		} catch (final GameNotFoundException e) {
-			System.out.println("GameNotFoundException fuera de rango por debajo");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException fuera de rango por debajo");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba GameNotFoundException");
+			fail(e.toString() + "\n Esperaba ArrayIndexOutOfBoundsException");
 		}
 	}
 
@@ -400,8 +363,7 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			final TestGameEventListener tgel = new TestGameEventListener();
-			gameMgr.connectToGame(0, tgel);
+			gameMgr.connectToGame(0, new TestGameEventListener());
 			assertTrue(gameMgr.getGameEngine() != null);
 		} catch (final Exception e) {
 			fail(e.toString() + "\n Esperaba Exception");
@@ -418,13 +380,13 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(1, null);
-			fail("Esperaba GameNotFoundException");
+			gameMgr.connectToGame(1, new TestGameEventListener());
+			fail("Esperaba IndexOutOfBoundsException");
 			assertTrue(gameMgr.getGameEngine() != null);
-		} catch (final GameNotFoundException e) {
-			System.out.println("GameNotFoundException fuera de rango por arriba");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException fuera de rango por arriba");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba GameNotFoundException");
+			fail(e.toString() + "\n Esperaba IndexOutOfBoundsException");
 		}
 	}
 
