@@ -23,11 +23,11 @@ public class PlayerView extends JEditorPane implements TableModelListener {
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		String list = "<html>\n<P Align=\"left\">Usted es:<BR>"
-				+ plm.getSelfPlayer().getName() + "Dispone de "
+		String list = "<html>\n<P Align=\"left\">Usted es "
+				+ plm.getSelfPlayer().getName() + "<BR>Dispone de "
 				+ plm.getSelfPlayer().getMoney() + " gallifantes.</P>";
-		list += "<P ALIGN=\"center\">----------</P>";
-		list += "<P ALIGN=\"center\"><BIG>" + "Jugadores"
+		list += "<P ALIGN=\"center\">----------";
+		list += "<BR><BIG>" + "Jugadores"
 				+ "</BIG><BR></P>\n<HR>" + "<TABLE BORDER=0>";
 		for (int i = 0; i < plm.getRowCount(); i++) {
 			list += "<TR><TD Align=\"left\">" + "<IMG SRC=\"";
