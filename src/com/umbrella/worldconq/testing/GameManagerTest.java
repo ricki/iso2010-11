@@ -430,6 +430,18 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
+	public void testGameManagerDisconnectFromGame2() {
+		System.out.println("TestCase::testGameManagerDisconnectFromGame2");
+		try {
+			gameMgr.disconnectFromGame();
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba Exception");
+		}
+	}
+
 	@Override
 	@After
 	public void tearDown() throws Exception {
