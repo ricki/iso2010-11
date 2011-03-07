@@ -1225,5 +1225,11 @@ public class GameEngineTest extends TestCase {
 
 		}
 
+		@Override
+		public void turnChangedEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }
