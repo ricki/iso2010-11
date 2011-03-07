@@ -390,6 +390,26 @@ public class GameManagerTest extends TestCase {
 		}
 	}
 
+	public void testGameManagerConnectGame4() {
+		System.out.println("TestCase::testGameManagerConnectGame4");
+		try {
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() == 0);
+			assertTrue(gameMgr.getOpenGameListModel().getRowCount() == 0);
+			gameMgr.updateGameList();
+			assertTrue(gameMgr.getCurrentGameListModel().getRowCount() > 0);
+			assertTrue(gameMgr.getOpenGameListModel() != null);
+
+			assertTrue(gameMgr.getGameEngine() == null);
+			gameMgr.connectToGame(0, null);
+			fail("Esperaba NullPointerException");
+			assertTrue(gameMgr.getGameEngine() != null);
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException por parámetro null");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba NullPointerException");
+		}
+	}
+
 	public void testGameManagerDisconnectFromGame1() {
 		System.out.println("TestCase::testGameManagerDisconnectFromGame1");
 		try {
@@ -400,8 +420,7 @@ public class GameManagerTest extends TestCase {
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 
 			assertTrue(gameMgr.getGameEngine() == null);
-			final TestGameEventListener tgel = new TestGameEventListener();
-			gameMgr.connectToGame(0, tgel);
+			gameMgr.connectToGame(0, new TestGameEventListener());
 			assertTrue(gameMgr.getGameEngine() != null);
 
 			gameMgr.disconnectFromGame();
