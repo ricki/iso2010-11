@@ -871,6 +871,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 				} catch (final InvalidTimeException e) {
 				} catch (final NotCurrentPlayerGameException e) {
 				}
+				win.getPlayToolbar().setVisible(false);
+				win.mGamePanel.setVisible(false);
+				win.mGameInfoPanel.setVisible(false);
 				win.setupListGUI();
 			}
 		}
