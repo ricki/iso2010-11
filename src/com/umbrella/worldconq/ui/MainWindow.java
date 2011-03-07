@@ -720,6 +720,11 @@ public class MainWindow extends JFrame implements GameEventListener,
 						"No tienes dinero suficiente para la acción seleccionada.",
 						"Dinero insuficiente",
 						JOptionPane.WARNING_MESSAGE);
+				} catch (final InvalidTerritoryException e) {
+					JOptionPane.showMessageDialog(win,
+						"El territorio seleccionado no es válido.",
+						"Territorio no válido",
+						JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}

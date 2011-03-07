@@ -425,7 +425,7 @@ public class GameEngine implements ClientCallback {
 		mMapListModel.updateTerritory(territoryUpdate);
 	}
 
-	public void deploySpy(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, NotEnoughMoneyException, PendingAttackException {
+	public void deploySpy(int index) throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException, OutOfTurnException, NotEnoughMoneyException, PendingAttackException, InvalidTerritoryException {
 		this.checkInTurn();
 		if (mCurrentAttack != null)
 			throw new PendingAttackException();
@@ -434,6 +434,9 @@ public class GameEngine implements ClientCallback {
 
 		if (self.getMoney() < UnitInfo.getSpyCost())
 			throw new NotEnoughMoneyException();
+
+		if (self.equals(mMapListModel.getTerritoryAt(index).getPlayer()))
+			throw new InvalidTerritoryException();
 
 		final ArrayList<Spy> spyList = new ArrayList<Spy>();
 		spyList.addAll(self.getSpies());
