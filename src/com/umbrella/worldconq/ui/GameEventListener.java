@@ -18,5 +18,7 @@ public interface GameEventListener {
 
 	public void buyUnitsEvent(TerritoryDecorator t);
 
+	public void turnChangedEvent(Player p);
+
 	public void winnerEvent(Player p);
 }

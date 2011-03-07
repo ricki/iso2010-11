@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -19,6 +20,7 @@ import javax.swing.WindowConstants;
 
 import com.umbrella.worldconq.WorldConqApp;
 import com.umbrella.worldconq.domain.UserManager;
+import com.umbrella.worldconq.exceptions.EmptyStringException;
 import com.umbrella.worldconq.exceptions.MalformedEmailException;
 
 import exceptions.UserAlreadyExistsException;
@@ -155,14 +157,22 @@ public class StartupWindow extends JFrame {
 						stw.PasswdField.requestFocusInWindow();
 						invalidArgument = false;
 					} catch (final RemoteException e) {
-						stw.NoticeLabel.setText(e.toString());
-						NoticeLabel.setForeground(Color.RED);
+						JOptionPane.showMessageDialog(stw, e.toString(),
+							e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+						app.setStartupMode();
+						invalidArgument = false;
 					} catch (final UserAlreadyExistsException e) {
 						stw.NoticeLabel.setText("El usuario seleccionado ya existe.");
 						NoticeLabel.setForeground(Color.RED);
+						invalidArgument = false;
 					} catch (final MalformedEmailException e) {
-						stw.NoticeLabel.setText("Dirección de email mal escrita.");
-						NoticeLabel.setForeground(Color.RED);
+						JOptionPane.showMessageDialog(stw,
+							"Dirección de email mal escrita.",
+							e.getClass().getName(), JOptionPane.WARNING_MESSAGE);
+					} catch (final EmptyStringException e) {
+						JOptionPane.showMessageDialog(stw,
+							"Debes rellenar todos los parámetros.",
+							e.getClass().getName(), JOptionPane.WARNING_MESSAGE);
 					}
 					System.out.println("Fin registro");
 				} else {

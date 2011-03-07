@@ -564,6 +564,26 @@ public class GameEngine implements ClientCallback {
 
 	@Override
 	public void updateClient(ArrayList<Player> playerUpdate, ArrayList<Territory> territoryUpdate, EventType event) {
+		switch (event) {
+		case AttackEvent:
+			System.out.println("AttackEvent");
+			break;
+		case BuyArsenalEvent:
+			System.out.println("BuyArsenalEvent");
+			break;
+		case BuyTerritoryEvent:
+			System.out.println("BuyTerritoryEvent");
+			break;
+		case NegotiationEvent:
+			System.out.println("NegotiationEvent");
+			break;
+		case TurnChanged:
+			System.out.println("TurnChanged");
+			break;
+		case UnknownEvent:
+			System.out.println("UnknownEvent");
+			break;
+		}
 		final Player curPlayer = mPlayerListModel.getActivePlayer();
 		ArrayList<TerritoryDecorator> terrList = null;
 
@@ -574,6 +594,7 @@ public class GameEngine implements ClientCallback {
 					mPlayerListModel));
 			}
 		}
+		System.out.println("territoryUpdate is " + (territoryUpdate != null));
 
 		if (event == EventType.AttackEvent && terrList != null) {
 			if (terrList.size() == 2) {
@@ -599,6 +620,15 @@ public class GameEngine implements ClientCallback {
 			if (terrList.size() == 1) {
 				gameListener.buyTerritoryEvent(terrList.get(0));
 			}
+		} else if (event == EventType.TurnChanged) {
+			Player next = null;
+			for (final Player p : playerUpdate) {
+				if (p.isHasTurn()) {
+					next = p;
+					break;
+				}
+			}
+			gameListener.turnChangedEvent(next);
 		}
 
 		for (final Player p : playerUpdate) {
@@ -638,6 +668,7 @@ public class GameEngine implements ClientCallback {
 	private class TurnUpdateThread extends Thread {
 		@Override
 		public void run() {
+			mCurrentAttack = null;
 			final Player self = mPlayerListModel.getSelfPlayer();
 
 			if (!self.equals(mPlayerListModel.getActivePlayer())) return;
