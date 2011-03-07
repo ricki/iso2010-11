@@ -234,6 +234,11 @@ public class ServerAdapter {
 		}
 	}
 
+	public void endTurn(Session session, Game game) throws RemoteException, InvalidTimeException, InvalidSessionException {
+		this.checkConnection();
+		mProxy.endTurn(session.getId(), game.getGameInfo().getId());
+	}
+
 	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<TerritoryDecorator> territoryUpdate, EventType event)
 			throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException {
 		this.checkConnection();

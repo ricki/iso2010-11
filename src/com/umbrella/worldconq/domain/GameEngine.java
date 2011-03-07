@@ -451,6 +451,14 @@ public class GameEngine implements ClientCallback {
 		mPlayerListModel.updatePlayer(p);
 	}
 
+	public void endTurn() throws OutOfTurnException, PendingAttackException, RemoteException, InvalidTimeException, InvalidSessionException {
+		this.checkInTurn();
+		if (mCurrentAttack != null)
+			throw new PendingAttackException();
+
+		adapter.endTurn(session, mGame);
+	}
+
 	@Override
 	public void territoryUnderAttack(Territory src, Territory dst, Arsenal arsenal) throws InvalidTerritoryException {
 
