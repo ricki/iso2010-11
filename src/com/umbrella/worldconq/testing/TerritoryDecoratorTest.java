@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 import com.umbrella.worldconq.domain.MapModel;
 import com.umbrella.worldconq.domain.PlayerListModel;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 import domain.Spy;
@@ -29,7 +28,7 @@ public class TerritoryDecoratorTest extends TestCase {
 
 		try {
 			playerList = new PlayerListModel(selfPlayer, players);
-		} catch (final InvalidArgumentException e) {
+		} catch (final NullPointerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

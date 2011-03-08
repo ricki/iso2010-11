@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 import com.umbrella.worldconq.domain.MapModel;
 import com.umbrella.worldconq.domain.PlayerListModel;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.Player;
 import domain.Spy;
@@ -22,7 +21,7 @@ public class MapModelTest extends TestCase {
 	private static final String[] colTitles = {
 			"Territorio", "Jugador", "Nº Soldados", "Nº Canones 1",
 			"Nº Canones 2", "Nº Canones 3", "Nº Misiles", "Nº ICBMs",
-			"Nº AntiMisiles"
+			"Nº AntiMisiles", "Precio"
 	};
 
 	@Override
@@ -36,7 +35,7 @@ public class MapModelTest extends TestCase {
 			new ArrayList<Spy>()));
 		try {
 			playerList = new PlayerListModel(selfPlayer, players);
-		} catch (final InvalidArgumentException e) {
+		} catch (final NullPointerException e) {
 			fail(e.toString());
 		}
 
@@ -97,22 +96,46 @@ public class MapModelTest extends TestCase {
 
 	public void testgetValueAt1() {
 		System.out.println("TestCase:: testgetValueAt1");
-		assertTrue(map.getValueAt(-1, 0) == null);
+		try {
+			map.getValueAt(-1, 0);
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba ArrayIndexOutOfBoundsException");
+		}
 	}
 
 	public void testgetValueAt2() {
 		System.out.println("TestCase:: testgetValueAt2");
-		assertTrue(map.getValueAt(map.getRowCount(), 0) == null);
+		try {
+			map.getValueAt(map.getRowCount(), 0);
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba IndexOutOfBoundsException");
+		}
 	}
 
 	public void testgetValueAt3() {
 		System.out.println("TestCase:: testgetValueAt3");
-		assertTrue(map.getValueAt(0, -1) == null);
+		try {
+			map.getValueAt(0, -1);
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba IndexOutOfBoundsException");
+		}
 	}
 
 	public void testgetValueAt4() {
 		System.out.println("TestCase:: testgetValueAt4");
-		assertTrue(map.getValueAt(0, map.getColumnCount()) == null);
+		try {
+			map.getValueAt(0, map.getColumnCount());
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException");
+		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba IndexOutOfBoundsException");
+		}
 	}
 
 	public void testgetValueAt5() {
