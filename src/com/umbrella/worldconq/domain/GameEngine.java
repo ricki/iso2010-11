@@ -133,25 +133,25 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (soldiers > srcTerritory.getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			srcTerritory.getNumSoldiers());
+				srcTerritory.getNumSoldiers());
 
 		if (cannons < 0)
 			throw new NegativeValueException();
 		if (cannons > srcTerritory.getNumTotalCannons())
 			throw new NotEnoughUnitsException(cannons,
-			srcTerritory.getNumTotalCannons());
+				srcTerritory.getNumTotalCannons());
 
 		if (missiles < 0)
 			throw new NegativeValueException();
 		if (missiles > srcTerritory.getNumMissiles())
 			throw new NotEnoughUnitsException(missiles,
-			srcTerritory.getNumMissiles());
+				srcTerritory.getNumMissiles());
 
 		if (icbm < 0)
 			throw new NegativeValueException();
 		if (icbm > srcTerritory.getNumICBMs())
 			throw new NotEnoughUnitsException(icbm,
-			srcTerritory.getNumICBMs());
+				srcTerritory.getNumICBMs());
 
 		if (mCurrentAttack != null)
 			throw new PendingAttackException();
@@ -194,7 +194,7 @@ public class GameEngine implements ClientCallback {
 
 		if (soldiers > mCurrentAttack.getDestination().getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			mCurrentAttack.getDestination().getNumSoldiers());
+				mCurrentAttack.getDestination().getNumSoldiers());
 
 		adapter.requestNegotiation(session, mGame, money, soldiers);
 		mCurrentAttack = null;
@@ -300,7 +300,7 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (soldiers > srcTerritory.getNumSoldiers())
 			throw new NotEnoughUnitsException(soldiers,
-			srcTerritory.getNumSoldiers());
+				srcTerritory.getNumSoldiers());
 
 		if (cannons[0] < 0)
 			throw new NegativeValueException();
@@ -310,30 +310,30 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (cannons[0] > srcTerritory.getNumCannons()[0])
 			throw new NotEnoughUnitsException(cannons[0],
-			srcTerritory.getNumCannons()[0]);
+				srcTerritory.getNumCannons()[0]);
 		if (cannons[1] > srcTerritory.getNumCannons()[1])
 			throw new NotEnoughUnitsException(cannons[1],
-			srcTerritory.getNumCannons()[1]);
+				srcTerritory.getNumCannons()[1]);
 		if (cannons[2] > srcTerritory.getNumCannons()[2])
 			throw new NotEnoughUnitsException(cannons[2],
-			srcTerritory.getNumCannons()[2]);
+				srcTerritory.getNumCannons()[2]);
 
 		if (missiles < 0)
 			throw new NegativeValueException();
 		if (missiles > srcTerritory.getNumMissiles())
 			throw new NotEnoughUnitsException(missiles,
-			srcTerritory.getNumMissiles());
+				srcTerritory.getNumMissiles());
 
 		if (icbm < 0)
 			throw new NegativeValueException();
 		if (icbm > srcTerritory.getNumICBMs())
 			throw new NotEnoughUnitsException(icbm,
-			srcTerritory.getNumICBMs());
+				srcTerritory.getNumICBMs());
 
 		if (antimissiles < 0)
 			throw new NegativeValueException();
 		if (antimissiles > srcTerritory.getNumAntiMissiles())
-			throw new NotEnoughUnitsException(icbm,
+			throw new NotEnoughUnitsException(antimissiles,
 				srcTerritory.getNumICBMs());
 
 		srcTerritory = (TerritoryDecorator) srcTerritory.clone();
@@ -535,7 +535,7 @@ public class GameEngine implements ClientCallback {
 		final Player playerUpdateOrigin = new Player(
 			mPlayerListModel.getSelfPlayer().getName(),
 			mPlayerListModel.getSelfPlayer().getMoney()
-				+ mCurrentAttack.getOfferedMoney(),
+					+ mCurrentAttack.getOfferedMoney(),
 			mPlayerListModel.getSelfPlayer().isOnline(),
 			mPlayerListModel.getSelfPlayer().isHasTurn(),
 			mPlayerListModel.getSelfPlayer().getSpies());
@@ -548,7 +548,7 @@ public class GameEngine implements ClientCallback {
 		final Player playerUpdateDestination = new Player(
 			mCurrentAttack.getDestination().getPlayer().getName(),
 			mCurrentAttack.getDestination().getPlayer().getMoney()
-				- mCurrentAttack.getOfferedMoney(),
+					- mCurrentAttack.getOfferedMoney(),
 			mCurrentAttack.getDestination().getPlayer().isOnline(),
 			mCurrentAttack.getDestination().getPlayer().isHasTurn(),
 			mCurrentAttack.getDestination().getPlayer().getSpies());
