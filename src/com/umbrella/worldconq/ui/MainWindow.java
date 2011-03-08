@@ -76,6 +76,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 	private JButton logoutButton; //Botón para quitar y salir del juego (cerrar sesión)
 	private JButton connectGameButton; //Botón para conectarse a una partida
 	private JButton joinGameButton; //Botón para unirse a una partida
+	private JButton shiftOutButton; //botón para ceder el turno
 	private JButton updateListButton;
 	private JButton createGameButton;
 	private MapView mv; //MapView
@@ -120,6 +121,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 			mGameInfoPanel = null;
 		}
 
+		this.setTitle("La Conquista del Mundo");
 		this.getContentPane().add(this.getGameListToolBar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
@@ -221,7 +223,6 @@ public class MainWindow extends JFrame implements GameEventListener,
 		mGamePanel.setVisible(true);
 		this.pack();
 		this.setLocationRelativeTo(null);
-
 	}
 
 	private JPanel createGamePanel() {
@@ -304,6 +305,9 @@ public class MainWindow extends JFrame implements GameEventListener,
 			buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(
 				this));
 			exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
+			//Botón para pasar el turno
+			shiftOutButton = new JButton("Ceder turno");
+			shiftOutButton.addMouseListener(new ShiftOutMouseAdapter(this));
 
 			//Deshabilito los botones
 			attackButton.setEnabled(false);
@@ -321,6 +325,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 			mPlayToolBar.add(buyUnitsButton);
 			mPlayToolBar.add(buyTerritoryButton);
 			mPlayToolBar.add(exitGameButton);
+			mPlayToolBar.add(shiftOutButton);
 		}
 		return mPlayToolBar;
 	}
@@ -345,6 +350,47 @@ public class MainWindow extends JFrame implements GameEventListener,
 		} catch (final Exception e1) {
 		}
 		this.setupListGUI();
+	}
+
+	//Clase privada para gestionar el evento de pasar el turno
+	private class ShiftOutMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public ShiftOutMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			try {
+				win.getGameManager().getGameEngine().endTurn();
+			} catch (final OutOfTurnException oote) {
+				JOptionPane.showMessageDialog(win,
+					"No dispone del turno para cederlo",
+					"Fuera de turno",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final PendingAttackException pae) {
+				JOptionPane.showMessageDialog(win,
+					"Hay un ataque en curso",
+					"Ataque en curso",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final RemoteException re) {
+				JOptionPane.showMessageDialog(win,
+					"El servidor ha lanzado una excepción",
+					"Excepción del servidor",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final InvalidTimeException e) {
+				JOptionPane.showMessageDialog(win,
+					"El servidor ha lanzado una excepción",
+					"Excepción del servidor",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final InvalidSessionException e) {
+				JOptionPane.showMessageDialog(win,
+					"El servidor ha lanzado una excepción",
+					"Excepción del servidor",
+					JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
@@ -443,6 +489,9 @@ public class MainWindow extends JFrame implements GameEventListener,
 					"No ha seleccionado ninguna partida");
 			} else {
 				try {
+					final String winTitle = "La Conquista del Mundo"
+							+ win.getGameManager().getGameEngine().getName();
+					win.setTitle(winTitle);
 					gameMgr.connectToGame(gameSelected, win);
 					MainWindow.this.setupGameGUI();
 				} catch (final RemoteException e) {
