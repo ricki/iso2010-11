@@ -1275,7 +1275,7 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testBuyUnits8");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			gameEngine.buyUnits(0, 0, 0, 0, -1, 0);
+			gameEngine.buyUnits(0, 0, 0, 0, 0, -1);
 			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("NegativeValueException: Número de antimisiles negativo");
