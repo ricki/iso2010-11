@@ -1190,8 +1190,6 @@ public class GameEngineTest extends TestCase {
 			fail("Se esperaba InvalidTerritoryException");
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("InvalidArgumentException: el territorio no es del user");
-		} catch (final NotEnoughMoneyException e) {
-			fail("NotEnoughMoneyException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
