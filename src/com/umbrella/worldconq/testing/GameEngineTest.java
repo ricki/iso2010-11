@@ -1187,7 +1187,7 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(2, 1, 0, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba InvalidTerritoryException");
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("InvalidArgumentException: el territorio no es del user");
 		} catch (final NotEnoughMoneyException e) {
@@ -1220,9 +1220,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(0, -1, 0, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
-			System.out.println("InvalidArgumentException: Número de soldados negativo");
+			System.out.println("NegativeValueException: Número de soldados negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1234,9 +1234,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(0, 0, -1, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
-			System.out.println("InvalidArgumentException: Número de cañones negativo");
+			System.out.println("NegativeValueException: Número de cañones negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1248,9 +1248,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(0, 0, 0, -1, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
-			System.out.println("InvalidArgumentException: Número de misiles negativo");
+			System.out.println("NegativeValueException: Número de misiles negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1262,9 +1262,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(0, 0, 0, 0, -1, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
-			System.out.println("InvalidArgumentException: Número de ICBMs negativo");
+			System.out.println("NegativeValueException: Número de ICBMs negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1276,9 +1276,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(0, 0, 0, 0, -1, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
-			System.out.println("InvalidArgumentException: Número de antimisiles negativo");
+			System.out.println("NegativeValueException: Número de antimisiles negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1290,9 +1290,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(-1, 0, 0, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
-		} catch (final IndexOutOfBoundsException e) {
-			System.out.println("InvalidArgumentException: Número de territorio negativo");
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException: Número de territorio negativo");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1304,9 +1304,9 @@ public class GameEngineTest extends TestCase {
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.buyUnits(42, 0, 0, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba IndexOutOfBoundsException");
 		} catch (final IndexOutOfBoundsException e) {
-			System.out.println("InvalidArgumentException: Número de territorio 42");
+			System.out.println("IndexOutOfBoundsException: Número de territorio 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1356,7 +1356,7 @@ public class GameEngineTest extends TestCase {
 					&& srcTerritory.getNumAntiMissiles() == prevDstAntiM);
 
 		} catch (final InvalidTerritoryException e) {
-			fail("InvalidArgumentException");
+			fail("InvalidTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1469,7 +1469,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 100, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados soldados");
@@ -1490,7 +1490,7 @@ public class GameEngineTest extends TestCase {
 					110, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados cañones de un uso");
 		} catch (final Exception e) {
@@ -1510,7 +1510,7 @@ public class GameEngineTest extends TestCase {
 					0, 110, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados cañones de dos usos");
 		} catch (final Exception e) {
@@ -1530,7 +1530,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 110
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados cañones de tres usos");
 		} catch (final Exception e) {
@@ -1550,7 +1550,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 110, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados misiles");
 		} catch (final Exception e) {
@@ -1570,7 +1570,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 110, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados ICBMs");
 		} catch (final Exception e) {
@@ -1590,7 +1590,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 110);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NotEnoughUnitsException");
 		} catch (final NotEnoughUnitsException e) {
 			System.out.println("Demasiados antimisiles");
 		} catch (final Exception e) {
@@ -1610,7 +1610,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 7, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba InvalidTerritoryException");
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("Territorio no adyacente");
 		} catch (final Exception e) {
@@ -1627,8 +1627,8 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(-1, 0, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
-		} catch (final IndexOutOfBoundsException e) {
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
 			System.out.println("Origen -1");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -1644,8 +1644,8 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, -1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
-		} catch (final IndexOutOfBoundsException e) {
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
 			System.out.println("Destino -1");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -1661,7 +1661,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 2, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba InvalidTerritoryException");
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("Territorio no perteneciente al jugador");
 		} catch (final Exception e) {
@@ -1678,7 +1678,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, -1, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Soldados negativos");
 		} catch (final Exception e) {
@@ -1695,7 +1695,7 @@ public class GameEngineTest extends TestCase {
 					-1, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Cañones de un uso negativos");
 		} catch (final Exception e) {
@@ -1712,7 +1712,7 @@ public class GameEngineTest extends TestCase {
 					0, -1, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Cañones de dos usos negativos");
 		} catch (final Exception e) {
@@ -1729,7 +1729,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, -1
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Cañones de tres usos negativos");
 		} catch (final Exception e) {
@@ -1746,7 +1746,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, -1, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Misiles negativos");
 		} catch (final Exception e) {
@@ -1763,7 +1763,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, -1, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("ICBMs negativos");
 		} catch (final Exception e) {
@@ -1780,7 +1780,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, -1);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("Antimisiles negativos");
 		} catch (final Exception e) {
@@ -1797,7 +1797,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(42, 1, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba IndexOutOfBoundsException");
 		} catch (final IndexOutOfBoundsException e) {
 			System.out.println("Origen incorrecto 42");
 		} catch (final Exception e) {
@@ -1814,7 +1814,7 @@ public class GameEngineTest extends TestCase {
 					0, 0, 0
 			};
 			gameEngine.moveUnits(0, 42, 0, p2, 0, 0, 0);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba IndexOutOfBoundsException");
 		} catch (final IndexOutOfBoundsException e) {
 			System.out.println("Destino incorrecto 42");
 		} catch (final Exception e) {
@@ -1830,12 +1830,11 @@ public class GameEngineTest extends TestCase {
 		System.out.println("testDeploySpy1");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			gameEngine.getMapListModel().getTerritoryAt(0).getPlayer().setMoney(
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
 				UnitInfo.getSpyCost() + 100);
 			gameEngine.deploySpy(0);
-			fail("Se esperaba InvalidArgumentException");
 		} catch (final InvalidTerritoryException e) {
-			System.out.println("Destino perteneciente al jugador");
+			System.out.println("El territorio es del propio jugador");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1861,14 +1860,16 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
-	/* Caso de prueba con territorio negativo */
+	/* Caso de prueba con todo correcto y territorio negativo */
 	public void testDeploySpy3() {
 		System.out.println("testDeploySpy3");
 		try {
 			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
 			gameEngine.deploySpy(-1);
-			fail("Se esperaba InvalidArgumentException");
-		} catch (final NegativeValueException e) {
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
 			System.out.println("Destino incorrecto -1");
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -1880,8 +1881,10 @@ public class GameEngineTest extends TestCase {
 		System.out.println("testDeploySpy4");
 		try {
 			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
 			gameEngine.deploySpy(42);
-			fail("Se esperaba InvalidArgumentException");
+			fail("Se esperaba IndexOutOfBoundsException");
 		} catch (final IndexOutOfBoundsException e) {
 			System.out.println("Destino incorrecto 42");
 		} catch (final Exception e) {
@@ -1898,6 +1901,23 @@ public class GameEngineTest extends TestCase {
 			gameEngine.deploySpy(2);
 		} catch (final NotEnoughMoneyException e) {
 			System.out.println("El jugador no tenía dinero suficiente");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con todo correcto y territorio null */
+	public void testDeploySpy6() {
+		System.out.println("testDeploySpy6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int numSpies = gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
+			final int money = gameEngine.getPlayerListModel().getSelfPlayer().getMoney();
+			gameEngine.deploySpy(2);
+			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getMoney() == (money - UnitInfo.getSpyCost()));
+			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size() == numSpies + 1);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}

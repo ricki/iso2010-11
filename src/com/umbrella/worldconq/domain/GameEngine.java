@@ -330,6 +330,12 @@ public class GameEngine implements ClientCallback {
 			throw new NotEnoughUnitsException(icbm,
 			srcTerritory.getNumICBMs());
 
+		if (antimissiles < 0)
+			throw new NegativeValueException();
+		if (antimissiles > srcTerritory.getNumAntiMissiles())
+			throw new NotEnoughUnitsException(icbm,
+				srcTerritory.getNumICBMs());
+
 		srcTerritory = (TerritoryDecorator) srcTerritory.clone();
 
 		srcTerritory.setNumSoldiers(srcTerritory.getNumSoldiers()
