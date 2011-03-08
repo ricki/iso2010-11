@@ -94,8 +94,10 @@ public class TestPlayerListModel extends TestCase {
 		try {
 			new PlayerListModel(null, null);
 			fail("Se esperaba excepcion");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException()");
 		} catch (final Exception e) {
-
+			fail(e.toString());
 		}
 	}
 
