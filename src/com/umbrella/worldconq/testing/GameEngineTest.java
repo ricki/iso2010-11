@@ -1380,8 +1380,6 @@ public class GameEngineTest extends TestCase {
 					&& srcTerritory.getNumICBMs() == prevDstICBM
 					&& srcTerritory.getNumAntiMissiles() == prevDstAntiM);
 
-		} catch (final InvalidTerritoryException e) {
-			fail("InvalidTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -2000,26 +1998,9 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
-	/* Caso de prueba con todo correcto y territorio null */
+	/* Caso de prueba con ataque pendiente */
 	public void testDeploySpy6() {
 		System.out.println("testDeploySpy6");
-		try {
-			gameEngine = gameMgr.getGameEngine();
-			final int numSpies = gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size();
-			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
-				UnitInfo.getSpyCost() + 100);
-			final int money = gameEngine.getPlayerListModel().getSelfPlayer().getMoney();
-			gameEngine.deploySpy(2);
-			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getMoney() == (money - UnitInfo.getSpyCost()));
-			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size() == numSpies + 1);
-		} catch (final Exception e) {
-			fail(e.toString());
-		}
-	}
-
-	/* Caso de prueba con ataque pendiente */
-	public void testDeploySpy7() {
-		System.out.println("testDeploySpy7");
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);

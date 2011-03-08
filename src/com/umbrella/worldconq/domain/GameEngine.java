@@ -233,6 +233,10 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		totalCost += UnitInfo.getICBMCost() * icbm;
 
+		if (antimissiles < 0)
+			throw new NegativeValueException();
+		totalCost += UnitInfo.getAntiMissileCost() * antimissiles;
+
 		if (self.getMoney() < totalCost)
 			throw new NotEnoughMoneyException();
 
