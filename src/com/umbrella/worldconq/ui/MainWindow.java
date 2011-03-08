@@ -76,6 +76,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 	private JButton logoutButton; //Botón para quitar y salir del juego (cerrar sesión)
 	private JButton connectGameButton; //Botón para conectarse a una partida
 	private JButton joinGameButton; //Botón para unirse a una partida
+	private JButton endTurnButton; //botón para ceder el turno
 	private JButton updateListButton;
 	private JButton createGameButton;
 	private MapView mv; //MapView
@@ -120,6 +121,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 			mGameInfoPanel = null;
 		}
 
+		this.setTitle("La Conquista del Mundo");
 		this.getContentPane().add(this.getGameListToolBar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
@@ -204,6 +206,11 @@ public class MainWindow extends JFrame implements GameEventListener,
 		this.getGameListPanel().setVisible(false);
 		this.getGameListToolBar().setVisible(false);
 		// mostramos el mapa y lo demas
+		final String winTitle = String.format(
+			"La Conquista del Mundo - %s(%s)",
+			gameMgr.getGameEngine().getName(),
+			gameMgr.getGameEngine().getId().toString());
+		this.setTitle(winTitle);
 		mv = new MapView(
 			gameMgr.getGameEngine().getMapListModel());
 		tinfov = new TerritoryInfoView(
@@ -221,7 +228,6 @@ public class MainWindow extends JFrame implements GameEventListener,
 		mGamePanel.setVisible(true);
 		this.pack();
 		this.setLocationRelativeTo(null);
-
 	}
 
 	private JPanel createGamePanel() {
@@ -304,6 +310,9 @@ public class MainWindow extends JFrame implements GameEventListener,
 			buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(
 				this));
 			exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
+			//Botón para pasar el turno
+			endTurnButton = new JButton("Pasar turno");
+			endTurnButton.addMouseListener(new EndTurnMouseAdapter(this));
 
 			//Deshabilito los botones
 			attackButton.setEnabled(false);
@@ -321,6 +330,7 @@ public class MainWindow extends JFrame implements GameEventListener,
 			mPlayToolBar.add(buyUnitsButton);
 			mPlayToolBar.add(buyTerritoryButton);
 			mPlayToolBar.add(exitGameButton);
+			mPlayToolBar.add(endTurnButton);
 		}
 		return mPlayToolBar;
 	}
@@ -345,6 +355,41 @@ public class MainWindow extends JFrame implements GameEventListener,
 		} catch (final Exception e1) {
 		}
 		this.setupListGUI();
+	}
+
+	//Clase privada para gestionar el evento de pasar el turno
+	private class EndTurnMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public EndTurnMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			try {
+				win.getGameManager().getGameEngine().endTurn();
+			} catch (final RemoteException e) {
+				MainWindow.this.showErrorAndExit(e);
+			} catch (final InvalidSessionException e) {
+				MainWindow.this.showErrorAndExit(e);
+			} catch (final OutOfTurnException e) {
+				JOptionPane.showMessageDialog(win,
+					"Accion realizada fuera de turno.",
+					"Fuera de turno",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final PendingAttackException e) {
+				JOptionPane.showMessageDialog(win,
+					"Hay otro ataque en curso.",
+					"Ataques simultáneos",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final InvalidTimeException e) {
+				JOptionPane.showMessageDialog(MainWindow.this,
+					"No es buen momento para jugar. Tómate un café.",
+					"Tiempo no válido",
+					JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
