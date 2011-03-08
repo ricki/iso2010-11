@@ -334,7 +334,7 @@ public class GameEngine implements ClientCallback {
 			throw new NegativeValueException();
 		if (antimissiles > srcTerritory.getNumAntiMissiles())
 			throw new NotEnoughUnitsException(antimissiles,
-				srcTerritory.getNumICBMs());
+				srcTerritory.getNumAntiMissiles());
 
 		srcTerritory = (TerritoryDecorator) srcTerritory.clone();
 
@@ -358,9 +358,10 @@ public class GameEngine implements ClientCallback {
 		dstTerritory.setNumSoldiers(dstTerritory.getNumSoldiers()
 				+ soldiers);
 
+		final int numCan[] = new int[3];
 		for (int i = 0; i < 3; i++)
-			numCannons[i] = srcTerritory.getNumCannons()[i] + cannons[i];
-		dstTerritory.setNumCannons(numCannons);
+			numCan[i] = dstTerritory.getNumCannons()[i] + cannons[i];
+		dstTerritory.setNumCannons(numCan);
 
 		dstTerritory.setNumMissiles(dstTerritory.getNumMissiles()
 				+ missiles);

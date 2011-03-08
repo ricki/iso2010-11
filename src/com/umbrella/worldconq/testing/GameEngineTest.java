@@ -1312,6 +1312,33 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
+	/* Caso de prueba con territorio no asignado */
+	public void testBuyUnits11() {
+		System.out.println("TestCase::testBuyUnits11");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(12, 1, 0, 0, 0, 0);
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: Territorio sin ocupar");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio ataque en curso */
+	public void testBuyUnits12() {
+		System.out.println("TestCase::testBuyUnits12");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.buyUnits(12, 1, 0, 0, 0, 0);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException:ataque en curso ");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
 	/*
 	 * Caso de prueba en el que el jugador JorgeCA, dueño del territorio 0, ha
 	 * iniciado sesion y mueve un número correcto de tropas (0) a un territorio
@@ -1445,13 +1472,13 @@ public class GameEngineTest extends TestCase {
 					&& srcTerritory.getNumICBMs() == prevSrcICBM - 1
 					&& srcTerritory.getNumAntiMissiles() == prevSrcAntiM - 1);
 
-			assertTrue(srcTerritory.getNumSoldiers() == prevDstSold + 1
-					&& srcTerritory.getNumCannons()[0] == (prevDstCan[0] + 1)
-					&& srcTerritory.getNumCannons()[1] == (prevDstCan[1] + 1)
-					&& srcTerritory.getNumCannons()[2] == (prevDstCan[2] + 1)
-					&& srcTerritory.getNumMissiles() == prevDstMis + 1
-					&& srcTerritory.getNumICBMs() == prevDstICBM + 1
-					&& srcTerritory.getNumAntiMissiles() == prevDstAntiM + 1);
+			assertTrue(dstTerritory.getNumSoldiers() == prevDstSold + 1
+					&& dstTerritory.getNumCannons()[0] == (prevDstCan[0] + 1)
+					&& dstTerritory.getNumCannons()[1] == (prevDstCan[1] + 1)
+					&& dstTerritory.getNumCannons()[2] == (prevDstCan[2] + 1)
+					&& dstTerritory.getNumMissiles() == prevDstMis + 1
+					&& dstTerritory.getNumICBMs() == prevDstICBM + 1
+					&& dstTerritory.getNumAntiMissiles() == prevDstAntiM + 1);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1822,6 +1849,75 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
+	/* Caso de prueba con todo correcto y ataque pendiente */
+	public void testMoveUnits24() {
+		System.out.println("TestCase::testMoveUnits24");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.moveUnits(0, 42, 0, p2, 0, 0, 0);
+			fail("Se esperaba PendingAttackException");
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio origen no está asignado */
+	public void testMoveUnits25() {
+		System.out.println("TestCase::testMoveUnits25");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(12, 2, 0, p2, 0, 0, 0);
+			fail("Se esperaba UnocupiedTerritoryException");
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: el territorio no está asignado");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio destino no está asignado */
+	public void testMoveUnits26() {
+		System.out.println("TestCase::testMoveUnits26");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 12, 0, p2, 0, 0, 0);
+			fail("Se esperaba UnocupiedTerritoryException");
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: el destino no está asignado");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio origen pertenece a otro jugador */
+	public void testMoveUnits27() {
+		System.out.println("TestCase::testMoveUnits27");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(2, 0, 0, p2, 0, 0, 0);
+			fail("Se esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException: el origen no es del jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
 	/*
 	 * Caso de prueba en que se tiene dinero y se envía un espía a un país
 	 * propio
@@ -1918,6 +2014,21 @@ public class GameEngineTest extends TestCase {
 			gameEngine.deploySpy(2);
 			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getMoney() == (money - UnitInfo.getSpyCost()));
 			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size() == numSpies + 1);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con ataque pendiente */
+	public void testDeploySpy7() {
+		System.out.println("testDeploySpy7");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.deploySpy(2);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException: Hay un ataque en curso");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
