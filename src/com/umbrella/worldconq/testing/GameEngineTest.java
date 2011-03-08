@@ -1924,16 +1924,6 @@ public class GameEngineTest extends TestCase {
 
 	private class TestUnterAttack implements GameEventListener {
 
-		boolean territoryUnderAttackCalled = false;
-
-		public void territoryUnderAttack(final TerritoryDecorator src, final TerritoryDecorator dst, final Arsenal arsenal) {
-			territoryUnderAttackCalled = true;
-		}
-
-		boolean territoryUnderAttackWasCalled() {
-			return territoryUnderAttackCalled;
-		}
-
 		@Override
 		public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
 			// TODO Auto-generated method stub
@@ -1972,6 +1962,12 @@ public class GameEngineTest extends TestCase {
 
 		@Override
 		public void turnChangedEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst, Arsenal arsenal) {
 			// TODO Auto-generated method stub
 
 		}
