@@ -15,9 +15,15 @@ import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
+import com.umbrella.worldconq.domain.UnitInfo;
 import com.umbrella.worldconq.domain.UserManager;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.NegativeValueException;
+import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
+import com.umbrella.worldconq.exceptions.NotEnoughUnitsException;
+import com.umbrella.worldconq.exceptions.OcupiedTerritoryException;
+import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
+import com.umbrella.worldconq.exceptions.UnocupiedTerritoryException;
 import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Arsenal;
@@ -75,7 +81,7 @@ public class GameEngineTest extends TestCase {
 			assertTrue(gameMgr.getCurrentGameListModel() != null);
 			assertTrue(gameMgr.getOpenGameListModel() != null);
 			assertTrue(gameMgr.getGameEngine() == null);
-			gameMgr.connectToGame(0, null);
+			gameMgr.connectToGame(0, new TestUnterAttack());
 			assertTrue(gameMgr.getGameEngine() != null);
 
 		} catch (final Exception e) {
@@ -110,8 +116,6 @@ public class GameEngineTest extends TestCase {
 			assertNotNull(o);
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -147,8 +151,6 @@ public class GameEngineTest extends TestCase {
 			fail("Esperaba PendingAttackException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException ya hay un ataque en proceso");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -163,11 +165,9 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(-1, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen -1");
+			fail("Esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException territorio origen -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -182,11 +182,9 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(42, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen 42");
+			fail("Esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException territorio origen 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -201,11 +199,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(41, 2, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba UnocupiedTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen 41, Jorge esta en 0");
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException territorio origen 41, Jorge esta en 0");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -220,11 +218,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, -1, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba ArrayIndexOutOfBoundsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio destino -1");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException territorio destino -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -239,11 +237,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 42, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba IndexOutOfBoundsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio destino 42");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException territorio destino 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -258,11 +256,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 0, 0, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba InvalidTerritoryException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException territorio origen = destino y destino no es Angel");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException territorio origen = destino y destino no es Angel");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -277,11 +275,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, -1, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException soldados -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -296,11 +294,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 21, 0, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados 21");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException soldados 21");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -315,11 +313,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, -1, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException canones -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException canones -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -334,11 +332,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 7, 1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException canones 7");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException canones 7");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -353,11 +351,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, -1, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException misiles -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException misiles -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -372,11 +370,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 2, 6);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException misiles 2");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException misiles 2");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -391,11 +389,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 1, -1);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NegativeValueException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException icbm -1");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException icbm -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -410,11 +408,11 @@ public class GameEngineTest extends TestCase {
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 20, 6, 1, 7);
-			fail("Esperaba InvalidArgumentException");
+			fail("Esperaba NotEnoughUnitsException");
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException icbm 7");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException icbm 7");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -424,16 +422,23 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testAttackTerritory17");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
 			//attackTerritory(src, dst, soldiers, cannons, missiles, icbm)
 			gameEngine.attackTerritory(0, 2, 0, 0, 0, 0);
-			fail("Esperaba InvalidArgumentException");
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNotNull(o);
 		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException atacar sin tropas");
+			fail("PendingAttackException");
+		} catch (final InvalidTerritoryException e) {
+			fail("InvalidTerritoryException");
+		} catch (final NegativeValueException e) {
+			fail("NegativeValueException");
+		} catch (final NotEnoughUnitsException e) {
+			fail("NotEnoughUnitsException");
+		} catch (final UnocupiedTerritoryException e) {
+			fail("UnocupiedTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -451,9 +456,15 @@ public class GameEngineTest extends TestCase {
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
 		} catch (final PendingAttackException e) {
-			System.out.println("PendingAttackException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
+			fail("PendingAttackException");
+		} catch (final InvalidTerritoryException e) {
+			fail("InvalidTerritoryException");
+		} catch (final NegativeValueException e) {
+			fail("NegativeValueException");
+		} catch (final NotEnoughUnitsException e) {
+			fail("NotEnoughUnitsException");
+		} catch (final UnocupiedTerritoryException e) {
+			fail("UnocupiedTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -482,12 +493,12 @@ public class GameEngineTest extends TestCase {
 			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("Aduran", 250, true, false,
+			playerList.add(new Player("Aduran", 250, true, true,
 				new ArrayList<Spy>()));
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
 
-			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
 			gameEngine.updateClient(playerList, territoryList,
 				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
@@ -526,21 +537,21 @@ public class GameEngineTest extends TestCase {
 			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("Aduran", 250, true, false,
+			playerList.add(new Player("Aduran", 250, true, true,
 				new ArrayList<Spy>()));
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
 
-			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
 			gameEngine.updateClient(playerList, territoryList,
 				EventType.TurnChanged);
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
 			gameEngine.territoryUnderAttack(null, tDefensor, tropas);
-			fail("InvalidArgumentException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException atacante null");
+			fail("NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException atacante null");
 		} catch (final Exception e) {
 			System.out.println(e.toString());
 		}
@@ -569,21 +580,21 @@ public class GameEngineTest extends TestCase {
 			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("Aduran", 250, true, false,
+			playerList.add(new Player("Aduran", 250, true, true,
 				new ArrayList<Spy>()));
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
 
-			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
 			gameEngine.updateClient(playerList, territoryList,
 				EventType.TurnChanged);
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
 			gameEngine.territoryUnderAttack(tAtacante, null, tropas);
-			fail("InvalidArgumentException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException atacante null");
+			fail("NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException atacante null");
 		} catch (final Exception e) {
 			System.out.println(e.toString());
 		}
@@ -611,43 +622,70 @@ public class GameEngineTest extends TestCase {
 
 			gameEngine = gameMgr.getGameEngine();
 			final ArrayList<Player> playerList = new ArrayList<Player>();
-			playerList.add(new Player("Aduran", 250, true, false,
+			playerList.add(new Player("Aduran", 250, true, true,
 				new ArrayList<Spy>()));
 			final ArrayList<Spy> spyList = new ArrayList<Spy>();
 			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
 
-			playerList.add(new Player("JorgeCA", 200, true, true, spyList));
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
 			gameEngine.updateClient(playerList, territoryList,
 				EventType.TurnChanged);
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
 			gameEngine.territoryUnderAttack(tAtacante, tDefensor, null);
-			fail("InvalidArgumentException");
-		} catch (final InvalidTerritoryException e) {
-			System.out.println("InvalidTerritoryException atacante null");
+			fail("NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException atacante null");
 		} catch (final Exception e) {
 			System.out.println(e.toString());
 		}
 	}
 
-	//Terminado AcceptAttack
-
 	public void testAcceptAttack1() {
 		System.out.println("TestCase::testAcceptAttack1");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Aceptar el ataque
 			gameEngine.acceptAttack();
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNull(o);
+		} catch (final OutOfTurnException e) {
+			fail(e.toString());
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -656,13 +694,43 @@ public class GameEngineTest extends TestCase {
 	public void testAcceptAttack2() {
 		System.out.println("TestCase::testAcceptAttack2");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
+
 			//Aceptar el ataque
 			gameEngine.acceptAttack();
 			fail("Esperaba Exception");
+		} catch (final OutOfTurnException e) {
+			fail(e.toString());
 		} catch (final Exception e) {
 			System.out.println(e.toString() + " mCurrentAttack es null");
 		}
@@ -673,20 +741,47 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation1() {
 		System.out.println("TestCase::requestNegotiation1");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Pedir Negociacion
-			gameEngine.requestNegotiation(0, 10);
+			gameEngine.requestNegotiation(0, 20);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNull(o);
-		} catch (final InvalidArgumentException e) {
-			fail("InvalidArgumentException");
+		} catch (final OutOfTurnException e) {
+			fail(e.toString());
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -695,15 +790,45 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation2() {
 		System.out.println("TestCase::testRequestNegotiation2");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+
 			final Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
+
 			//Pedir Negociacion
-			gameEngine.requestNegotiation(0, 10);
-			fail("Esperaba Exception");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException");
+			gameEngine.requestNegotiation(0, 20);
+			fail("Esperaba NullPointerException");
+		} catch (final OutOfTurnException e) {
+			System.out.println("OutOfTurnException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
 			System.out.println(e.toString() + " mCurrentAttack es null");
 		}
@@ -712,19 +837,48 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation3() {
 		System.out.println("TestCase::requestNegotiation3");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Pedir Negociacion
 			gameEngine.requestNegotiation(-1, 0);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException dinero -1");
+			fail("Esperaba NegativeValueException");
+		} catch (final OutOfTurnException e) {
+			System.out.println("OutOfTurnException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException dinero -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -733,19 +887,48 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation4() {
 		System.out.println("TestCase::requestNegotiation4");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Pedir Negociacion
-			gameEngine.requestNegotiation(251, 0);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException dinero 250");
+			gameEngine.requestNegotiation(201, 0);
+			fail("Esperaba NotEnoughMoneyException");
+		} catch (final OutOfTurnException e) {
+			System.out.println("OutOfTurnException");
+		} catch (final NotEnoughMoneyException e) {
+			System.out.println("NotEnoughMoneyException dinero 201");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -754,19 +937,48 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation5() {
 		System.out.println("TestCase::requestNegotiation5");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Pedir Negociacion
-			gameEngine.requestNegotiation(250, -1);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados -1");
+			gameEngine.requestNegotiation(200, -1);
+			fail("Esperaba NegativeValueException");
+		} catch (final OutOfTurnException e) {
+			System.out.println("OutOfTurnException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException soldados -1");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -775,88 +987,1133 @@ public class GameEngineTest extends TestCase {
 	public void testRequestNegotiation6() {
 		System.out.println("TestCase::requestNegotiation6");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Pedir Negociacion
-			gameEngine.requestNegotiation(250, 11);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
-			System.out.println("InvalidArgumentException soldados 11");
+			gameEngine.requestNegotiation(200, 21);
+			fail("Esperaba NotEnoughUnitsException");
+		} catch (final OutOfTurnException e) {
+			System.out.println("OutOfTurnException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("NotEnoughUnitsException soldados 21");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
 	}
-
-	/*
-	 * public void testRequestNegotiation7() {
-	 * System.out.println("TestCase::requestNegotiation7"); try { gameEngine =
-	 * gameMgr.getGameEngine(); Object o =
-	 * PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-	 * assertNull(o); //Hacer el ataque gameEngine.attackTerritory(0, 2, 0, 0,
-	 * 1, 6); o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-	 * assertNotNull(o); //Pedir Negociacion gameEngine.requestNegotiation(250,
-	 * 0); o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-	 * assertNull(o); } catch (final InvalidArgumentException e) {
-	 * fail("InvalidArgumentException"); } catch (final Exception e) {
-	 * fail(e.toString()); } }
-	 */
 
 	public void testResolveAttack1() {
 		System.out.println("TestCase::testResolveAttack1");
 		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
 			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
 			Object o = PrivateAccessor.getPrivateField(gameEngine,
 				"mCurrentAttack");
 			assertNull(o);
-			//Hacer el ataque
-			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNotNull(o);
+
 			//Resolver el ataque
 			gameEngine.resolveAttack();
 			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
 			assertNull(o);
-		} catch (final InvalidArgumentException e) {
-			fail("InvalidArgumentException");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testResolveAttack2() {
+		System.out.println("TestCase::testResolveAttack2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+
+			//Resolver el ataque sin atacar primero
+			gameEngine.resolveAttack();
+			fail("Exception");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void testResolveNegotiation1() {
+		System.out.println("TestCase::testResolveNegotiation1");
+		try {
+			//Genero los parametros
+			final int[] p1 = {
+					1, 2, 3
+			};
+			final int[] p2 = {
+					1, 2, 3
+			};
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			final Territory tAtacante = new Territory(2,
+				Territory.Continent.Europe,
+				"Aduran", 10, p1, 2, 0, 1);
+			final Territory tDefensor = new Territory(0,
+				Territory.Continent.Europe,
+				"JorgeCA", 20, p2, 1, 6, 1);
+			territoryList.add(tAtacante);
+			territoryList.add(tDefensor);
+
+			final Arsenal tropas = new Arsenal(5, 4, 1, 0);
+			gameEngine = gameMgr.getGameEngine();
+			final ArrayList<Player> playerList = new ArrayList<Player>();
+			playerList.add(new Player("Aduran", 250, true, true,
+				new ArrayList<Spy>()));
+			final ArrayList<Spy> spyList = new ArrayList<Spy>();
+			spyList.add(new Spy(2, tAtacante.getIdTerritory()));
+
+			playerList.add(new Player("JorgeCA", 200, true, false, spyList));
+			gameEngine.updateClient(playerList, territoryList,
+				EventType.TurnChanged);
+			Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+			gameEngine.territoryUnderAttack(tAtacante, tDefensor, tropas);
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNotNull(o);
+
+			//Resolver la negociacion
+			gameEngine.resolveNegotiation();
+			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
+			assertNull(o);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testResolveNegotiation2() {
+		System.out.println("TestCase::testResolveNegotiation2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Object o = PrivateAccessor.getPrivateField(gameEngine,
+				"mCurrentAttack");
+			assertNull(o);
+
+			//Resolver la negociacion sin atacar primero
+			gameEngine.resolveNegotiation();
+			fail("Exception");
+		} catch (final Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador JorgeCA, dueño del territorio 0, ha
+	 * iniciado sesion y tiene dinero suficiente para comprar un soldado
+	 */
+	public void testBuyUnits1() {
+		System.out.println("TestCase::testBuyUnits1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getMapListModel().getTerritoryAt(0).getPlayer();
+			final int money = player.getMoney();
+			final int soldiers = gameEngine.getMapListModel().getTerritoryAt(0).getNumSoldiers();
+			gameEngine.buyUnits(0, 1, 0, 0, 0, 0);
+			assertTrue(player.getMoney() == money - UnitInfo.getSoldierCost());
+			assertTrue(gameEngine.getMapListModel().getTerritoryAt(0).getNumSoldiers() == soldiers + 1);
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
 	}
 
 	/*
-	 * public void testResolveAttack2() {
-	 * System.out.println("TestCase::testResolveAttack2"); try { gameEngine =
-	 * gameMgr.getGameEngine(); final Object o =
-	 * PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-	 * assertNull(o); //Resolver el ataque sin atacar primero
-	 * gameEngine.resolveAttack(); fail("Exception"); } catch (final Exception
-	 * e) { System.out.println(e.toString()); } }
+	 * Caso de prueba en el que el jugador no es quien ha iniciado sesion
+	 * (JorgeCA)
 	 */
-
-	public void testResolveNegotiation1() {
-		System.out.println("TestCase::testResolveNegotiation1");
+	public void testBuyUnits2() {
+		System.out.println("TestCase::testBuyUnits2");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			Object o = PrivateAccessor.getPrivateField(gameEngine,
-				"mCurrentAttack");
-			assertNull(o);
-			//Hacer el ataque
+			gameEngine.buyUnits(2, 1, 0, 0, 0, 0);
+			fail("Se esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidArgumentException: el territorio no es del user");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en que el jugador ha iniciado sesion, pero no tiene dinero
+	 * suficiente
+	 */
+	public void testBuyUnits3() {
+		System.out.println("TestCase::testBuyUnits3");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
+			gameEngine.buyUnits(0, 3, 0, 0, 0, 0);
+			fail("Se esperaba NotEnoughMoneyException");
+		} catch (final NotEnoughMoneyException e) {
+			System.out.println("NotEnoughMoneyException");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con soldados negativos */
+	public void testBuyUnits4() {
+		System.out.println("TestCase::testBuyUnits4");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(0, -1, 0, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException: Número de soldados negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con cañones negativos */
+	public void testBuyUnits5() {
+		System.out.println("TestCase::testBuyUnits5");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(0, 0, -1, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException: Número de cañones negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con misiles negativos */
+	public void testBuyUnits6() {
+		System.out.println("TestCase::testBuyUnits6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(0, 0, 0, -1, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException: Número de misiles negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con ICBMs negativos */
+	public void testBuyUnits7() {
+		System.out.println("TestCase::testBuyUnits7");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(0, 0, 0, 0, -1, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException: Número de ICBMs negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con antimisiles negativos */
+	public void testBuyUnits8() {
+		System.out.println("TestCase::testBuyUnits8");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(0, 0, 0, 0, 0, -1);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("NegativeValueException: Número de antimisiles negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio negativo */
+	public void testBuyUnits9() {
+		System.out.println("TestCase::testBuyUnits9");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(-1, 0, 0, 0, 0, 0);
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException: Número de territorio negativo");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio 42 */
+	public void testBuyUnits10() {
+		System.out.println("TestCase::testBuyUnits10");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(42, 0, 0, 0, 0, 0);
+			fail("Se esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException: Número de territorio 42");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio no asignado */
+	public void testBuyUnits11() {
+		System.out.println("TestCase::testBuyUnits11");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.buyUnits(12, 1, 0, 0, 0, 0);
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: Territorio sin ocupar");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio ataque en curso */
+	public void testBuyUnits12() {
+		System.out.println("TestCase::testBuyUnits12");
+		try {
+			gameEngine = gameMgr.getGameEngine();
 			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
-			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-			assertNotNull(o);
-			//Resolver la negociacion
-			//resolveNegotiation(money, soldiers);
-			gameEngine.resolveNegotiation(1, 1);
-			o = PrivateAccessor.getPrivateField(gameEngine, "mCurrentAttack");
-			assertNull(o);
-		} catch (final InvalidArgumentException e) {
-			fail("InvalidArgumentException");
+			gameEngine.buyUnits(12, 1, 0, 0, 0, 0);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException:ataque en curso ");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador JorgeCA, dueño del territorio 0, ha
+	 * iniciado sesion y mueve un número correcto de tropas (0) a un territorio
+	 * adyacente que le pertenece
+	 */
+	public void testMoveUnits1() {
+		System.out.println("TestCase::testMoveUnits1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final TerritoryDecorator srcTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				0);
+			final TerritoryDecorator dstTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				1);
+			final int prevDstSold = dstTerritory.getNumSoldiers();
+			final int prevDstMis = dstTerritory.getNumMissiles();
+			final int prevDstICBM = dstTerritory.getNumICBMs();
+			final int prevDstAntiM = dstTerritory.getNumAntiMissiles();
+			final int[] prevDstCan = dstTerritory.getNumCannons();
+			final int prevSrcSold = srcTerritory.getNumSoldiers();
+			final int prevSrcMis = srcTerritory.getNumMissiles();
+			final int prevSrcICBM = srcTerritory.getNumICBMs();
+			final int prevSrcAntiM = srcTerritory.getNumAntiMissiles();
+			final int[] prevSrcCan = srcTerritory.getNumCannons();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			assertTrue(srcTerritory.getNumSoldiers() == prevSrcSold
+					&& srcTerritory.getNumCannons()[0] == (prevSrcCan[0])
+					&& srcTerritory.getNumCannons()[1] == (prevSrcCan[1])
+					&& srcTerritory.getNumCannons()[2] == (prevSrcCan[2])
+					&& srcTerritory.getNumMissiles() == prevSrcMis
+					&& srcTerritory.getNumICBMs() == prevSrcICBM
+					&& srcTerritory.getNumAntiMissiles() == prevSrcAntiM);
+
+			assertTrue(srcTerritory.getNumSoldiers() == prevDstSold
+					&& srcTerritory.getNumCannons()[0] == (prevDstCan[0])
+					&& srcTerritory.getNumCannons()[1] == (prevDstCan[1])
+					&& srcTerritory.getNumCannons()[2] == (prevDstCan[2])
+					&& srcTerritory.getNumMissiles() == prevDstMis
+					&& srcTerritory.getNumICBMs() == prevDstICBM
+					&& srcTerritory.getNumAntiMissiles() == prevDstAntiM);
+
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador JorgeCA, dueño del territorio 0, ha
+	 * iniciado sesion y mueve un arma de cada tipo (excepto los cañones)a un
+	 * territorio adyacente que le pertenece
+	 */
+	public void testMoveUnits2() {
+		System.out.println("TestCase::testMoveUnits2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final TerritoryDecorator srcTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				0);
+			final TerritoryDecorator dstTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				1);
+			final int prevDstSold = dstTerritory.getNumSoldiers();
+			final int prevDstMis = dstTerritory.getNumMissiles();
+			final int prevDstICBM = dstTerritory.getNumICBMs();
+			final int prevDstAntiM = dstTerritory.getNumAntiMissiles();
+			final int[] prevDstCan = dstTerritory.getNumCannons();
+			final int prevSrcSold = srcTerritory.getNumSoldiers();
+			final int prevSrcMis = srcTerritory.getNumMissiles();
+			final int prevSrcICBM = srcTerritory.getNumICBMs();
+			final int prevSrcAntiM = srcTerritory.getNumAntiMissiles();
+			final int[] prevSrcCan = srcTerritory.getNumCannons();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 1, p2, 1, 1, 1);
+			assertTrue(srcTerritory.getNumSoldiers() == prevSrcSold - 1
+					&& srcTerritory.getNumCannons()[0] == (prevSrcCan[0] - 0)
+					&& srcTerritory.getNumCannons()[1] == (prevSrcCan[1] - 0)
+					&& srcTerritory.getNumCannons()[2] == (prevSrcCan[2] - 0)
+					&& srcTerritory.getNumMissiles() == prevSrcMis - 1
+					&& srcTerritory.getNumICBMs() == prevSrcICBM - 1
+					&& srcTerritory.getNumAntiMissiles() == prevSrcAntiM - 1);
+
+			assertTrue(dstTerritory.getNumSoldiers() == prevDstSold + 1
+					&& dstTerritory.getNumCannons()[0] == (prevDstCan[0])
+					&& dstTerritory.getNumCannons()[1] == (prevDstCan[1])
+					&& dstTerritory.getNumCannons()[2] == (prevDstCan[2])
+					&& dstTerritory.getNumMissiles() == prevDstMis + 1
+					&& dstTerritory.getNumICBMs() == prevDstICBM + 1
+					&& dstTerritory.getNumAntiMissiles() == prevDstAntiM + 1);
+
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador JorgeCA, dueño del territorio 0, ha
+	 * iniciado sesion y mueve un arma de cada tipo a un territorio adyacente
+	 * que le pertenece
+	 */
+	public void testMoveUnits3() {
+		System.out.println("TestCase::testMoveUnits3");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final TerritoryDecorator srcTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				0);
+			final TerritoryDecorator dstTerritory = gameEngine.getMapListModel().getTerritoryAt(
+				1);
+			final int prevDstSold = dstTerritory.getNumSoldiers();
+			final int prevDstMis = dstTerritory.getNumMissiles();
+			final int prevDstICBM = dstTerritory.getNumICBMs();
+			final int prevDstAntiM = dstTerritory.getNumAntiMissiles();
+			final int[] prevDstCan = dstTerritory.getNumCannons();
+			final int prevSrcSold = srcTerritory.getNumSoldiers();
+			final int prevSrcMis = srcTerritory.getNumMissiles();
+			final int prevSrcICBM = srcTerritory.getNumICBMs();
+			final int prevSrcAntiM = srcTerritory.getNumAntiMissiles();
+			final int[] prevSrcCan = srcTerritory.getNumCannons();
+			final int[] p2 = {
+					1, 1, 1
+			};
+			gameEngine.moveUnits(0, 1, 1, p2, 1, 1, 1);
+			assertTrue(srcTerritory.getNumSoldiers() == prevSrcSold - 1
+					&& srcTerritory.getNumCannons()[0] == (prevSrcCan[0] - 1)
+					&& srcTerritory.getNumCannons()[1] == (prevSrcCan[1] - 1)
+					&& srcTerritory.getNumCannons()[2] == (prevSrcCan[2] - 1)
+					&& srcTerritory.getNumMissiles() == prevSrcMis - 1
+					&& srcTerritory.getNumICBMs() == prevSrcICBM - 1
+					&& srcTerritory.getNumAntiMissiles() == prevSrcAntiM - 1);
+
+			assertTrue(dstTerritory.getNumSoldiers() == prevDstSold + 1
+					&& dstTerritory.getNumCannons()[0] == (prevDstCan[0] + 1)
+					&& dstTerritory.getNumCannons()[1] == (prevDstCan[1] + 1)
+					&& dstTerritory.getNumCannons()[2] == (prevDstCan[2] + 1)
+					&& dstTerritory.getNumMissiles() == prevDstMis + 1
+					&& dstTerritory.getNumICBMs() == prevDstICBM + 1
+					&& dstTerritory.getNumAntiMissiles() == prevDstAntiM + 1);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad de soldados superior a la que tiene
+	 */
+	public void testMoveUnits4() {
+		System.out.println("TestCase::testMoveUnits4");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 100, p2, 0, 0, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados soldados");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad de cañones de un uso superior a la que tiene
+	 */
+	public void testMoveUnits5() {
+		System.out.println("TestCase::testMoveUnits5");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					110, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados cañones de un uso");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad de cañones de dos uso superior a la que tiene
+	 */
+	public void testMoveUnits6() {
+		System.out.println("TestCase::testMoveUnits6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 110, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados cañones de dos usos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad de cañones de tres uso superior a la que tiene
+	 */
+	public void testMoveUnits7() {
+		System.out.println("TestCase::testMoveUnits7");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 110
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados cañones de tres usos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad misiles superior a la que tiene
+	 */
+	public void testMoveUnits8() {
+		System.out.println("TestCase::testMoveUnits8");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 110, 0, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados misiles");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad ICBMs superior a la que tiene
+	 */
+	public void testMoveUnits9() {
+		System.out.println("TestCase::testMoveUnits9");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 110, 0);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados ICBMs");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en el que el jugador mueve a un territorio adyacente que
+	 * le pertenece una cantidad antimisiles superior a la que tiene
+	 */
+	public void testMoveUnits10() {
+		System.out.println("TestCase::testMoveUnits10");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 110);
+			fail("Se esperaba NotEnoughUnitsException");
+		} catch (final NotEnoughUnitsException e) {
+			System.out.println("Demasiados antimisiles");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba donde el usuario mueve unidades a un territorio que le
+	 * pertenece pero no es adyacente
+	 */
+	public void testMoveUnits11() {
+		System.out.println("TestCase::testMoveUnits11");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 7, 0, p2, 0, 0, 0);
+			fail("Se esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("Territorio no adyacente");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con origen negativo */
+	public void testMoveUnits12() {
+		System.out.println("TestCase::testMoveUnits12");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(-1, 0, 0, p2, 0, 0, 0);
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("Origen -1");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con destino negativo */
+	public void testMoveUnits13() {
+		System.out.println("TestCase::testMoveUnits13");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, -1, 0, p2, 0, 0, 0);
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("Destino -1");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio destino no perteneciente al jugador */
+	public void testMoveUnits14() {
+		System.out.println("TestCase::testMoveUnits14");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 2, 0, p2, 0, 0, 0);
+			fail("Se esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("Territorio no perteneciente al jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de soldadoes */
+	public void testMoveUnits15() {
+		System.out.println("TestCase::testMoveUnits15");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, -1, p2, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Soldados negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de cañones de un uso */
+	public void testMoveUnits16() {
+		System.out.println("TestCase::testMoveUnits16");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					-1, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Cañones de un uso negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de cañones de dos usos */
+	public void testMoveUnits17() {
+		System.out.println("TestCase::testMoveUnits17");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, -1, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Cañones de dos usos negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de cañones de tres usos */
+	public void testMoveUnits18() {
+		System.out.println("TestCase::testMoveUnits18");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, -1
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Cañones de tres usos negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de misiles */
+	public void testMoveUnits19() {
+		System.out.println("TestCase::testMoveUnits19");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, -1, 0, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Misiles negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de ICBMs */
+	public void testMoveUnits20() {
+		System.out.println("TestCase::testMoveUnits20");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, -1, 0);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("ICBMs negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que se mueve un número negativo de antimisiles */
+	public void testMoveUnits21() {
+		System.out.println("TestCase::testMoveUnits21");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 1, 0, p2, 0, 0, -1);
+			fail("Se esperaba NegativeValueException");
+		} catch (final NegativeValueException e) {
+			System.out.println("Antimisiles negativos");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con origen 42 */
+	public void testMoveUnits22() {
+		System.out.println("TestCase::testMoveUnits22");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(42, 1, 0, p2, 0, 0, 0);
+			fail("Se esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("Origen incorrecto 42");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con destino 42 */
+	public void testMoveUnits23() {
+		System.out.println("TestCase::testMoveUnits23");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 42, 0, p2, 0, 0, 0);
+			fail("Se esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("Destino incorrecto 42");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con todo correcto y ataque pendiente */
+	public void testMoveUnits24() {
+		System.out.println("TestCase::testMoveUnits24");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.moveUnits(0, 42, 0, p2, 0, 0, 0);
+			fail("Se esperaba PendingAttackException");
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio origen no está asignado */
+	public void testMoveUnits25() {
+		System.out.println("TestCase::testMoveUnits25");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(12, 2, 0, p2, 0, 0, 0);
+			fail("Se esperaba UnocupiedTerritoryException");
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: el territorio no está asignado");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio destino no está asignado */
+	public void testMoveUnits26() {
+		System.out.println("TestCase::testMoveUnits26");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(0, 12, 0, p2, 0, 0, 0);
+			fail("Se esperaba UnocupiedTerritoryException");
+		} catch (final UnocupiedTerritoryException e) {
+			System.out.println("UnocupiedTerritoryException: el destino no está asignado");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba en que el territorio origen pertenece a otro jugador */
+	public void testMoveUnits27() {
+		System.out.println("TestCase::testMoveUnits27");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int[] p2 = {
+					0, 0, 0
+			};
+			gameEngine.moveUnits(2, 0, 0, p2, 0, 0, 0);
+			fail("Se esperaba InvalidTerritoryException");
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("InvalidTerritoryException: el origen no es del jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en que se tiene dinero y se envía un espía a un país
+	 * propio
+	 */
+	public void testDeploySpy1() {
+		System.out.println("testDeploySpy1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
+			gameEngine.deploySpy(0);
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("El territorio es del propio jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/*
+	 * Caso de prueba en que se tiene dinero y se envía un espía a un país no
+	 * propio
+	 */
+	public void testDeploySpy2() {
+		System.out.println("testDeploySpy2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final int numSpies = gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
+			final int money = gameEngine.getPlayerListModel().getSelfPlayer().getMoney();
+			gameEngine.deploySpy(2);
+			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getMoney() == (money - UnitInfo.getSpyCost()));
+			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size() == numSpies + 1);
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con todo correcto y territorio negativo */
+	public void testDeploySpy3() {
+		System.out.println("testDeploySpy3");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
+			gameEngine.deploySpy(-1);
+			fail("Se esperaba ArrayIndexOutOfBoundsException");
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("Destino incorrecto -1");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con territorio 42 */
+	public void testDeploySpy4() {
+		System.out.println("testDeploySpy4");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
+				UnitInfo.getSpyCost() + 100);
+			gameEngine.deploySpy(42);
+			fail("Se esperaba IndexOutOfBoundsException");
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("Destino incorrecto 42");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con dinero insuficiente */
+	public void testDeploySpy5() {
+		System.out.println("testDeploySpy5");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
+			gameEngine.deploySpy(2);
+		} catch (final NotEnoughMoneyException e) {
+			System.out.println("El jugador no tenía dinero suficiente");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso de prueba con ataque pendiente */
+	public void testDeploySpy6() {
+		System.out.println("testDeploySpy6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.deploySpy(2);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException: Hay un ataque en curso");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso correcto */
+	public void testBuyTerritory1() {
+		System.out.println("testBuyTerritory1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(
+					10000);
+			gameEngine.buyTerritory(6);
+			assertTrue(gameEngine.getMapListModel().getTerritoryAt(6).getPlayer().equals(
+				player));
+			assertTrue(player.getMoney() == 10000 - gameEngine.getMapListModel().getTerritoryAt(
+				6).getPrice());
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* El país no es adyacente a ninguno del jugador */
+	public void testBuyTerritory2() {
+		System.out.println("testBuyTerritory2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(22);
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("El país no es adyacente a ninguno del jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory3() {
+		System.out.println("testBuyTerritory3");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(2);
+		} catch (final OcupiedTerritoryException e) {
+			System.out.println("El territorio ya tiene dueño");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory4() {
+		System.out.println("testBuyTerritory4");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(0);
+			gameEngine.buyTerritory(6);
+		} catch (final NotEnoughMoneyException e) {
+			System.out.println("No tiene dinero para comprar el territorio");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory5() {
+		System.out.println("testBuyTerritory5");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.buyTerritory(6);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException: Hay un ataque en curso");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory6() {
+		System.out.println("testBuyTerritory6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(-1);
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException: Territorio -1");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory7() {
+		System.out.println("testBuyTerritory7");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(42);
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException: Territorio 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -882,16 +2139,6 @@ public class GameEngineTest extends TestCase {
 	}
 
 	private class TestUnterAttack implements GameEventListener {
-
-		boolean territoryUnderAttackCalled = false;
-
-		public void territoryUnderAttack(final TerritoryDecorator src, final TerritoryDecorator dst, final Arsenal arsenal) {
-			territoryUnderAttackCalled = true;
-		}
-
-		boolean territoryUnderAttackWasCalled() {
-			return territoryUnderAttackCalled;
-		}
 
 		@Override
 		public void attackEvent(TerritoryDecorator src, TerritoryDecorator dst) {
@@ -925,6 +2172,18 @@ public class GameEngineTest extends TestCase {
 
 		@Override
 		public void winnerEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void turnChangedEvent(Player p) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void territoryUnderAttack(TerritoryDecorator src, TerritoryDecorator dst, Arsenal arsenal) {
 			// TODO Auto-generated method stub
 
 		}

@@ -13,8 +13,10 @@ import org.junit.Before;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.Session;
 import com.umbrella.worldconq.domain.UserManager;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.EmptyStringException;
+import com.umbrella.worldconq.exceptions.MalformedEmailException;
 
+import exceptions.UserAlreadyExistsException;
 import exceptions.WrongLoginException;
 
 public class UserManagerTest extends TestCase {
@@ -57,10 +59,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"", "", "");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -70,10 +73,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				null, null, null);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
@@ -84,7 +88,10 @@ public class UserManagerTest extends TestCase {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "jorge.colao@gmail.com");
 			fail("Esperaba UserAlreadyExistsException");
+		} catch (final UserAlreadyExistsException e) {
+			System.out.println("UserAlreadyExistsException");
 		} catch (final Exception e) {
+			fail(e.toString() + "\n Esperaba UserAlreadyExistsException");
 		}
 	}
 
@@ -94,10 +101,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "", "jorge.colao@gmail.com");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -107,10 +115,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", null, "jorge.colao@gmail.com");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
@@ -120,10 +129,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -133,10 +143,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", null);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
@@ -146,10 +157,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba MalformedEmailException");
+		} catch (final MalformedEmailException e) {
+			System.out.println("MalformedEmailException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba MalformedEmailException");
 		}
 	}
 
@@ -159,10 +171,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"JorgeCA", "jorge", "jorge@");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba MalformedEmailException");
+		} catch (final MalformedEmailException e) {
+			System.out.println("MalformedEmailException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba MalformedEmailException");
 		}
 	}
 
@@ -172,10 +185,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge@gmail");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba MalformedEmailException");
+		} catch (final MalformedEmailException e) {
+			System.out.println("MalformedEmailException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba MalformedEmailException");
 		}
 	}
 
@@ -185,10 +199,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).registerUser(
 				"Jorge", "jorge", "jorge@gmail.");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba MalformedEmailException");
+		} catch (final MalformedEmailException e) {
+			System.out.println("MalformedEmailException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba MalformedEmailException");
 		}
 	}
 
@@ -223,10 +238,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).createSession("",
 				"");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -236,10 +252,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).createSession(
 				"Aduran", "");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -249,10 +266,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).createSession("",
 				"angel");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba EmptyStringException");
+		} catch (final EmptyStringException e) {
+			System.out.println("EmptyStringException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba EmptyStringException");
 		}
 	}
 
@@ -275,10 +293,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).createSession(null,
 				"angel");
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
@@ -289,10 +308,11 @@ public class UserManagerTest extends TestCase {
 			new UserManager(srvAdapter).createSession(
 				"Aduran",
 				null);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 
@@ -302,10 +322,11 @@ public class UserManagerTest extends TestCase {
 		try {
 			new UserManager(srvAdapter).createSession(null,
 				null);
-			fail("Esperaba InvalidArgumentException");
-		} catch (final InvalidArgumentException e) {
+			fail("Esperaba NullPointerException");
+		} catch (final NullPointerException e) {
+			System.out.println("NullPointerException");
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString() + "\n Esperaba NullPointerException");
 		}
 	}
 

@@ -149,13 +149,15 @@ public class DateDialog extends JDialog {
 			correct = true;
 			errorD.setVisible(false);
 			final Calendar c2 = Calendar.getInstance();
+			final Calendar time_2hago = Calendar.getInstance();
+			time_2hago.add(Calendar.HOUR_OF_DAY, -2);
 
 			c2.setTime(((SpinnerDateModel) hourMin.getModel()).getDate());
 			c.setTime(jdFecha.getDate());
 			c.set(Calendar.HOUR_OF_DAY, c2.get(Calendar.HOUR_OF_DAY));
 			c.set(Calendar.MINUTE, c2.get(Calendar.MINUTE));
 
-			if (c.before(Calendar.getInstance())) {
+			if (c.before(time_2hago)) {
 				correct = false;
 				errorD.setVisible(true);
 			}

@@ -40,7 +40,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPriceSoldier");
 
 		try {
-			final int price_soldier = UnitInfo.getPriceSoldier();
+			final int price_soldier = UnitInfo.getSoldierCost();
 			assertTrue(price_soldier == 100);
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -51,7 +51,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPriceCannon");
 
 		try {
-			final int price_Cannon = UnitInfo.getPriceCannon();
+			final int price_Cannon = UnitInfo.getCannonCost();
 			assertTrue(price_Cannon == 300);
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -62,7 +62,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPriceMissil");
 
 		try {
-			final int price_Missil = UnitInfo.getPriceMissil();
+			final int price_Missil = UnitInfo.getMissileCost();
 			assertTrue(price_Missil == 500);
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -73,7 +73,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPricePriceICBM");
 
 		try {
-			final int price_ICBM = UnitInfo.getPriceICBM();
+			final int price_ICBM = UnitInfo.getICBMCost();
 			assertTrue(price_ICBM == 800);
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -84,7 +84,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPriceAntiMissile");
 
 		try {
-			final int price_AntiMissile = UnitInfo.getPriceAntiMissile();
+			final int price_AntiMissile = UnitInfo.getAntiMissileCost();
 			assertTrue(price_AntiMissile == 400);
 		} catch (final Exception e) {
 			fail(e.toString());
@@ -95,7 +95,7 @@ public class UnitInfoTest extends TestCase {
 		System.out.println("TestCase::testGetPricSpy");
 
 		try {
-			final int price_Spy = UnitInfo.getPricSpy();
+			final int price_Spy = UnitInfo.getSpyCost();
 			assertTrue(price_Spy == 600);
 		} catch (final Exception e) {
 			fail(e.toString());

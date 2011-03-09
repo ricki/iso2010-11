@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -20,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -28,14 +30,26 @@ import com.umbrella.worldconq.WorldConqApp;
 import com.umbrella.worldconq.domain.GameEngine;
 import com.umbrella.worldconq.domain.GameManager;
 import com.umbrella.worldconq.domain.TerritoryDecorator;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
+import com.umbrella.worldconq.exceptions.NotEnoughUnitsException;
+import com.umbrella.worldconq.exceptions.OcupiedTerritoryException;
+import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
+import com.umbrella.worldconq.exceptions.UnocupiedTerritoryException;
 
 import domain.Arsenal;
 import domain.Player;
+import exceptions.AlreadyInGameException;
+import exceptions.FullGameException;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTerritoryException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
 
-public class MainWindow extends JFrame implements GameEventListener {
+public class MainWindow extends JFrame implements GameEventListener,
+		WindowListener {
 
 	private static final long serialVersionUID = -5107198177153703399L;
 
@@ -62,9 +76,11 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JButton logoutButton; //Botón para quitar y salir del juego (cerrar sesión)
 	private JButton connectGameButton; //Botón para conectarse a una partida
 	private JButton joinGameButton; //Botón para unirse a una partida
+	private JButton endTurnButton; //botón para ceder el turno
 	private JButton updateListButton;
 	private JButton createGameButton;
 	private MapView mv; //MapView
+	private TerritoryInfoView tinfov; //MapView
 
 	public MainWindow(GameManager gameMgr, WorldConqApp app) {
 		super();
@@ -79,17 +95,33 @@ public class MainWindow extends JFrame implements GameEventListener {
 		this.setResizable(false);
 		this.setTitle("La Conquista del Mundo");
 		this.setSize(800, 500);
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.addWindowListener(this);
 		this.setupListGUI();
 
 		try {
 			gameMgr.updateGameList();
-		} catch (final Exception e) {
+		} catch (final RemoteException e) {
+			this.showErrorAndExit(e);
+		} catch (final InvalidSessionException e) {
 			this.showErrorAndExit(e);
 		}
 	}
 
 	public void setupListGUI() {
+		if (mPlayToolBar != null) {
+			mPlayToolBar.setVisible(false);
+			mPlayToolBar = null;
+		}
+		if (mGamePanel != null) {
+			mGamePanel.setVisible(false);
+			mGamePanel = null;
+		}
+		if (mGameInfoPanel != null) {
+			mGameInfoPanel.setVisible(false);
+			mGameInfoPanel = null;
+		}
+
+		this.setTitle("La Conquista del Mundo");
 		this.getContentPane().add(this.getGameListToolBar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.getGameListPanel(), BorderLayout.CENTER);
 		mGameListToolBar.setVisible(true);
@@ -156,11 +188,10 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mCurrentList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			mOpenList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-			//añadido para adherirle un observador
+			final GameListObserver listObserver = new GameListObserver(this);
 			mCurrentList.getSelectionModel().addListSelectionListener(
-				new GameListObserver(this, "mCurrentList"));
-			mOpenList.getSelectionModel().addListSelectionListener(
-				new GameListObserver(this, "mOpenList"));
+				listObserver);
+			mOpenList.getSelectionModel().addListSelectionListener(listObserver);
 
 			mGameListPanel.add(new JLabel("Mis partidas actuales"));
 			mGameListPanel.add(currentListPanel);
@@ -175,11 +206,20 @@ public class MainWindow extends JFrame implements GameEventListener {
 		this.getGameListPanel().setVisible(false);
 		this.getGameListToolBar().setVisible(false);
 		// mostramos el mapa y lo demas
+		final String winTitle = String.format(
+			"La Conquista del Mundo - %s(%s)",
+			gameMgr.getGameEngine().getName(),
+			gameMgr.getGameEngine().getId().toString());
+		this.setTitle(winTitle);
 		mv = new MapView(
+			gameMgr.getGameEngine().getMapListModel());
+		tinfov = new TerritoryInfoView(
 			gameMgr.getGameEngine().getMapListModel());
 		//Añado un observador al modelo de lista de selección del mapView
 		mv.getListSelectionModel().addListSelectionListener(
 			new MapViewObserver(this, mv));
+		//tinfov.getListSelectionModel().addListSelectionListener(
+		//	new TerritoryInfoViewObserver(this, tinfov));
 		//this.getPlayToolbar();
 		this.getContentPane().add(this.getPlayToolbar(), BorderLayout.NORTH);
 		this.getContentPane().add(this.createGamePanel(), BorderLayout.CENTER);
@@ -188,7 +228,6 @@ public class MainWindow extends JFrame implements GameEventListener {
 		mGamePanel.setVisible(true);
 		this.pack();
 		this.setLocationRelativeTo(null);
-
 	}
 
 	private JPanel createGamePanel() {
@@ -199,7 +238,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 		//añadimos el panel para la informacion de la partida
 		this.setActionGame(new JTextArea());
 		final JScrollPane ActionGameScroll = new JScrollPane(
-				this.getActionGame());
+			this.getActionGame());
 		ActionGameScroll.setPreferredSize(new Dimension(300, 125));
 		mGamePanel.add(ActionGameScroll);
 		return mGamePanel;
@@ -208,14 +247,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 	private JPanel createGameInfoPanel() {
 		mGameInfoPanel = new JPanel();
 		mGameInfoPanel.setLayout(new BoxLayout(mGameInfoPanel,
-				BoxLayout.Y_AXIS));
+			BoxLayout.Y_AXIS));
 		mv.setInfoPlayer(new JEditorPane());
+		tinfov.setInfoPlayer(new JEditorPane());
 		final JScrollPane listPlayerSroll = new JScrollPane(new PlayerView(
-				gameMgr.getGameEngine().getPlayerListModel()));
+			gameMgr.getGameEngine().getPlayerListModel()));
 		listPlayerSroll.setPreferredSize(new Dimension(150, 300));
 
-		final JScrollPane listInfoSroll = new JScrollPane(
-				mv.getInfoPlayer());
+		final JScrollPane listInfoSroll = new JScrollPane(mv.getInfoPlayer());
+		//final JScrollPane listInfoSroll = new JScrollPane(tinfov.getInfoPlayer());
 		listInfoSroll.setPreferredSize(new Dimension(150, 300));
 		mGameInfoPanel.add(listPlayerSroll);
 		mGameInfoPanel.add(listInfoSroll);
@@ -270,6 +310,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 			buyTerritoryButton.addMouseListener(new BuyTerritoryMouseAdapter(
 				this));
 			exitGameButton.addMouseListener(new ExitGameMouseAdapter(this));
+			//Botón para pasar el turno
+			endTurnButton = new JButton("Pasar turno");
+			endTurnButton.addMouseListener(new EndTurnMouseAdapter(this));
 
 			//Deshabilito los botones
 			attackButton.setEnabled(false);
@@ -287,12 +330,13 @@ public class MainWindow extends JFrame implements GameEventListener {
 			mPlayToolBar.add(buyUnitsButton);
 			mPlayToolBar.add(buyTerritoryButton);
 			mPlayToolBar.add(exitGameButton);
+			mPlayToolBar.add(endTurnButton);
 		}
 		return mPlayToolBar;
 	}
 
 	private void showErrorAndExit(Exception e) {
-		JOptionPane.showMessageDialog(MainWindow.this, e,
+		JOptionPane.showMessageDialog(MainWindow.this, e.toString(),
 			"Error inesperado", JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace();
 		try {
@@ -300,6 +344,52 @@ public class MainWindow extends JFrame implements GameEventListener {
 		} catch (final Exception e1) {
 		}
 		app.setStartupMode();
+	}
+
+	private void showErrorAndExitGame(Exception e) {
+		JOptionPane.showMessageDialog(MainWindow.this, e.toString(),
+			"Error en la partida", JOptionPane.ERROR_MESSAGE);
+		e.printStackTrace();
+		try {
+			gameMgr.disconnectFromGame();
+		} catch (final Exception e1) {
+		}
+		this.setupListGUI();
+	}
+
+	//Clase privada para gestionar el evento de pasar el turno
+	private class EndTurnMouseAdapter extends MouseAdapter {
+		MainWindow win;
+
+		public EndTurnMouseAdapter(MainWindow win) {
+			this.win = win;
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent evt) {
+			try {
+				win.getGameManager().getGameEngine().endTurn();
+			} catch (final RemoteException e) {
+				MainWindow.this.showErrorAndExit(e);
+			} catch (final InvalidSessionException e) {
+				MainWindow.this.showErrorAndExit(e);
+			} catch (final OutOfTurnException e) {
+				JOptionPane.showMessageDialog(win,
+					"Accion realizada fuera de turno.",
+					"Fuera de turno",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final PendingAttackException e) {
+				JOptionPane.showMessageDialog(win,
+					"Hay otro ataque en curso.",
+					"Ataques simultáneos",
+					JOptionPane.WARNING_MESSAGE);
+			} catch (final InvalidTimeException e) {
+				JOptionPane.showMessageDialog(MainWindow.this,
+					"No es buen momento para jugar. Tómate un café.",
+					"Tiempo no válido",
+					JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}
 
 	private class CreateGameMouseAdapter extends MouseAdapter {
@@ -317,8 +407,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 						dlg.getDescription(), dlg.getCalendarList(),
 						dlg.getTurnTime(),
 						dlg.getDefTime(), dlg.getNegTime());
-				} catch (final Exception e) {
+				} catch (final RemoteException e) {
 					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidGameInfoException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"Algún parámetro de partida es inválido",
+						"GameInfo inválido",
+						JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			f.dispose();
@@ -330,7 +427,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 		public void mouseClicked(MouseEvent evt) {
 			try {
 				gameMgr.updateGameList();
-			} catch (final Exception e) {
+			} catch (final RemoteException e) {
+				MainWindow.this.showErrorAndExit(e);
+			} catch (final InvalidSessionException e) {
 				MainWindow.this.showErrorAndExit(e);
 			}
 		}
@@ -349,8 +448,25 @@ public class MainWindow extends JFrame implements GameEventListener {
 				try {
 					gameMgr.joinGame(gameSelected);
 					gameMgr.updateGameList();
-				} catch (final Exception e) {
+				} catch (final RemoteException e) {
 					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final FullGameException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"La partida a la que intentas unirte ya está llena.",
+						"Partida llena",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final GameNotFoundException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"No se ha podido localizar la partida seleccionada.",
+						"Partida no encontrada",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final AlreadyInGameException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"Ya estás unido a la partida seleccionada.",
+						"Jugador en la partida",
+						JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -374,8 +490,36 @@ public class MainWindow extends JFrame implements GameEventListener {
 				try {
 					gameMgr.connectToGame(gameSelected, win);
 					MainWindow.this.setupGameGUI();
-				} catch (final Exception e) {
+				} catch (final RemoteException e) {
 					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"No se ha podido localizar la partida seleccionada.",
+						"Partida no encontrada",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final InvalidTimeException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"No es buen momento para jugar. Tómate un café.",
+						"Tiempo no válido",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final NotCurrentPlayerGameException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"No estás unido a la partida seleccionada.",
+						"Jugador no en la partida",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final AlreadyInGameException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						"Ya estás conectado a la partida seleccionada.",
+						"Jugador en la partida",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final IOException e) {
+					JOptionPane.showMessageDialog(MainWindow.this,
+						e.toString(),
+						"Problema en MapView",
+						JOptionPane.WARNING_MESSAGE);
+					MainWindow.this.setupListGUI();
 				}
 			}
 		}
@@ -397,7 +541,7 @@ public class MainWindow extends JFrame implements GameEventListener {
 				final int confirm = JOptionPane.showConfirmDialog(
 					mGameListPanel,
 					"¿Está seguro de que desea salir?",
-					"confirmación", JOptionPane.YES_NO_OPTION);
+					"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (confirm == 0) {
 					win.getGameManager().getUserManager().closeSession();
 					win.dispose();
@@ -459,18 +603,40 @@ public class MainWindow extends JFrame implements GameEventListener {
 							lad.getCannonCount(),
 							lad.getMissileCount(),
 							lad.getICBMCount());
-					} catch (final InvalidArgumentException e) {
-						JOptionPane.showMessageDialog(win,
-							"Algún parámetro es inválido",
-							"Parámetro erroneo",
-							JOptionPane.WARNING_MESSAGE);
+					} catch (final RemoteException e) {
+						MainWindow.this.showErrorAndExit(e);
+					} catch (final InvalidSessionException e) {
+						MainWindow.this.showErrorAndExit(e);
+					} catch (final GameNotFoundException e) {
+						MainWindow.this.showErrorAndExitGame(e);
+					} catch (final InvalidTimeException e) {
+						MainWindow.this.showErrorAndExitGame(e);
 					} catch (final PendingAttackException e) {
 						JOptionPane.showMessageDialog(win,
-							"Hay otro ataque en curso",
-							"Dos ataques simultáneos",
+							"Hay otro ataque en curso.",
+							"Ataques simultáneos",
 							JOptionPane.WARNING_MESSAGE);
-					} catch (final Exception e) {
-						MainWindow.this.showErrorAndExit(e);
+					} catch (final InvalidTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no es válido.",
+							"Territorio no válido",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion realizada fuera de turno.",
+							"Fuera de turno",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final UnocupiedTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no está ocupado.",
+							"Territorio no ocupado",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final NotEnoughUnitsException e) {
+						JOptionPane.showMessageDialog(
+							win,
+							"No tienes unidades suficientes para la acción seleccionada.",
+							"Unidades insuficientes",
+							JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}
@@ -520,16 +686,41 @@ public class MainWindow extends JFrame implements GameEventListener {
 							selectedT, dstT.getId(), mud.getSoldierCount(),
 							mud.getCannonCount(), mud.getMissileCount(),
 							mud.getICBMCount(), mud.getAntiMissileCount());
-					} catch (final InvalidArgumentException e) {
-						JOptionPane.showMessageDialog(win,
-							"Algún parámetro es inválido",
-							"Parámetro erroneo",
-							JOptionPane.WARNING_MESSAGE);
-					} catch (final Exception e) {
+					} catch (final RemoteException e) {
 						MainWindow.this.showErrorAndExit(e);
+					} catch (final InvalidSessionException e) {
+						MainWindow.this.showErrorAndExit(e);
+					} catch (final GameNotFoundException e) {
+						MainWindow.this.showErrorAndExitGame(e);
+					} catch (final NotCurrentPlayerGameException e) {
+						MainWindow.this.showErrorAndExitGame(e);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion realizada fuera de turno.",
+							"Fuera de turno",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final UnocupiedTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no está ocupado.",
+							"Territorio no ocupado",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final NotEnoughUnitsException e) {
+						JOptionPane.showMessageDialog(
+							win,
+							"No tienes unidades suficientes para la acción seleccionada.",
+							"Unidades insuficientes",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final InvalidTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no es válido.",
+							"Territorio no válido",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final PendingAttackException e) {
+						JOptionPane.showMessageDialog(win,
+							"Hay otro ataque en curso.",
+							"Ataques simultáneos",
+							JOptionPane.WARNING_MESSAGE);
 					}
-				} else {
-					mud.setVisible(false);
 				}
 			}
 		}
@@ -546,22 +737,39 @@ public class MainWindow extends JFrame implements GameEventListener {
 		@Override
 		public void mouseClicked(MouseEvent evt) {
 			final int selT = win.getMapView().getSelectedRow();
-			if (win.sendSpyButton.isEnabled()) {
+			if (win.sendSpyButton.isEnabled() && selT >= 0) {
 				System.out.println("Enviando un espía...");
 				try {
 					win.getGameManager().getGameEngine().deploySpy(selT);
-				} catch (final NotEnoughMoneyException e) {
+				} catch (final RemoteException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final NotCurrentPlayerGameException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final OutOfTurnException e) {
 					JOptionPane.showMessageDialog(win,
-						"No dispone de suficiente dinero",
+						"Accion realizada fuera de turno.",
+						"Fuera de turno",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final PendingAttackException e) {
+					JOptionPane.showMessageDialog(win,
+						"Hay otro ataque en curso.",
+						"Ataques simultáneos",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final NotEnoughMoneyException e) {
+					JOptionPane.showMessageDialog(
+						win,
+						"No tienes dinero suficiente para la acción seleccionada.",
 						"Dinero insuficiente",
 						JOptionPane.WARNING_MESSAGE);
-				} catch (final InvalidArgumentException e) {
+				} catch (final InvalidTerritoryException e) {
 					JOptionPane.showMessageDialog(win,
-						"Algún parámetro es inválido",
-						"Parámetro erroneo",
+						"El territorio seleccionado no es válido.",
+						"Territorio no válido",
 						JOptionPane.WARNING_MESSAGE);
-				} catch (final Exception e) {
-					MainWindow.this.showErrorAndExit(e);
 				}
 			}
 		}
@@ -581,10 +789,9 @@ public class MainWindow extends JFrame implements GameEventListener {
 			ArrayList<TerritoryDecorator> adjList;
 			TerritoryDecorator srcT;
 			final ArrayList<String> adjListNames = new ArrayList<String>();
-			int selectedT;
-			if (win.buyUnitsButton.isEnabled()) {
+			final int selectedT = win.getMapView().getSelectedRow();
+			if (win.buyUnitsButton.isEnabled() && selectedT >= 0) {
 				System.out.println("Comprando refuerzos...");
-				selectedT = win.getMapView().getSelectedRow();
 				srcT = win.getGameManager().getGameEngine().getMapListModel().getTerritoryAt(
 					selectedT);
 				adjList = srcT.getAdjacentTerritories();
@@ -606,13 +813,40 @@ public class MainWindow extends JFrame implements GameEventListener {
 							selectedT, bud.getSoldierCount(),
 							bud.getCannonCount(), bud.getMissileCount(),
 							bud.getICBMCount(), bud.getAntiMissileCount());
-					} catch (final InvalidArgumentException e) {
-						JOptionPane.showMessageDialog(win,
-							"Algún parámetro es inválido",
-							"Parámetro erroneo",
-							JOptionPane.WARNING_MESSAGE);
-					} catch (final Exception e) {
+					} catch (final RemoteException e) {
 						MainWindow.this.showErrorAndExit(e);
+					} catch (final InvalidSessionException e) {
+						MainWindow.this.showErrorAndExit(e);
+					} catch (final GameNotFoundException e) {
+						MainWindow.this.showErrorAndExitGame(e);
+					} catch (final NotCurrentPlayerGameException e) {
+						MainWindow.this.showErrorAndExitGame(e);
+					} catch (final OutOfTurnException e) {
+						JOptionPane.showMessageDialog(win,
+							"Accion realizada fuera de turno.",
+							"Fuera de turno",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final PendingAttackException e) {
+						JOptionPane.showMessageDialog(win,
+							"Hay otro ataque en curso.",
+							"Ataques simultáneos",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final NotEnoughMoneyException e) {
+						JOptionPane.showMessageDialog(
+							win,
+							"No tienes dinero suficiente para la acción seleccionada.",
+							"Dinero insuficiente",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final UnocupiedTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no está ocupado.",
+							"Territorio no ocupado",
+							JOptionPane.WARNING_MESSAGE);
+					} catch (final InvalidTerritoryException e) {
+						JOptionPane.showMessageDialog(win,
+							"El territorio seleccionado no es válido.",
+							"Territorio no válido",
+							JOptionPane.WARNING_MESSAGE);
 					}
 				} else {
 					bud.setVisible(false);
@@ -631,40 +865,45 @@ public class MainWindow extends JFrame implements GameEventListener {
 
 		@Override
 		public void mouseClicked(MouseEvent evt) {
-			TerritoryDecorator srcT;
-			Player p;
-			int selectedT;
-			if (win.buyTerritoryButton.isEnabled()) {
+			final int selectedT = win.getMapView().getSelectedRow();
+			if (win.buyTerritoryButton.isEnabled() && selectedT >= 0) {
 				System.out.println("Comprando un territorio...");
-				final GameEngine engine = win.gameMgr.getGameEngine();
-				selectedT = win.getMapView().getSelectedRow();
-				srcT = engine.getMapListModel().getTerritoryAt(selectedT);
-				p = engine.getPlayerListModel().getSelfPlayer();
-				if (selectedT != -1) {
-					if (srcT.getPlayer() == null) {
-						if (p.getMoney() >= srcT.getPrice()) {
-							try {
-								engine.buyTerritory(selectedT);
-							} catch (final InvalidArgumentException e) {
-								JOptionPane.showMessageDialog(win,
-									"El territorio no se puede comprar",
-									"Territorio no dosponible para usted",
-									JOptionPane.WARNING_MESSAGE);
-							} catch (final Exception e) {
-								MainWindow.this.showErrorAndExit(e);
-							}
-						} else {
-							JOptionPane.showMessageDialog(win,
-								"No dispone de suficiente dinero",
-								"Dinero insuficiente",
-								JOptionPane.WARNING_MESSAGE);
-						}
-					} else {
-						JOptionPane.showMessageDialog(win,
-							"Este territorio no está libre",
-							"Territorio ocupado",
-							JOptionPane.WARNING_MESSAGE);
-					}
+				try {
+					win.gameMgr.getGameEngine().buyTerritory(selectedT);
+				} catch (final RemoteException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final NotCurrentPlayerGameException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final OutOfTurnException e) {
+					JOptionPane.showMessageDialog(win,
+						"Accion realizada fuera de turno.",
+						"Fuera de turno",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final PendingAttackException e) {
+					JOptionPane.showMessageDialog(win,
+						"Hay otro ataque en curso.",
+						"Ataques simultáneos",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final NotEnoughMoneyException e) {
+					JOptionPane.showMessageDialog(
+						win,
+						"No tienes dinero suficiente para la acción seleccionada.",
+						"Dinero insuficiente",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final OcupiedTerritoryException e) {
+					JOptionPane.showMessageDialog(win,
+						"El territorio seleccionado está ocupado.",
+						"Territorio ocupado",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final InvalidTerritoryException e) {
+					JOptionPane.showMessageDialog(win,
+						"El territorio seleccionado no es válido.",
+						"Territorio no válido",
+						JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -687,15 +926,17 @@ public class MainWindow extends JFrame implements GameEventListener {
 				question,
 				"confirmación", JOptionPane.YES_NO_OPTION);
 			if (confirm == 0) {
-				win.mPlayToolBar.setVisible(false);
-				win.mGamePanel.setVisible(false);
-				win.mGameInfoPanel.setVisible(false);
-				win.setupListGUI();
 				try {
 					win.gameMgr.disconnectFromGame();
-				} catch (final Exception e) {
-					e.printStackTrace();
+				} catch (final RemoteException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+				} catch (final InvalidTimeException e) {
+				} catch (final NotCurrentPlayerGameException e) {
 				}
+				win.setupListGUI();
 			}
 		}
 	}
@@ -745,8 +986,17 @@ public class MainWindow extends JFrame implements GameEventListener {
 				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 			if (opt == JOptionPane.YES_OPTION) {
-				win.getGameManager().getGameEngine().resolveNegotiation(money,
-					soldiers);
+				try {
+					win.getGameManager().getGameEngine().resolveNegotiation();
+				} catch (final RemoteException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final NotCurrentPlayerGameException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				}
 			} else {
 				win.getGameManager().getGameEngine().resolveAttack();
 			}
@@ -776,19 +1026,55 @@ public class MainWindow extends JFrame implements GameEventListener {
 			System.out.println("territoryUnderAttack");
 			final ReplyAttackDialog rad = new ReplyAttackDialog(win, srcT,
 				dstT, arsenal);
+			rad.setModal(true);
 			rad.setVisible(true);
+			System.out.println(rad.isAttackAccepted());
 			if (rad.isAttackAccepted()) {
 				try {
 					win.getGameManager().getGameEngine().acceptAttack();
-				} catch (final Exception e) {
+				} catch (final RemoteException e) {
 					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final OutOfTurnException e) {
+					JOptionPane.showMessageDialog(win,
+						"Accion realizada fuera de turno.",
+						"Fuera de turno",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final InvalidTimeException e) {
+					MainWindow.this.showErrorAndExitGame(e);
 				}
 			} else {
 				try {
 					win.getGameManager().getGameEngine().requestNegotiation(
 						rad.getMoney(), rad.getSoldierCount());
-				} catch (final Exception e) {
+				} catch (final RemoteException e) {
 					MainWindow.this.showErrorAndExit(e);
+				} catch (final InvalidSessionException e) {
+					MainWindow.this.showErrorAndExit(e);
+				} catch (final GameNotFoundException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final OutOfTurnException e) {
+					JOptionPane.showMessageDialog(win,
+						"Accion realizada fuera de turno.",
+						"Fuera de turno",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final InvalidTimeException e) {
+					MainWindow.this.showErrorAndExitGame(e);
+				} catch (final NotEnoughMoneyException e) {
+					JOptionPane.showMessageDialog(
+						win,
+						"No tienes dinero suficiente para la acción seleccionada.",
+						"Dinero insuficiente",
+						JOptionPane.WARNING_MESSAGE);
+				} catch (final NotEnoughUnitsException e) {
+					JOptionPane.showMessageDialog(
+						win,
+						"No tienes unidades suficientes para la acción seleccionada.",
+						"Unidades insuficientes",
+						JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
@@ -813,12 +1099,14 @@ public class MainWindow extends JFrame implements GameEventListener {
 				if (p != null) {
 					if (p.getName().equals(
 						win.getGameManager().getGameEngine().getPlayerListModel().getSelfPlayer().getName())) {
+						System.out.println("Soy yo");
 						win.attackButton.setEnabled(true);
 						win.buyUnitsButton.setEnabled(true);
 						win.moveUnitsButton.setEnabled(true);
 						win.sendSpyButton.setEnabled(false);
 						win.buyTerritoryButton.setEnabled(false);
 					} else {
+						System.out.println("Es otro");
 						win.sendSpyButton.setEnabled(true);
 						win.buyTerritoryButton.setEnabled(false);
 						win.attackButton.setEnabled(false);
@@ -826,13 +1114,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 						win.moveUnitsButton.setEnabled(false);
 					}
 				} else {
+					System.out.println("No hay nadie");
 					win.buyTerritoryButton.setEnabled(true);
-					win.sendSpyButton.setEnabled(false);
+					win.sendSpyButton.setEnabled(true);
 					win.attackButton.setEnabled(false);
 					win.buyUnitsButton.setEnabled(false);
 					win.moveUnitsButton.setEnabled(false);
 				}
 			} else {
+				System.out.println("Estoy en el mar");
 				win.buyTerritoryButton.setEnabled(false);
 				win.sendSpyButton.setEnabled(false);
 				win.attackButton.setEnabled(false);
@@ -846,22 +1136,15 @@ public class MainWindow extends JFrame implements GameEventListener {
 	//Miniclase que captura los cambios en las listas de partidas
 	private class GameListObserver implements ListSelectionListener {
 		private final MainWindow win;
-		private final String gl;
 
-		public GameListObserver(MainWindow win, String gl) {
+		public GameListObserver(MainWindow win) {
 			this.win = win;
-			this.gl = gl;
 		}
 
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
-			if (gl.equals("mCurrentList")) {
-				win.connectGameButton.setEnabled(true);
-				win.joinGameButton.setEnabled(false);
-			} else {
-				win.joinGameButton.setEnabled(true);
-				win.connectGameButton.setEnabled(false);
-			}
+			win.connectGameButton.setEnabled(mCurrentList.getSelectedRow() != -1);
+			win.joinGameButton.setEnabled(mOpenList.getSelectedRow() != -1);
 		}
 	}
 
@@ -904,10 +1187,69 @@ public class MainWindow extends JFrame implements GameEventListener {
 	}
 
 	@Override
+	public void turnChangedEvent(Player p) {
+		final Player self = gameMgr.getGameEngine().getPlayerListModel().getSelfPlayer();
+		if (self.equals(p))
+			JOptionPane.showMessageDialog(null, "Es tu turno", "Turno",
+				JOptionPane.INFORMATION_MESSAGE);
+		else
+			JOptionPane.showMessageDialog(null, "Ya no es tu turno", "Turno",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	@Override
 	public void winnerEvent(Player p) {
 		final String list = "El jugador " + p.getName() + "ha ganado\n";
 		this.getActionGame().append(list);
 		JOptionPane.showMessageDialog(null, "Ganador", list,
 			JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosed(WindowEvent evt) {
+		try {
+			gameMgr.getUserManager().closeSession();
+		} catch (final Exception e) {
+			this.showErrorAndExit(e);
+		}
+	}
+
+	@Override
+	public void windowClosing(WindowEvent evt) {
+		try {
+			gameMgr.getUserManager().closeSession();
+		} catch (final Exception e) {
+			this.showErrorAndExit(e);
+		}
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 }

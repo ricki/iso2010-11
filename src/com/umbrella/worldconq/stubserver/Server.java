@@ -118,7 +118,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 			spyList.add(new Spy(2, t.getIdTerritory()));
 
-			playerList.add(new Player(Users[0][0], 200, true, true, spyList));
+			playerList.add(new Player(Users[0][0], 650, true, true, spyList));
 			testGame.setPlayers(playerList);
 
 			//añadimos los datos a la partida necesarios para la clase Territory
@@ -127,6 +127,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 			mapList.set(0, new Territory(0, Territory.Continent.Europe,
 				playerList.get(1).getName(), 20, p2, 1, 6, 1));//terrotorio jorge
+			mapList.set(1, new Territory(1, Territory.Continent.Europe,
+				playerList.get(1).getName(), 20, p2, 1, 6, 1)); //territorio jorge adyacente al suyo
+			mapList.set(7, new Territory(7, Territory.Continent.Asia,
+				playerList.get(1).getName(), 20, p2, 1, 6, 1)); //territorio jorge no adyacente al suyo
 			mapList.set(2, t);
 
 			testGame.setMap(mapList);

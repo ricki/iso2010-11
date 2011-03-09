@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.umbrella.worldconq.domain.GameListModel;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
 
 import domain.GameInfo;
 
@@ -122,10 +121,10 @@ public class GameListModelTest extends TestCase {
 		try {
 			final GameListModel mGameListModel = new GameListModel();
 			mGameListModel.setData(null);
-			fail("Se esperaba excepcion");
-		} catch (final InvalidArgumentException e) {
+			// no lanza excepcion porque el metodo, en el caso que sea null solo borra la lista
+			assertTrue(mGameListModel.getRowCount() == 0);
 		} catch (final Exception e) {
-			fail(e.toString() + "\n Esperaba InvalidArgumentException");
+			fail(e.toString());
 		}
 	}
 

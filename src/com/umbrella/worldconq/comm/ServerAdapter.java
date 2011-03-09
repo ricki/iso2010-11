@@ -19,6 +19,16 @@ import domain.Game;
 import domain.GameInfo;
 import domain.Player;
 import domain.Territory;
+import exceptions.AlreadyInGameException;
+import exceptions.FullGameException;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTerritoryException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
+import exceptions.UserAlreadyExistsException;
+import exceptions.WrongLoginException;
 
 public class ServerAdapter {
 
@@ -57,12 +67,13 @@ public class ServerAdapter {
 		return mRemotePort;
 	}
 
-	public void connect() throws MalformedURLException, RemoteException, NotBoundException {
+	public void connect() throws RemoteException, MalformedURLException, NotBoundException {
 		this.disconnect();
 		final String url = String.format("rmi://%s:%d/%s",
 			mRemoteHost.getHostAddress(),
 			mRemotePort,
 			mRemoteName);
+		System.out.println("Connecting to " + url);
 		mProxy = (IServer) Naming.lookup(url);
 	}
 
@@ -74,82 +85,176 @@ public class ServerAdapter {
 		return mProxy != null;
 	}
 
-	private void checkConnection() throws Exception {
-		if (!this.isConnected()) throw new RemoteException();
+	private void checkConnection() throws RemoteException {
+		if (!this.isConnected())
+			throw new RemoteException("ServerAdapter: Proxy not connected");
 	}
 
-	public UUID createSession(String login, String passwd, Remote callback) throws Exception {
+	public UUID createSession(String login, String passwd, Remote callback)
+			throws RemoteException, WrongLoginException {
 		this.checkConnection();
-		return mProxy.loginUser(login, passwd, callback);
+		UUID ret = null;
+		try {
+			ret = mProxy.loginUser(login, passwd, callback);
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
+		return ret;
 	}
 
-	public void closeSession(Session session) throws Exception {
+	public void closeSession(Session session)
+			throws RemoteException, InvalidSessionException {
 		this.checkConnection();
-		mProxy.logoutUser(session.getId());
+		try {
+			mProxy.logoutUser(session.getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void registerUser(String login, String passwd, String email) throws Exception {
+	public void registerUser(String login, String passwd, String email)
+			throws RemoteException, UserAlreadyExistsException {
 		this.checkConnection();
-		mProxy.registerUser(login, passwd, email);
+		try {
+			mProxy.registerUser(login, passwd, email);
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public ArrayList<GameInfo> fetchGameList(Session session) throws Exception {
+	public ArrayList<GameInfo> fetchGameList(Session session)
+			throws RemoteException, InvalidSessionException {
 		this.checkConnection();
-		return mProxy.listGames(session.getId());
+		ArrayList<GameInfo> ret;
+		try {
+			ret = mProxy.listGames(session.getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
+		return ret;
 	}
 
-	public void createGame(Session session, GameInfo game) throws Exception {
+	public void createGame(Session session, GameInfo game)
+			throws RemoteException, InvalidGameInfoException, InvalidSessionException {
 		this.checkConnection();
-		mProxy.createGame(session.getId(), game);
+		try {
+			mProxy.createGame(session.getId(), game);
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void joinGame(Session session, GameInfo game) throws Exception {
+	public void joinGame(Session session, GameInfo game)
+			throws RemoteException, FullGameException, GameNotFoundException, InvalidSessionException, AlreadyInGameException {
 		this.checkConnection();
-		mProxy.joinGame(session.getId(), game.getId());
+		try {
+			mProxy.joinGame(session.getId(), game.getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public Game playGame(Session session, GameInfo game) throws Exception {
+	public Game playGame(Session session, GameInfo game)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException, AlreadyInGameException {
 		this.checkConnection();
-		return mProxy.playGame(session.getId(), game.getId());
-
+		Game ret;
+		try {
+			ret = mProxy.playGame(session.getId(), game.getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
+		return ret;
 	}
 
-	public void quitGame(Session session, Game game) throws Exception {
+	public void quitGame(Session session, Game game)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
 		this.checkConnection();
-		mProxy.quitGame(session.getId(), game.getGameInfo().getId());
+		try {
+			mProxy.quitGame(session.getId(), game.getGameInfo().getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void resignGame(Session session, Game game) throws Exception {
+	public void resignGame(Session session, Game game)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException {
 		this.checkConnection();
-		mProxy.resignGame(session.getId(), game.getGameInfo().getId());
+		try {
+			mProxy.resignGame(session.getId(), game.getGameInfo().getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void attackTerritory(Session session, Game game, Attack currentAttack) throws Exception {
+	public void attackTerritory(Session session, Game game, Attack currentAttack)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTerritoryException, InvalidTimeException {
 		this.checkConnection();
-		mProxy.attackTerritory(session.getId(), game.getGameInfo().getId(),
-			currentAttack.getOrigin().getDecoratedTerritory(),
-			currentAttack.getDestination().getDecoratedTerritory(),
-			currentAttack.getArsenal());
+		try {
+			mProxy.attackTerritory(
+				session.getId(),
+				game.getGameInfo().getId(),
+				currentAttack.getOrigin().getDecoratedTerritory(),
+				currentAttack.getDestination().getDecoratedTerritory(),
+				currentAttack.getArsenal());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void acceptAttack(Session session, Game game) throws Exception {
+	public void acceptAttack(Session session, Game game)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		this.checkConnection();
-		mProxy.acceptAttack(session.getId(), game.getGameInfo().getId());
+		try {
+			mProxy.acceptAttack(session.getId(), game.getGameInfo().getId());
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void requestNegotiation(Session session, Game game, int money, int soldiers) throws Exception {
+	public void requestNegotiation(Session session, Game game, int money, int soldiers)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException {
 		this.checkConnection();
-		mProxy.requestedNegotiation(session.getId(),
-			game.getGameInfo().getId(), money, soldiers);
+		try {
+			mProxy.requestedNegotiation(session.getId(),
+				game.getGameInfo().getId(), money, soldiers);
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
-	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<TerritoryDecorator> territoryUpdate, EventType event) throws Exception {
+	public void endTurn(Session session, Game game) throws RemoteException, InvalidTimeException, InvalidSessionException {
 		this.checkConnection();
-		final ArrayList<Territory> territoryList = new ArrayList<Territory>();
-		for (final TerritoryDecorator t : territoryUpdate)
-			territoryList.add(t.getDecoratedTerritory());
-		mProxy.updateGame(session.getId(), game.getGameInfo().getId(),
-			playerUpdate, territoryList, event);
+		mProxy.endTurn(session.getId(), game.getGameInfo().getId());
+	}
+
+	public void updateGame(Session session, Game game, ArrayList<Player> playerUpdate, ArrayList<TerritoryDecorator> territoryUpdate, EventType event)
+			throws RemoteException, GameNotFoundException, InvalidSessionException, NotCurrentPlayerGameException {
+		this.checkConnection();
+		try {
+			final ArrayList<Territory> territoryList = new ArrayList<Territory>();
+			if (territoryUpdate != null) {
+				for (final TerritoryDecorator t : territoryUpdate) {
+					territoryList.add(t.getDecoratedTerritory());
+				}
+			}
+			mProxy.updateGame(session.getId(), game.getGameInfo().getId(),
+				playerUpdate, territoryList, event);
+		} catch (final RemoteException e) {
+			this.disconnect();
+			throw e;
+		}
 	}
 
 }

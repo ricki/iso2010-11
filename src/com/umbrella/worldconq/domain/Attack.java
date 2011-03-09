@@ -10,6 +10,8 @@ public class Attack {
 	private final TerritoryDecorator dst;
 	private boolean resolved;
 	private boolean territoryConquered;
+	private int offeredMoney;
+	private int offeredSoldiers;
 
 	public Attack(Arsenal arsenal, TerritoryDecorator src, TerritoryDecorator dst) {
 		this.src = src;
@@ -18,6 +20,9 @@ public class Attack {
 
 		territoryConquered = false;
 		resolved = false;
+
+		offeredMoney = 0;
+		offeredSoldiers = 0;
 	}
 
 	public boolean isResolved() {
@@ -38,6 +43,22 @@ public class Attack {
 
 	public Arsenal getArsenal() {
 		return arsenal;
+	}
+
+	public int getOfferedMoney() {
+		return offeredMoney;
+	}
+
+	public void setOfferedMoney(int offeredMoney) {
+		this.offeredMoney = offeredMoney;
+	}
+
+	public int getOfferedSoldiers() {
+		return offeredSoldiers;
+	}
+
+	public void setOfferedSoldiers(int offeredSoldiers) {
+		this.offeredSoldiers = offeredSoldiers;
 	}
 
 	public void resolve() {

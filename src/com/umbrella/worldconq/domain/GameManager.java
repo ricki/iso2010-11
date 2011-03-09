@@ -1,15 +1,25 @@
 package com.umbrella.worldconq.domain;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
-import com.umbrella.worldconq.exceptions.InvalidArgumentException;
+import com.umbrella.worldconq.exceptions.EmptyStringException;
+import com.umbrella.worldconq.exceptions.NegativeValueException;
 import com.umbrella.worldconq.ui.GameEventListener;
 
 import domain.Game;
 import domain.GameInfo;
+import exceptions.AlreadyInGameException;
+import exceptions.FullGameException;
+import exceptions.GameNotFoundException;
+import exceptions.InvalidGameInfoException;
+import exceptions.InvalidSessionException;
+import exceptions.InvalidTimeException;
+import exceptions.NotCurrentPlayerGameException;
 
 public class GameManager {
 
@@ -22,6 +32,11 @@ public class GameManager {
 	private GameEngine mGameEngine;
 
 	public GameManager(ServerAdapter srvAdapter, ClientAdapter cltAdapter) {
+		if (srvAdapter == null)
+			throw new NullPointerException();
+		if (cltAdapter == null)
+			throw new NullPointerException();
+
 		usrMgr = null;
 		this.srvAdapter = srvAdapter;
 		this.cltAdapter = cltAdapter;
@@ -53,7 +68,11 @@ public class GameManager {
 		return mOpenGameListModel;
 	}
 
-	public void updateGameList() throws Exception {
+	public GameEngine getGameEngine() {
+		return mGameEngine;
+	}
+
+	public void updateGameList() throws RemoteException, InvalidSessionException {
 		final String user = usrMgr.getSession().getUser();
 		final ArrayList<GameInfo> fullList = srvAdapter.fetchGameList(usrMgr.getSession());
 		final ArrayList<GameInfo> currentList = new ArrayList<GameInfo>();
@@ -84,48 +103,66 @@ public class GameManager {
 		mOpenGameListModel.setData(openList);
 	}
 
-	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime) throws Exception {
+	public void createGame(String name, String description, ArrayList<Calendar> gameSessions, int turnTime, int defTime, int negTime)
+			throws RemoteException, InvalidGameInfoException, InvalidSessionException {
 
-		if (name == null || name.equals("") || gameSessions == null
-				|| description == null || name.isEmpty() || turnTime <= 0
-				|| defTime <= 0 || negTime <= 0) throw new InvalidArgumentException();
-		for (final Calendar c : gameSessions) {
-			if (c == null || c.before(Calendar.getInstance())) throw new InvalidArgumentException();
+		if (name == null)
+			throw new NullPointerException();
+		if (description == null)
+			throw new NullPointerException();
+		if (gameSessions == null)
+			throw new NullPointerException();
+		if (name.isEmpty())
+			throw new EmptyStringException();
+		if (turnTime <= 0)
+			throw new NegativeValueException();
+		if (defTime <= 0)
+			throw new NegativeValueException();
+		if (negTime <= 0)
+			throw new NegativeValueException();
+
+		final ArrayList<String> listPlayer = new ArrayList<String>();
+		listPlayer.add(usrMgr.getSession().getUser());
+		srvAdapter.createGame(usrMgr.getSession(),
+			new GameInfo(UUID.randomUUID(), name,
+			description, listPlayer, gameSessions, 42, turnTime, defTime,
+			negTime));
+		this.updateGameList();
+	}
+
+	public void joinGame(int gameIndex) throws RemoteException, FullGameException, GameNotFoundException, InvalidSessionException, AlreadyInGameException {
+		final GameInfo info = mOpenGameListModel.getGameAt(gameIndex);
+		srvAdapter.joinGame(usrMgr.getSession(), info);
+	}
+
+	public void connectToGame(int gameIndex, GameEventListener gameListener) throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException, AlreadyInGameException {
+		final GameInfo info = mCurrentGameListModel.getGameAt(gameIndex);
+		final Session session = usrMgr.getSession();
+		final Game game = srvAdapter.playGame(session, info);
+		mGameEngine = new GameEngine(game, session, srvAdapter,
+			gameListener);
+		cltAdapter.setCallback(mGameEngine);
+	}
+
+	public void disconnectFromGame() throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
+		try {
+			srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
+			mGameEngine = null;
+		} catch (final RemoteException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final GameNotFoundException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final InvalidSessionException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final InvalidTimeException e) {
+			mGameEngine = null;
+			throw e;
+		} catch (final NotCurrentPlayerGameException e) {
+			mGameEngine = null;
+			throw e;
 		}
-		srvAdapter.createGame(usrMgr.getSession(), new GameInfo(null, name,
-			description, null, gameSessions, 0, turnTime, defTime, negTime));
-	}
-
-	public void joinGame(int gameSelected) throws Exception {
-		if (gameSelected >= mOpenGameListModel.getRowCount()
-				|| gameSelected < 0) {
-			throw new InvalidArgumentException();
-		} else {
-			final GameInfo gameUuid = mOpenGameListModel.getGameAt(gameSelected);
-			final Session user = usrMgr.getSession();
-			srvAdapter.joinGame(user, gameUuid);
-		}
-	}
-
-	public void connectToGame(int gameIndex, GameEventListener gameListener) throws Exception {
-		if (gameIndex >= mCurrentGameListModel.getRowCount() || gameIndex < 0) {
-			throw new InvalidArgumentException();
-		} else {
-			final GameInfo gameUuid = mCurrentGameListModel.getGameAt(gameIndex);
-			final Session session = usrMgr.getSession();
-			final Game game = srvAdapter.playGame(session, gameUuid);
-			mGameEngine = new GameEngine(game, session, srvAdapter,
-				gameListener);
-			cltAdapter.setCallback(mGameEngine);
-		}
-	}
-
-	public GameEngine getGameEngine() {
-		return mGameEngine;
-	}
-
-	public void disconnectFromGame() throws Exception {
-		srvAdapter.quitGame(usrMgr.getSession(), mGameEngine.getGame());
-		mGameEngine = null;
 	}
 }

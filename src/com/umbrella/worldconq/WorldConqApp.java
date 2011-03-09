@@ -2,6 +2,8 @@ package com.umbrella.worldconq;
 
 import java.net.InetAddress;
 
+import javax.swing.JOptionPane;
+
 import com.umbrella.worldconq.comm.ClientAdapter;
 import com.umbrella.worldconq.comm.ServerAdapter;
 import com.umbrella.worldconq.domain.GameManager;
@@ -42,10 +44,9 @@ public class WorldConqApp {
 
 		srvAdapter = new ServerAdapter();
 		srvAdapter.setRemoteInfo(
-			"WorldConqStubServer",
-			InetAddress.getByName("localhost"),
-			3234);
-		srvAdapter.connect();
+			"Server",
+			InetAddress.getByName("161.67.106.74"),
+			1099);
 
 		gameMgr = new GameManager(srvAdapter, cltAdapter);
 
@@ -65,9 +66,17 @@ public class WorldConqApp {
 			startupWindow.setVisible(false);
 			startupWindow.dispose();
 		}
-		startupWindow = new StartupWindow(this, usrMgr);
-		startupWindow.setLocationRelativeTo(null);
-		startupWindow.setVisible(true);
+		try {
+			startupWindow = new StartupWindow(this, usrMgr);
+			srvAdapter.connect();
+			startupWindow.setLocationRelativeTo(null);
+			startupWindow.setVisible(true);
+		} catch (final Exception e) {
+			JOptionPane.showMessageDialog(startupWindow, e.toString(),
+				e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			this.freeResources();
+		}
 	}
 
 	public void setMainMode() {
@@ -106,6 +115,7 @@ public class WorldConqApp {
 			srvAdapter.disconnect();
 			srvAdapter = null;
 		}
+		System.exit(0);
 	}
 
 }
