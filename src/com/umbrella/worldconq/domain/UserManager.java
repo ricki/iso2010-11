@@ -96,7 +96,7 @@ public class UserManager {
 	}
 
 	public void closeSession() throws RemoteException, GameNotFoundException, InvalidSessionException, InvalidTimeException, NotCurrentPlayerGameException {
-		if (gameMgr.getGameEngine() != null) {
+		if (gameMgr != null && gameMgr.getGameEngine() != null) {
 			try {
 				gameMgr.disconnectFromGame();
 			} catch (final RemoteException e) {
