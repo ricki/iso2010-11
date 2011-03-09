@@ -118,7 +118,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 			spyList.add(new Spy(2, t.getIdTerritory()));
 
-			playerList.add(new Player(Users[0][0], 200, true, true, spyList));
+			playerList.add(new Player(Users[0][0], 650, true, true, spyList));
 			testGame.setPlayers(playerList);
 
 			//añadimos los datos a la partida necesarios para la clase Territory

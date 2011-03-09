@@ -20,6 +20,7 @@ import com.umbrella.worldconq.domain.UserManager;
 import com.umbrella.worldconq.exceptions.NegativeValueException;
 import com.umbrella.worldconq.exceptions.NotEnoughMoneyException;
 import com.umbrella.worldconq.exceptions.NotEnoughUnitsException;
+import com.umbrella.worldconq.exceptions.OcupiedTerritoryException;
 import com.umbrella.worldconq.exceptions.OutOfTurnException;
 import com.umbrella.worldconq.exceptions.PendingAttackException;
 import com.umbrella.worldconq.exceptions.UnocupiedTerritoryException;
@@ -1190,8 +1191,6 @@ public class GameEngineTest extends TestCase {
 			fail("Se esperaba InvalidTerritoryException");
 		} catch (final InvalidTerritoryException e) {
 			System.out.println("InvalidArgumentException: el territorio no es del user");
-		} catch (final NotEnoughMoneyException e) {
-			fail("NotEnoughMoneyException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -1205,6 +1204,7 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testBuyUnits3");
 		try {
 			gameEngine = gameMgr.getGameEngine();
+			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
 			gameEngine.buyUnits(0, 3, 0, 0, 0, 0);
 			fail("Se esperaba NotEnoughMoneyException");
 		} catch (final NotEnoughMoneyException e) {
@@ -1275,7 +1275,7 @@ public class GameEngineTest extends TestCase {
 		System.out.println("TestCase::testBuyUnits8");
 		try {
 			gameEngine = gameMgr.getGameEngine();
-			gameEngine.buyUnits(0, 0, 0, 0, -1, 0);
+			gameEngine.buyUnits(0, 0, 0, 0, 0, -1);
 			fail("Se esperaba NegativeValueException");
 		} catch (final NegativeValueException e) {
 			System.out.println("NegativeValueException: Número de antimisiles negativo");
@@ -1382,8 +1382,6 @@ public class GameEngineTest extends TestCase {
 					&& srcTerritory.getNumICBMs() == prevDstICBM
 					&& srcTerritory.getNumAntiMissiles() == prevDstAntiM);
 
-		} catch (final InvalidTerritoryException e) {
-			fail("InvalidTerritoryException");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
@@ -2002,26 +2000,9 @@ public class GameEngineTest extends TestCase {
 		}
 	}
 
-	/* Caso de prueba con todo correcto y territorio null */
+	/* Caso de prueba con ataque pendiente */
 	public void testDeploySpy6() {
 		System.out.println("testDeploySpy6");
-		try {
-			gameEngine = gameMgr.getGameEngine();
-			final int numSpies = gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size();
-			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(
-				UnitInfo.getSpyCost() + 100);
-			final int money = gameEngine.getPlayerListModel().getSelfPlayer().getMoney();
-			gameEngine.deploySpy(2);
-			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getMoney() == (money - UnitInfo.getSpyCost()));
-			assertTrue(gameEngine.getPlayerListModel().getSelfPlayer().getSpies().size() == numSpies + 1);
-		} catch (final Exception e) {
-			fail(e.toString());
-		}
-	}
-
-	/* Caso de prueba con ataque pendiente */
-	public void testDeploySpy7() {
-		System.out.println("testDeploySpy7");
 		try {
 			gameEngine = gameMgr.getGameEngine();
 			gameEngine.getPlayerListModel().getSelfPlayer().setMoney(0);
@@ -2029,6 +2010,110 @@ public class GameEngineTest extends TestCase {
 			gameEngine.deploySpy(2);
 		} catch (final PendingAttackException e) {
 			System.out.println("PendingAttackException: Hay un ataque en curso");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* Caso correcto */
+	public void testBuyTerritory1() {
+		System.out.println("testBuyTerritory1");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(
+					10000);
+			gameEngine.buyTerritory(6);
+			assertTrue(gameEngine.getMapListModel().getTerritoryAt(6).getPlayer().equals(
+				player));
+			assertTrue(player.getMoney() == 10000 - gameEngine.getMapListModel().getTerritoryAt(
+				6).getPrice());
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	/* El país no es adyacente a ninguno del jugador */
+	public void testBuyTerritory2() {
+		System.out.println("testBuyTerritory2");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(22);
+		} catch (final InvalidTerritoryException e) {
+			System.out.println("El país no es adyacente a ninguno del jugador");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory3() {
+		System.out.println("testBuyTerritory3");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(2);
+		} catch (final OcupiedTerritoryException e) {
+			System.out.println("El territorio ya tiene dueño");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory4() {
+		System.out.println("testBuyTerritory4");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(0);
+			gameEngine.buyTerritory(6);
+		} catch (final NotEnoughMoneyException e) {
+			System.out.println("No tiene dinero para comprar el territorio");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory5() {
+		System.out.println("testBuyTerritory5");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.attackTerritory(0, 2, 0, 0, 1, 6);
+			gameEngine.buyTerritory(6);
+		} catch (final PendingAttackException e) {
+			System.out.println("PendingAttackException: Hay un ataque en curso");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory6() {
+		System.out.println("testBuyTerritory6");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(-1);
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException: Territorio -1");
+		} catch (final Exception e) {
+			fail(e.toString());
+		}
+	}
+
+	public void testBuyTerritory7() {
+		System.out.println("testBuyTerritory7");
+		try {
+			gameEngine = gameMgr.getGameEngine();
+			final Player player = gameEngine.getPlayerListModel().getSelfPlayer();
+			player.setMoney(10000);
+			gameEngine.buyTerritory(42);
+		} catch (final IndexOutOfBoundsException e) {
+			System.out.println("IndexOutOfBoundsException: Territorio 42");
 		} catch (final Exception e) {
 			fail(e.toString());
 		}
